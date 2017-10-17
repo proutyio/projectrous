@@ -1,0 +1,94 @@
+\documentclass[onecolumn, draftclsnofoot,10pt, compsoc]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{setspace}
+
+\usepackage{geometry}
+\geometry{textheight=9.5in, textwidth=7in}
+
+\def \DocType{Problem Statement}
+
+\begin{document}
+\begin{titlepage}
+\pagenumbering{gobble}
+    \begin{singlespace}
+    		
+		\hfill  
+        \par\vspace{.2in}
+        \centering
+        \scshape{
+            \huge CS Capstone \DocType \par
+            {\large\today}\par
+            \vspace{1in}
+            \textbf{\Huge Collaborative Threat Mitigation: \\Social Devices Working to Mitigate \\Security Threats}\par
+            \vspace{.4in}
+            {\Large{Oregon State University\\CS 461\\
+            
+            	\vspace{.4in}
+            	Prepared By:\\Kyle Prouty}
+            }\par
+            \vfill
+        }
+    
+        \begin{abstract}
+        \noindent
+Mitigating security threats is essential in today's world of interconnected devices. This project aims to create a network of loosely coupled wireless devices that are able to gather information about the world around them in order to collectively mitigate security threats that we introduced into the system. By doing this, we can improve devices in the future so that they can automatically mitigate threats without having any rigid logical configurations. Our goal will be to allow these devices to offer services that will be vulnerable to threats introduced into the system. When a device has been infected and their services shut down, the other devices on the network will work together to self organize. Part of this project will be to build the interconnected devices using raspberry pis and arduino micro-controllers. In the end our system will have a visual display to show the users how threats are introduced, how the devices self organize, and lastly the end result of the mitigation.
+        \end{abstract}     
+        
+    \end{singlespace}
+\end{titlepage}
+
+
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+
+\addcontentsline{toc}{section}{Problem Definition}
+\section*{Problem Definition}
+\addcontentsline{toc}{subsection}{Overview}
+\subsection*{Overview}
+The world around us is filling with more and more interconnected devices that take up more and more bandwidth on our networks. This projects aim is to allow these devices to stop talking to the outside world and start talking to each other in order to mitigate threats that are introduced.
+\addcontentsline{toc}{subsection}{Devices}
+\subsection*{Devices}
+Our first problem to solve will be to build multiple devices that will act as nodes on our network. To build these devices we will be using raspberry pis and arduino micro-controllers. These device nodes will be able to automatically connect to each other. When a node has been added to the network it will be able to gather information about the services and state of the other device nodes.
+\addcontentsline{toc}{subsection}{Services}
+\subsection*{Services}
+Every device node on the network will offer services. These services will be vulnerable to security threats that we introduce into the network. Services can be disabled temporarily or be permanently shut down. Device nodes will only figure out what services they offer when they are added to the network of nodes and discover what services are available for them to offer.
+\addcontentsline{toc}{subsection}{Mitigation}
+\subsection*{Mitigation}
+The main problem to solve is getting our collection of device nodes to self organize to mitigate a security threat. Our system will start in a non threat state, move to a threat state, then to a mitigating state, and then finally to a cleared of threats state. Threats introduced will shut down or disable services offered by individual nodes. When a service has been shut down or disabled, the other nodes on the network will know that a node has been attacked. To mitigate the threat, nodes will then self organize to figure out which nodes can offer the services of the node that has the security threat. 
+
+
+
+\vspace{0.0 in}
+\addcontentsline{toc}{section}{Proposed Solution}
+\section*{Proposed Solution}
+\addcontentsline{toc}{subsection}{Self Organization}
+\subsection*{Self Organization}
+To solve our distinct problems, first our team will be creating a network of device nodes using various micro-controllers. The creation of these nodes will include the ability of the connected nodes to be able to gather information about other device nodes. The information gather from other device node on the network will then be used to determine which services a node can offer. Once other nodes know about all services offered, they can then use that information to self organize around an introduced goal.
+\addcontentsline{toc}{subsection}{Threat Introduction}
+\subsection*{Threat Introduction}
+For us to solve the problem of threat mitigation we must have the ability to introduce threats on the network. Threats will be manually introduced onto devices nodes on the network. These threats will shutdown services. After a threat has shutdown a service, other nodes will see that a node has been compromised. When a node has been determined to have been compromised, the other node will then self organize to mitigate the threats on the compromised node.
+\addcontentsline{toc}{subsection}{Threat Level}
+\subsection*{Threat Level}
+Introduced threats into the network will have different levels of threat. Device nodes will use information about the level of threat introduced when deciding how to mitigate that threat. Using these threat levels node can make different decisions. They can decide to just disable services offered by that node. Or if a high level threat has been introduced they will be able to decide if an entire node and all of its services should be shut down, allowing other nodes to self organize to take over the lost services.
+
+
+\addcontentsline{toc}{section}{Performance Metrics}
+\section*{Performance Metrics}
+\addcontentsline{toc}{subsection}{Prototype}
+\subsection*{Prototype}
+To show that threats can be mitigated our team will be creating a prototype of this network of device nodes using various micro-controllers. This prototype will include the ability for nodes to be added and subtracted from the system. It will include the ability for devices introduced to the system to be able to automatically connect and discover the current state and services offered by the other nodes already on the system. The prototype system will be able to have a threat introduced which shuts down services on individual nodes. 
+\addcontentsline{toc}{subsection}{Display}
+\subsection*{Display}
+In order to show that our solution is working correctly we will develop a graphical way to show our system move through the varying states of the threat mitigation. This display will show nodes connected, services offered, and threats introduced. Further more this display will some in real time how the threat is moving through the system, how the nodes respond, then how the threat is mitigated, and finally showing how the beginning and ending states compare.
+\addcontentsline{toc}{subsection}{Testing}
+\subsection*{Testing}
+The last key to judge the outcome of our project will be to create a small test suite. This test suite will test against different threat scenarios to ensure that our system is correctly mitigating security threats. 
+
+
+
+\vspace{2 in}
+
+\end{document}
