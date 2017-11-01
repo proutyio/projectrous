@@ -1,4 +1,5 @@
-# Rodents Of Unusual Size (ROUS)
+## Project ROUS
+### Rodents Of Unusual Size 
 
 **Team:**
 Kyle Prouty,
