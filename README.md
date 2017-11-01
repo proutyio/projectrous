@@ -1,4 +1,4 @@
-# RodentsOfUnusualSize
+# Rodents Of Unusual Size (ROUS)
 
 **Team:**
 Kyle Prouty,
