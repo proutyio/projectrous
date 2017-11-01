@@ -1,4 +1,4 @@
-# Collaborative Threat Mitigation
+# RodentsOfUnusualSize
 
 **Team:**
 Kyle Prouty,
@@ -7,7 +7,7 @@ Lucien Tamno
 
 <br/>
 
-- ## [Weekly Blog](https://github.com/CollaborativeThreatMitigation/CollaborativeThreatMitigation/wiki) 
+- ## [Weekly Blog](https://github.com/RodentsOfUnusualSize/RodentsOfUnusualSize/wiki) 
 
 
 
