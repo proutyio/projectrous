@@ -1,5 +1,5 @@
 /*
-*	Author: 	Kyle Prouty
+*	Author: 	Kyle Prouty - Fall 2017
 *
 *	Subject:	C++ socket experiments 
 *				Client
@@ -18,40 +18,45 @@
 using namespace std;
 using namespace boost::asio::ip;
 
-int setup_client();
+int setup_client(char*,char*);
 
 
 int main(int argc, char* argv[])
 {
+	/*
+	*	TODO: error checking params
+	*/
+	char* address = argv[1];
+	char* port = argv[2];
 
-	if(setup_client()){
-		cout << "\n\tSetup Succesful\n";
+	if(setup_client(address, port)){
+		cout << "\n\tSuccesfully received data from server!\n";
 	} else {
-		cerr << "\n\tSetup failed!\n\n";
+		cerr << "\n\tClient setup failed!\n\n";
 	}
+
 }
 
-int setup_client() {
+int setup_client(char* address, char* port) {
 	try {
-
 		/*
 		*	setup
 		*/
-		boost::asio::io_service io_service; //to use asio library, need at least one io_service object
-		tcp::resolver resolver(io_service); //TCP endpoint
-		tcp::resolver::query query("text","more text"); //resolver takes query object and turns it into list of endpoints
-		tcp::resolver::iterator end_itr = resolver.resolve(query); //endpoints are returned as iterator object
+		boost::asio::io_service io_service; 
+		tcp::resolver resolver(io_service); 
+		tcp::resolver::query query(address, port); 
+		tcp::resolver::iterator end_itr = resolver.resolve(query); 
 
+		
 		/*
 		*	open connection on socket
 		*/
 		tcp::socket socket(io_service);
 		connect(socket, end_itr);
 
+		
 		/*
-		*	We use a boost::array to hold the received data. The boost::asio::buffer() function 
-		*	automatically determines the size of the array to help prevent buffer overruns. 
-		*	Instead of a boost::array, we could have used a char [] or std::vector.
+		*	Read buffer from server
 		*/
 		for (;;) {
 			boost::array<char, 128> buf;
@@ -59,19 +64,16 @@ int setup_client() {
 
 			size_t len = socket.read_some(boost::asio::buffer(buf), error);
 			if (error == boost::asio::error::eof)
-				break; // Connection closed cleanly by peer.
+				break; // Connection closed cleanly by peer
 			else if (error)
 				throw boost::system::system_error(error); // Some other error.
 			cout.write(buf.data(), len);
 		}
-
-
 
 		return 1;
 	}  catch (exception& e) {
 		cerr <<"\n\t"<< e.what() << "\n";
 		return 0;
 	}
-
 
 }
