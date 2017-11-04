@@ -1,5 +1,5 @@
 
-## Only tested on Ubunutu 16.04 with C++ Boost libraries installed
+## Only tested on Ubuntu 16.04 with C++ Boost libraries installed
 
 To Run:
 
