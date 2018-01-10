@@ -3,8 +3,7 @@
 
 **Team:**
 Kyle Prouty,
-Hayden Anderson,
-Lucien Tamno 
+Hayden Anderson
 
 <br/>
 
