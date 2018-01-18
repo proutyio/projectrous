@@ -3,6 +3,7 @@ import sys
 
 
 log_file = "rous/rous.log"
+whitelist = "rous/whitelist.txt"
 
 
 def setup_logger():
@@ -13,3 +14,15 @@ def setup_logger():
         level=log.INFO)
 
 
+def parse_whitelist():
+	try:
+		file = open(whitelist, "r")
+		lst = [line.split(',') for line in file.readlines()]
+		return lst
+	except:
+		log.error("Failed to read whitelist")
+
+
+# tmp = parse_whitelist()
+# for l in tmp:
+# 	print l
