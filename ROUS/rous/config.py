@@ -21,8 +21,3 @@ def parse_whitelist():
 		return lst
 	except:
 		log.error("Failed to read whitelist")
-
-
-# tmp = parse_whitelist()
-# for l in tmp:
-# 	print l

@@ -35,13 +35,11 @@ def wait_for_message(sock):
         log.info("Server:%s - received %s from %s",server_address,(message,len(message)),address)
        
         if message:
-        
             msg_lst = parse_message(message)
-            run_service(msg_lst)
-        
-            # sent = sock.sendto(message, address)
-            # log.info('Sent return message: %s back to %s', sent, address)   
-  
+            check = check_service_exists(msg_lst)
+            if check:
+                run_service(msg_lst)        
+
     except(KeyboardInterrupt,RuntimeError):
             log.error("Server:%s - sock.recvfrom had an error",server_address)
             exit = True
@@ -52,7 +50,7 @@ def wait_for_message(sock):
 #   by : to break list into sublists
 def parse_message(message):
     msg_lst = message.split()
-    return [line.split(":") for line in msg_lst]
+    return msg_lst
 
 
 
@@ -60,18 +58,18 @@ def parse_message(message):
 #   service is in passed in list
 def check_service_exists(msg_lst):
     services = rous.services.all_services()
-
     for s in services:
-        if(msg_lst[0][0] == s):
+        if(msg_lst[0] == s):
             return True
     return False
 
 
 
-
-#
-def run_service():
-    pass
+# Passes service to services module which then returns
+#   message to be sent...must do it this way because socket
+#   is in this module
+def run_service(msg_lst):
+    return rous.services.run_service(msg_lst)
 
 
 

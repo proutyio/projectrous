@@ -6,7 +6,8 @@ all:
 	@echo "Option 4: make test_node"
 	@echo "Option 5: make test_user"
 	@echo "Option 6: make test_admin"
-	@echo "Option 7: make clean"
+	@echo "Option 7: make test"
+	@echo "Option 8: make clean"
 
 
 node: rous/node/node.py
@@ -31,6 +32,10 @@ test_user: test/test_user.py
 
 test_admin: test/test_admin.py
 	python -m test.test_admin
+
+
+test: test/test.py
+	python -m test.test
 
 
 clean:
