@@ -1,14 +1,5 @@
 
-
-class OK:
-	def ok(self):
-		print "ok"
+import rous.utils.utils as utils
 
 
-def test():
-	ok = OK()
-	ok.ok()
-
-
-
-test()
+utils.discover_nodes()
