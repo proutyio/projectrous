@@ -18,13 +18,26 @@ def setup_logger():
         level=log.INFO)
 
 
-def parse_whitelist():
+
+def read_from_whitelist():
 	try:
-		file = open(whitelist, "r")
-		lst = [line.split(',') for line in file.readlines()]
+		f = open(whitelist, "r")
+		lst = [line.split(',') for line in f.readlines()]
 		return lst
 	except:
 		log.error("Failed to read whitelist")
+
+
+
+def write_to_whitelist(lst):
+    try:
+        f = open(whitelist, "a")
+        for l in lst:
+            f.write(l[0])
+            f.write("\n")
+        f.close()
+    except:
+        log.error("Failed to write to whitelist")
 
 
 
@@ -48,7 +61,8 @@ def discover_nodes():
         nodes.append(commands.getstatusoutput(cmd))
 
     for node in nodes:
-        ip_list = re.findall( r'[0-9]+(?:\.[0-9]+){3}',node[1])
+        tmp = re.findall( r'[0-9]+(?:\.[0-9]+){3}',node[1])
+        ip_list.append(tmp)
     return ip_list
 
 

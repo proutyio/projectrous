@@ -2,4 +2,6 @@
 import rous.utils.utils as utils
 
 
-utils.discover_nodes()
+lst = utils.discover_nodes()
+
+utils.write_to_whitelist(lst)
