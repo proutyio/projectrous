@@ -90,9 +90,9 @@ def main():
         try:
             wait_for_message(sock)
 
-            if not exit:
-                log.error("Server:%s - shutting down",server_address)
-                break
+            # if not exit:
+            #     log.error("Server:%s - shutting down",server_address)
+            #     break
 
         except(KeyboardInterrupt,RuntimeError):
             log.error("Server:%s - main loop failure",server_address)

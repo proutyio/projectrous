@@ -1,11 +1,14 @@
 import logging as log
 
 
-
+###### Service Functions #######
 def led_blink_green():
 	print "blink green"
+	return
 
 
+
+################################
 
 def run_service(service):
 	try:
@@ -13,7 +16,6 @@ def run_service(service):
 		log.info("Running Service: %s",service[0])
 	except:
 		log.error("Failed to run service: %s",service[0])
-
 
 
 def all_services():
