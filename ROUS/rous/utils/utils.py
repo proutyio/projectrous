@@ -61,7 +61,10 @@ def handle_crtl_z(signal, frame):
 
 def find_my_ip():
     try:
-        ip = commands.getstatusoutput('ip -f inet addr show lo')
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect(("1.1.1.1", 80))
+        ip = sock.getsockname()[0]
+        sock.close()
         return ip
     except:
         log.error("Failed to find my IP address")
@@ -70,18 +73,18 @@ def find_my_ip():
 
 def find_ip_from_string(str):
     try:
-        ip = re.findall( r'[0-9]+(?:\.[0-9]+){3}',str)
+        ip = re.findall(r'[0-9]+(?:\.[0-9]+){3}',str)
         return ip
     except:
         log.error("Failed to parse IP from string")
 
 
 
-def parse_ip_list(node_lst):
+def parse_ip_list(lst):
     ip_list = []
     try:
-        for node in node_lst:
-            ip = parse_ip_from_string(node[1])
+        for node in lst:
+            ip = find_ip_from_string(node[1])
             ip_list.append(ip)
         return ip_list
     except:
@@ -137,5 +140,5 @@ def discover_nodes():
 # regex IP string expression taken from
 # https://stackoverflow.com/questions/2890896/extract-ip-address-from-an-html-string-python
 
-# grabbing IP taken from
+# extract IP taken from
 # https://unix.stackexchange.com/questions/87468/is-there-an-easy-way-to-programmatically-extract-ip-address

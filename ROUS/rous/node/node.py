@@ -7,11 +7,13 @@ import rous.utils.utils as utils
 import rous.utils.services as services
 
 
-host = 'localhost'
-port = 5000
-server_address = (host, port)
+#
+def find_server_address():
+    port = 22000
+    host = utils.find_my_ip()
+    return (host,port)
+server_address = find_server_address()
 
-exit = False
 
 
 # Setup socket and bind to server address
@@ -43,7 +45,6 @@ def wait_for_message(sock):
 
     except(KeyboardInterrupt,RuntimeError):
             log.error("Server:%s - sock.recvfrom had an error",server_address)
-            exit = True
 
 
 
