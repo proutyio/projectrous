@@ -3,8 +3,8 @@ import sys
 import signal
 
 
-log_file = "rous/rous.log"
-whitelist = "rous/whitelist.txt"
+log_file = "rous/utils/rous.log"
+whitelist = "rous/utils/whitelist.txt"
 
 
 def setup_logger():

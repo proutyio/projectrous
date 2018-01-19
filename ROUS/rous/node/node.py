@@ -3,8 +3,8 @@ import sys
 import signal
 import logging as log
 
-import rous.config
-import rous.services
+import rous.utils.utils as utils
+import rous.utils.services as services
 
 
 host = 'localhost'
@@ -58,8 +58,8 @@ def parse_message(message):
 # Grabs services from services module. Checks if
 #   service is in passed in list
 def check_service_exists(msg_lst):
-    services = rous.services.all_services()
-    for s in services:
+    svc = services.all_services()
+    for s in svc:
         if(msg_lst[0] == s): 
             return True
     return False
@@ -70,7 +70,7 @@ def check_service_exists(msg_lst):
 #   message to be sent...must do it this way because socket
 #   is in this module
 def run_service(msg_lst):
-    return rous.services.run_service(msg_lst)
+    return services.run_service(msg_lst)
 
 
 
@@ -82,7 +82,7 @@ def send_message():
 
 #
 def main():
-    rous.config.setup_logger()
+    utils.setup_logger()
     sock = start_server()
     
     # Main loop that waits from messages from other nodes
@@ -94,6 +94,6 @@ def main():
             log.error("Server:%s - main loop failure",server_address)
 
 
-signal.signal(signal.SIGINT, rous.config.handle_crtl_z)
+signal.signal(signal.SIGINT, utils.handle_crtl_z)
 if __name__ == "__main__":
     main()
