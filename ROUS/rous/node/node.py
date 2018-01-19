@@ -82,7 +82,6 @@ def send_message():
 
 #
 def main():
-    utils.setup_logger()
     sock = start_server()
     
     # Main loop that waits from messages from other nodes

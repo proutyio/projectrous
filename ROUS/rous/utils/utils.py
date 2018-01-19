@@ -16,6 +16,7 @@ def setup_logger():
         datefmt='%m/%d/%Y %I:%M:%S %p',
         stream=sys.stdout,
         level=log.INFO)
+setup_logger()
 
 
 
@@ -30,14 +31,25 @@ def read_from_whitelist():
 
 
 def write_to_whitelist(lst):
+    erase_text_file(whitelist)
     try:
         f = open(whitelist, "a")
-        for l in lst:
-            f.write(l[0])
-            f.write("\n")
+        if lst[0]:
+            for l in lst:
+                f.write(l[0])
+                f.write("\n")
         f.close()
     except:
         log.error("Failed to write to whitelist")
+
+
+
+def erase_text_file(text_file):
+    try:
+        f = open(text_file, 'r+')
+        f.truncate()
+    except:
+        log.error("Failed to erase text file")
 
 
 
@@ -47,23 +59,73 @@ def handle_crtl_z(signal, frame):
 
 
 
+def find_my_ip():
+    try:
+        ip = commands.getstatusoutput('ip -f inet addr show lo')
+        return ip
+    except:
+        log.error("Failed to find my IP address")
+
+
+
+def find_ip_from_string(str):
+    try:
+        ip = re.findall( r'[0-9]+(?:\.[0-9]+){3}',str)
+        return ip
+    except:
+        log.error("Failed to parse IP from string")
+
+
+
+def parse_ip_list(node_lst):
+    ip_list = []
+    try:
+        for node in node_lst:
+            ip = parse_ip_from_string(node[1])
+            ip_list.append(ip)
+        return ip_list
+    except:
+        log.error("Failed parsing IP list")
+
+
+
+def scan_subnet():
+    try:
+        log.info("- Scanning subnet range... -")
+        commands.getstatusoutput('nmap -sP 192.168.0.1/24')
+    except:
+        log.error("Failed to scan subnet")
+
+
+
+#returns list of nodes
+def find_rpi_nodes():
+    nodes = []
+    try:
+        for item in mac_list:
+            cmd = 'arp -na | grep -i '+item
+            nodes.append(commands.getstatusoutput(cmd))
+        return nodes
+    except:
+        log.error("Failed when trying to find RPi nodes")
+
+
+
+# ----------------------------------------!!Probably should do this in a thread
 # Starts by using bash nmap cmd to ping subnet
 # Next it looks for RPi specific MAC addresses
 # Lastly it parses IPs out of string
 # Returns list of IPs
-def discover_nodes():
-    commands.getstatusoutput('nmap -sP 192.168.0.1/24')
-    nodes = []
-    ip_list = []
+def discover_nodes():    
+    scan_subnet()
+    
+    log.info("DiscoverNodes - Finding RPi nodes ...")
+    nodes = find_rpi_nodes()
 
-    for item in mac_list:
-        cmd = 'arp -na | grep -i '+item
-        nodes.append(commands.getstatusoutput(cmd))
-
-    for node in nodes:
-        tmp = re.findall( r'[0-9]+(?:\.[0-9]+){3}',node[1])
-        ip_list.append(tmp)
+    log.info("DiscoverNodes - Parsing IP addresses")
+    ip_list = parse_ip_list(nodes)
     return ip_list
+
 
 
 
@@ -72,5 +134,8 @@ def discover_nodes():
 # arp request taken from
 # https://raspberrypi.stackexchange.com/questions/13936/find-raspberry-pi-address-on-local-network
 
-# regex expression taken from
+# regex IP string expression taken from
 # https://stackoverflow.com/questions/2890896/extract-ip-address-from-an-html-string-python
+
+# grabbing IP taken from
+# https://unix.stackexchange.com/questions/87468/is-there-an-easy-way-to-programmatically-extract-ip-address
