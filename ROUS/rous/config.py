@@ -1,5 +1,6 @@
 import logging as log
 import sys
+import signal
 
 
 log_file = "rous/rous.log"
@@ -21,3 +22,9 @@ def parse_whitelist():
 		return lst
 	except:
 		log.error("Failed to read whitelist")
+
+
+def handle_crtl_z(signal, frame):
+    log.info("Crtl Z -- Server shutting down")
+    sys.exit(0)
+

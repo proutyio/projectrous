@@ -1,5 +1,6 @@
 import socket
 import sys
+import signal
 import logging as log
 
 import rous.config
@@ -59,7 +60,7 @@ def parse_message(message):
 def check_service_exists(msg_lst):
     services = rous.services.all_services()
     for s in services:
-        if(msg_lst[0] == s):
+        if(msg_lst[0] == s): 
             return True
     return False
 
@@ -84,23 +85,15 @@ def main():
     rous.config.setup_logger()
     sock = start_server()
     
-
     # Main loop that waits from messages from other nodes
     while True:
         try:
             wait_for_message(sock)
 
-            # if not exit:
-            #     log.error("Server:%s - shutting down",server_address)
-            #     break
-
-        except(KeyboardInterrupt,RuntimeError):
+        except KeyboardInterrupt:
             log.error("Server:%s - main loop failure",server_address)
-            log.error("Exiting..")
-            sys.exit()
 
 
-
-
+signal.signal(signal.SIGINT, rous.config.handle_crtl_z)
 if __name__ == "__main__":
     main()
