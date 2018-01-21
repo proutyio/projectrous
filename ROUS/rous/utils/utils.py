@@ -2,10 +2,11 @@
 import sys
 import signal
 import commands
+import socket
 import re
 import logging as log
 
-log_file = "rous/utils/rous.log"
+log_file = "rous.log"
 whitelist = "rous/utils/whitelist.txt"
 mac_list = ['b8:27:eb','00:0f:60']
 
@@ -21,12 +22,12 @@ setup_logger()
 
 
 def read_from_whitelist():
-	try:
-		f = open(whitelist, "r")
-		lst = [line.split(',') for line in f.readlines()]
-		return lst
-	except:
-		log.error("Failed to read whitelist")
+    try:
+        f = open(whitelist, "r")
+        lst = [line.split(',') for line in f.readlines()]
+        return lst
+    except:
+        log.error("Failed to read whitelist")
 
 
 

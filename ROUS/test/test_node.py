@@ -9,6 +9,6 @@ def test_services():
 		node.run_service(msg_lst)
 
 
-test_services()
+# test_services()
 
 
