@@ -6,6 +6,7 @@ import logging as log
 import rous.utils.utils as utils
 import rous.utils.services as services
 
+threads = []
 
 #
 def find_server_address():

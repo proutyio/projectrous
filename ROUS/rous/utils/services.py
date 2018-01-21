@@ -1,6 +1,9 @@
 import logging as log
 import rous.utils.rpi_control as rpi
 
+green_threads = []
+yellow_threads = []
+
 ###### Service Functions #######
 def led_blink_green():
 	print "blink green"

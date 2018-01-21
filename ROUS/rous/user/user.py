@@ -27,14 +27,14 @@ def start_gui():
 			print "Option 6: All Colors OFF"
 			print 
 
-			services = {1 : send_message("led:solid:green:on"),
-						2 : send_message("led:solid:green:off"),
-						3 : send_message("led:solid:yellow:on"),
-						4 : send_message("led:solid:yellow:off"),
-						5 : send_message("led:all:on"),
-						6 : send_message("led:all:off"),
+			services = {1 : send_message,
+						# 2 : send_message("led:solid:green:off"),
+						# 3 : send_message("led:solid:yellow:on"),
+						# 4 : send_message("led:solid:yellow:off"),
+						# 5 : send_message("led:all:on"),
+						# 6 : send_message("led:all:off"),
 						}
-			services[int(input("Choose an option: "))]
+			services[int(input("Choose an option: "))]("led:solid:green:off")
 	except:
 		print "GUI Failed.."
 
