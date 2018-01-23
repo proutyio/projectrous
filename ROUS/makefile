@@ -44,4 +44,5 @@ clean:
 	rm -f rous/node/*.pyc
 	rm -f rous/user/*.pyc
 	rm -f rous/admin/*.pyc
+	rm -f rous/utils/*.pyc
 	rm -f test/*pyc

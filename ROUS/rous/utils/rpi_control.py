@@ -16,10 +16,10 @@ rpi.setup(pin_yellow,rpi.OUT)
 
 def thread_green_on():
 	try:
+		log.info("LED - green on")
 		for t in green_threads:
 			while getattr(t, "exit", True):
 				rpi.output(pin_green,rpi.HIGH)
-				log.info("LED - green on")
 	except:
 		log.error("Failed to turn green on")
 
@@ -40,10 +40,10 @@ def green_off():
 
 def thread_yellow_on():
 	try:
+		log.info("LED - yellow on")
 		for t in yellow_threads:
 			while getattr(t, "exit", True):
 				rpi.output(pin_yellow,rpi.HIGH)
-				log.info("LED - yellow on")
 	except:
 		log.error("Failed to turn yellow on")
 
@@ -60,5 +60,8 @@ def yellow_off():
 		t.exit = False
 		t.join()
 		log.info("LED - yellow off")
+
+
+
 
 
