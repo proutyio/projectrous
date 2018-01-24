@@ -23,9 +23,9 @@ def start_server():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         log.info("Starting server:%s ",server_address)
         sock.bind(server_address)
+        return sock
     except:
         log.error("Failed to start server:%s",server_address)
-    return sock
 
 
 

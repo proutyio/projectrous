@@ -34,7 +34,7 @@ def green_off():
 	rpi.output(pin_green,rpi.LOW)
 	for t in green_threads:
 		t.exit = False
-		t.join()
+		#t.join()
 		log.info("LED - green off")
 
 
@@ -58,7 +58,7 @@ def yellow_off():
 	rpi.output(pin_yellow,rpi.LOW)
 	for t in yellow_threads:
 		t.exit = False
-		t.join()
+		#t.join()
 		log.info("LED - yellow off")
 
 

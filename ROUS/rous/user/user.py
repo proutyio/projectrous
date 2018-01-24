@@ -3,20 +3,12 @@ import sys
 import threading
 import time
 import rous.utils.utils as utils
+import rous.utils.network as network
 
 
 port = 22000
 host_list = []
 threads = []
-
-
-
-def generate_host_list():
-	start_message_thread()
-	utils.scan_subnet()
-	end_message_thread()
-	nodes = utils.find_rpi_nodes() 
-	host_list.append(utils.parse_ip_list(nodes))
 
 
 
@@ -43,23 +35,33 @@ def end_message_thread():
 	print
 	for t in threads:
 		t.exit = False
-		t.join()
+		#t.join()
+
+
+
+def generate_host_list():
+	start_message_thread()
+	host_list.append(network.discover_nodes())
+	end_message_thread()
+
 
 
 
 def send_message(message):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	try:
-		for host in host_list[0]:
-			sent = sock.sendto(message, (host[0], port))
-
+		if host_list[0]:
+			for host in host_list[0]:
+				sent = sock.sendto(message, (host[0], port))
+		else:
+			print "\nNo Nodes Found\n"
 	finally:
 		sock.close()
 
 
 
 def start_gui():
-	try:
+	#try:
 		print
 		print "-----------------"
 		print " User Interface"
@@ -72,6 +74,7 @@ def start_gui():
 			print "Option 4: Yellow OFF"
 			print "Option 5: All Colors ON"
 			print "Option 6: All Colors OFF"
+			print "Option 7: Discover nodes"
 			print 
 
 
@@ -84,8 +87,9 @@ def start_gui():
 						}
 
 			send_message(services[int(input("Choose an option: "))])
-	except:
-		print "GUI Failed.."
+
+	#except:
+	#	print "GUI Failed.."
 
 
 
