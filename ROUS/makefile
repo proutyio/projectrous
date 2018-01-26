@@ -46,3 +46,4 @@ clean:
 	rm -f rous/admin/*.pyc
 	rm -f rous/utils/*.pyc
 	rm -f test/*pyc
+	rm -f rous.log

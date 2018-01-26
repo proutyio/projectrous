@@ -10,6 +10,7 @@ log_file = "rous.log"
 whitelist = "rous/utils/whitelist.txt"
 
 
+#
 def setup_logger():
     log.basicConfig(filename=log_file,
         format='%(asctime)s %(levelname)s\t%(message)s',
@@ -19,7 +20,7 @@ def setup_logger():
 setup_logger()
 
 
-
+#
 def read_from_whitelist(address):
     try:
         f = open(whitelist, "r")
@@ -29,7 +30,7 @@ def read_from_whitelist(address):
         log.error("%s - FAILED to read whitelist",address)
 
 
-
+#
 def write_to_whitelist(lst, address):
     erase_text_file(whitelist, address)
     try:
@@ -43,7 +44,7 @@ def write_to_whitelist(lst, address):
         log.error("%s - FAILED to write to whitelist",address)
 
 
-
+#
 def erase_text_file(text_file, address):
     try:
         f = open(text_file, 'r+')
@@ -52,7 +53,7 @@ def erase_text_file(text_file, address):
         log.error("%s - FAILED to erase text file",address)
 
 
-
+#
 def handle_crtl_z(address, signal, frame):
     log.info("%s - Crtl Z: Server shutting down",address)
     sys.exit(0)

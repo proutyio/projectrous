@@ -23,19 +23,19 @@ import rous.utils.utils as utils
 
 
 
-pins = {"green" : 18,
-		"red"	: 17,
-		"blue"	: 27,
-		}
+# pins = {"green" : 18,
+# 		"red"	: 17,
+# 		"blue"	: 27,
+# 		}
 
-threads = {"green" : [],}
+# threads = {"green" : [],}
 
-def thread(color):
-	try:
-		threads[color].append("test1")
-		threads[color].append("test2")
+# def thread(color):
+# 	try:
+# 		threads[color].append("test1")
+# 		threads[color].append("test2")
 
-		print threads["green"][1]
-	except:
-		pass
-thread("green")
+# 		print threads["green"][1]
+# 	except:
+# 		pass
+# thread("green")

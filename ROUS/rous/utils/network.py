@@ -9,11 +9,11 @@ import logging as log
 import rous.utils.utils as utils
 
 
-mac_list = ['b8:27:eb','00:0f:60']
 host = '224.0.0.0'
 port = 22400
 multicast_group = (host, port)
 server_address = ('', port)
+mac_list = ['b8:27:eb','00:0f:60']
 
 
 
@@ -35,7 +35,7 @@ def find_my_ip():
 
 
 
-
+#
 def start_multicast_reciever(address):
 	try:
 	    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -51,7 +51,7 @@ def start_multicast_reciever(address):
 
 
 
-
+#
 def send_multicast_message(message, address):
 	try:
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -62,11 +62,10 @@ def send_multicast_message(message, address):
 						)
 		sent = sock.sendto(str(message), multicast_group)
 		log.info("%s - SENT: %s", address, message)
+		sock.close()
+		return
 	except:
 		log.error("%s - FAILED to send: %s", address, message)
-	finally:
-		sock.close()
-
 
 
 

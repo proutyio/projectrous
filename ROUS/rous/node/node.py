@@ -16,6 +16,7 @@ threads = []
 self_ip = network.find_my_ip()
 
 
+# IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
     log.info("%s - WAITING to recieve data", self_ip)
     try:
@@ -25,12 +26,11 @@ def wait_for_message(sock):
 
         message = filter_messages(message, host)
 
-        print message
         if message:
             msg_str = parse_message(message)
-            if check_service_exists(msg_str):
-                if bid_on_service(sock):
-                    services.run_service(msg_str, self_ip)        
+            # if check_service_exists(msg_str):
+            if bid_on_service(sock):
+               services.run_service(msg_str, self_ip)        
 
     except(KeyboardInterrupt,RuntimeError):
             log.error("%s - FAILED wait_for_message", self_ip)
@@ -43,8 +43,10 @@ def filter_messages(message, host):
     for h in utils.read_from_whitelist(self_ip):
         for s in h:
             if(host == s.rstrip()):
+                log.info("%s - FILTERED message from: %s",self_ip,s.rstrip())
                 return []
     return message
+
 
 
 # takes in a tuple of (msg, (h,p))
@@ -56,6 +58,7 @@ def parse_message(message):
 
 
 
+#
 def check_service_exists(msg_str):
     for s in services.all_services():
         if(msg_str == s): 
@@ -64,8 +67,9 @@ def check_service_exists(msg_str):
 
 
 
+#
 def bid_on_service(sock):
-    TTL = 3 #seconds
+    TTL = 1 #seconds
     bids = []
     try:
         my_bid = random.randint(1,100)
@@ -73,19 +77,20 @@ def bid_on_service(sock):
         wait_for_bids(sock, bids, TTL)
         
         for b in bids:
-            print b
-            print my_bid
             if(my_bid > b):
                 log.info("%s - won bid", self_ip)
                 return True
+        log.info("%s - lost bid", self_ip)
         return False
     except:
        log.error("%s - FAILED bid on service", self_ip)
 
 
 
+# thread dies after it sends bid to multicast group
 def place_bid(my_bid):
     try:
+        log.info("%s - my bid: %s",self_ip, my_bid)
         t = threading.Thread(target=network.send_multicast_message, args=(my_bid, self_ip))
         t.start()
     except:
@@ -95,7 +100,7 @@ def place_bid(my_bid):
 
 # bid recieved as (bid, (host, port))
 def wait_for_bids(sock, bids, TTL):
-    #try:
+    try:
         timeout = time.time()+TTL
         while True:
             bid = sock.recvfrom(4096)
@@ -105,8 +110,8 @@ def wait_for_bids(sock, bids, TTL):
 
             if time.time() > timeout:
                 break
-    #except:
-        #log.error("%s - FAILED to wait on bids", self_ip)
+    except:
+        log.error("%s - FAILED to wait on bids", self_ip)
 
 
 
