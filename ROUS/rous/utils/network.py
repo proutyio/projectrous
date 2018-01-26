@@ -6,7 +6,7 @@ import socket
 import struct
 import re
 import logging as log
-import rous.utils.utils
+import rous.utils.utils as utils
 
 
 mac_list = ['b8:27:eb','00:0f:60']
@@ -14,6 +14,25 @@ host = '224.0.0.0'
 port = 22400
 multicast_group = (host, port)
 server_address = ('', port)
+
+
+
+# make a fake internet query, grab hostname, close socket
+# write ip to whitelist
+# return ip
+def find_my_ip():
+	try:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		sock.connect(("1.1.1.1", 80))
+		ip = sock.getsockname()[0]
+		sock.close()
+
+		#ignore message from myself
+		utils.write_to_whitelist([ip],ip)
+		return ip
+	except:
+		log.error("FAILED to find my IP address")
+
 
 
 
@@ -32,8 +51,9 @@ def start_multicast_reciever(address):
 
 
 
+
 def send_multicast_message(message, address):
-	#try:
+	try:
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		sock.settimeout(0.2)
 		sock.setsockopt(socket.IPPROTO_IP, 
@@ -42,25 +62,12 @@ def send_multicast_message(message, address):
 						)
 		sent = sock.sendto(str(message), multicast_group)
 		log.info("%s - SENT: %s", address, message)
+	except:
+		log.error("%s - FAILED to send: %s", address, message)
+	finally:
 		sock.close()
-		#except:
-		#	log.error("%s - FAILED to send: %s", address, message)
-		#finally:
-		    
-	#except:
-	#	log.error("%s - FAILED to send multicast message", address)
 
 
-
-def find_my_ip():
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.connect(("1.1.1.1", 80))
-        ip = sock.getsockname()[0]
-        sock.close()
-        return ip
-    except:
-        log.error("FAILED to find my IP address")
 
 
 

@@ -31,12 +31,12 @@ def read_from_whitelist(address):
 
 
 def write_to_whitelist(lst, address):
-    erase_text_file(whitelist)
+    erase_text_file(whitelist, address)
     try:
         f = open(whitelist, "a")
-        if lst[0]:
+        if lst:
             for l in lst:
-                f.write(l[0])
+                f.write(l)
                 f.write("\n")
         f.close()
     except:

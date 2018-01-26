@@ -41,12 +41,12 @@ def test():
 
 ################################
 
-def run_service(service):
+def run_service(service, address):
 	try:
 		services[service]()
-		log.info("Running Service: %s",service[0])
+		log.info("%s - RUNNING Service: %s",address,service)
 	except:
-		log.error("Failed to run service: %s",service[0])
+		log.error("%s - FAILED to run service: %s",address,service)
 
 
 def all_services():

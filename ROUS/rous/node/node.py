@@ -23,17 +23,28 @@ def wait_for_message(sock):
         message = (data,(host,port))
         log.info("%s - RECIEVED: %s", self_ip, message)
 
-        #message = filter_messages()
+        message = filter_messages(message, host)
 
+        print message
         if message:
             msg_str = parse_message(message)
             if check_service_exists(msg_str):
                 if bid_on_service(sock):
-                    services.run_service(msg_str)        
+                    services.run_service(msg_str, self_ip)        
 
     except(KeyboardInterrupt,RuntimeError):
             log.error("%s - FAILED wait_for_message", self_ip)
 
+
+
+# if host is in list return empty list
+# else return original list
+def filter_messages(message, host):
+    for h in utils.read_from_whitelist(self_ip):
+        for s in h:
+            if(host == s.rstrip()):
+                return []
+    return message
 
 
 # takes in a tuple of (msg, (h,p))
@@ -54,20 +65,22 @@ def check_service_exists(msg_str):
 
 
 def bid_on_service(sock):
-    TTL = 5 #seconds
+    TTL = 3 #seconds
     bids = []
-
-    #try:
-    my_bid = random.randint(1,100)
-    place_bid(my_bid)
-    wait_for_bids(sock, bids, TTL)
-    
-    for b in bids:
-        if(my_bid >= b):
-            return True
-    return False
-    #except:
-       # log.error("%s - FAILED bid on service", self_ip)
+    try:
+        my_bid = random.randint(1,100)
+        place_bid(my_bid)
+        wait_for_bids(sock, bids, TTL)
+        
+        for b in bids:
+            print b
+            print my_bid
+            if(my_bid > b):
+                log.info("%s - won bid", self_ip)
+                return True
+        return False
+    except:
+       log.error("%s - FAILED bid on service", self_ip)
 
 
 
@@ -80,11 +93,13 @@ def place_bid(my_bid):
 
 
 
+# bid recieved as (bid, (host, port))
 def wait_for_bids(sock, bids, TTL):
     #try:
         timeout = time.time()+TTL
         while True:
             bid = sock.recvfrom(4096)
+            
             if bid[0].isdigit():
                 bids.append(int(bid[0]))
 
