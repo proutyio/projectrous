@@ -14,6 +14,26 @@ rpi.setwarnings(False)
 rpi.setup(pin_green,rpi.OUT)
 rpi.setup(pin_yellow,rpi.OUT)
 
+pins = {"green" : 18,
+		"red"	: 17,
+		"blue"	: 27,
+		}
+
+threads = {"green" : [],}
+
+def thread(color):
+	try:
+		threads[color].append("test")
+		print threads
+	except:
+		pass
+thread("green")
+
+
+# def start_thread(color):
+
+
+# def stop_thread(color):
 def thread_green_on():
 	try:
 		log.info("LED - green on")

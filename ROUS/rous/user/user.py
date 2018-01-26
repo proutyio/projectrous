@@ -41,7 +41,9 @@ def end_message_thread():
 
 def generate_host_list():
 	start_message_thread()
-	host_list.append(network.discover_nodes())
+	iplist = network.discover_nodes()
+	print iplist
+	host_list.append(iplist)
 	end_message_thread()
 
 
@@ -50,11 +52,11 @@ def generate_host_list():
 def send_message(message):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	try:
-		if host_list[0]:
+		#if host_list[0]:
 			for host in host_list[0]:
 				sent = sock.sendto(message, (host[0], port))
-		else:
-			print "\nNo Nodes Found\n"
+		#else:
+		#	print "\nNo Nodes Found\n"
 	finally:
 		sock.close()
 

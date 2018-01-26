@@ -1,100 +1,112 @@
+#!/usr/bin/python
 import socket
 import sys
 import signal
+import struct
+import random
+import threading
+import time
 import logging as log
-
+from functools import partial
 import rous.utils.utils as utils
 import rous.utils.services as services
+import rous.utils.network as network
 
 threads = []
-
-#
-def find_server_address():
-    port = 22000
-    host = utils.find_my_ip()
-    return (host,port)
-server_address = find_server_address()
+self_ip = network.find_my_ip()
 
 
-
-# Setup socket and bind to server address
-def start_server():
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        log.info("Starting server:%s ",server_address)
-        sock.bind(server_address)
-        return sock
-    except:
-        log.error("Failed to start server:%s",server_address)
-
-
-
-# This function will live in a while loop and waits to receive a messge
-# When it recieves a message it then checks what it should do then will
-#   send a reply
 def wait_for_message(sock):
-    log.info("Server:%s - waiting to receive message", server_address)
+    log.info("%s - WAITING to recieve data", self_ip)
     try:
-        message, address = sock.recvfrom(4096)
-        log.info("Server:%s - received %s from %s",server_address,(message,len(message)),address)
-       
+        data, (host,port) = sock.recvfrom(4096)
+        message = (data,(host,port))
+        log.info("%s - RECIEVED: %s", self_ip, message)
+
+        #message = filter_messages()
+
         if message:
-            msg_lst = parse_message(message)
-            check = check_service_exists(msg_lst)
-            if check:
-                run_service(msg_lst)        
+            msg_str = parse_message(message)
+            if check_service_exists(msg_str):
+                if bid_on_service(sock):
+                    services.run_service(msg_str)        
 
     except(KeyboardInterrupt,RuntimeError):
-            log.error("Server:%s - sock.recvfrom had an error",server_address)
+            log.error("%s - FAILED wait_for_message", self_ip)
 
 
 
-# breaks message by newline into list then splits
-#   by : to break list into sublists
+# takes in a tuple of (msg, (h,p))
+# returns string 
 def parse_message(message):
-    msg_lst = message.split()
-    return msg_lst
+    msg_lst = message[0].split()
+    msg_str = msg_lst[0]
+    return msg_str
 
 
 
-# Grabs services from services module. Checks if
-#   service is in passed in list
-def check_service_exists(msg_lst):
-    svc = services.all_services()
-    for s in svc:
-        if(msg_lst[0] == s): 
+def check_service_exists(msg_str):
+    for s in services.all_services():
+        if(msg_str == s): 
             return True
     return False
 
 
 
-# Passes service to services module which then returns
-#   message to be sent...must do it this way because socket
-#   is in this module
-def run_service(msg_lst):
-    return services.run_service(msg_lst)
+def bid_on_service(sock):
+    TTL = 5 #seconds
+    bids = []
 
-
-
-#
-def send_message():
-    pass
-
-
-
-#
-def main():
-    sock = start_server()
+    #try:
+    my_bid = random.randint(1,100)
+    place_bid(my_bid)
+    wait_for_bids(sock, bids, TTL)
     
-    # Main loop that waits from messages from other nodes
+    for b in bids:
+        if(my_bid >= b):
+            return True
+    return False
+    #except:
+       # log.error("%s - FAILED bid on service", self_ip)
+
+
+
+def place_bid(my_bid):
+    try:
+        t = threading.Thread(target=network.send_multicast_message, args=(my_bid, self_ip))
+        t.start()
+    except:
+        log.error("%s - FAILED to place bid", self_ip)
+
+
+
+def wait_for_bids(sock, bids, TTL):
+    #try:
+        timeout = time.time()+TTL
+        while True:
+            bid = sock.recvfrom(4096)
+            if bid[0].isdigit():
+                bids.append(int(bid[0]))
+
+            if time.time() > timeout:
+                break
+    #except:
+        #log.error("%s - FAILED to wait on bids", self_ip)
+
+
+
+# Main loop that waits from messages from other nodes
+def main():
+    sock = network.start_multicast_reciever(self_ip)
     while True:
         try:
             wait_for_message(sock)
 
         except KeyboardInterrupt:
-            log.error("Server:%s - main loop failure",server_address)
+            log.error("%s - FAILED main loop", self_ip)
 
 
-signal.signal(signal.SIGINT, utils.handle_crtl_z)
+
+signal.signal(signal.SIGINT, partial(utils.handle_crtl_z, self_ip))
 if __name__ == "__main__":
     main()
