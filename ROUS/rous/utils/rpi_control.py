@@ -8,6 +8,63 @@ pin_green = 17
 pin_yellow = 18
 green_threads = []
 yellow_threads = []
+threads = []
+p1 = 18
+# p2 = 17
+p3 = 23
+rpi.setmode(rpi.BCM)
+rpi.setwarnings(False)
+rpi.setup(p1,rpi.OUT)
+# rpi.setup(p2,rpi.OUT)
+rpi.setup(p3,rpi.OUT)
+
+
+def led_solid_green_on():
+	#thread = threading.currentThread()
+	for t in threads:
+		while getattr(t, "do_run", True):
+			rpi.output(p1,rpi.HIGH)
+			# rpi.output(p2,rpi.LOW)
+			rpi.output(p3,rpi.LOW)
+
+
+def green_off():
+	rpi.output(p1,rpi.LOW)
+	# rpi.output(p2,rpi.LOW)
+	rpi.output(p3,rpi.LOW)
+	for t in threads:
+		t.do_run = False
+		t.join()
+		
+
+
+def green_on():
+	t = threading.Thread(target=led_solid_green_on)
+	threads.append(t)
+	t.start()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #rpi.setup(pin_yellow,rpi.OUT)
@@ -68,40 +125,40 @@ yellow_threads = []
 	# for t in green_threads:
 	# 	t.join()
 
-class MyThread(threading.Thread):
-    def __init__(self, *args, **kwargs):
-        super(MyThread, self).__init__(*args, **kwargs)
-        self._stop = threading.Event()
+# class MyThread(threading.Thread):
+#     def __init__(self, *args, **kwargs):
+#         super(MyThread, self).__init__(*args, **kwargs)
+#         self._stop = threading.Event()
 
-    def stop(self):
-        self._stop.set()
+#     def stop(self):
+#         self._stop.set()
 
-    def stopped(self):
-        return self._stop.isSet()
+#     def stopped(self):
+#         return self._stop.isSet()
 
-def thread_on():
-	for t in green_threads:
-		while not t.stopped():
-			rpi.setmode(rpi.BCM)
-			rpi.setwarnings(False)
-			rpi.setup(pin_green,rpi.OUT)
-			rpi.output(pin_green,rpi.HIGH)
-			time.sleep(.05)
+# def thread_on():
+# 	for t in green_threads:
+# 		while not t.stopped():
+# 			rpi.setmode(rpi.BCM)
+# 			rpi.setwarnings(False)
+# 			rpi.setup(pin_green,rpi.OUT)
+# 			rpi.output(pin_green,rpi.HIGH)
+# 			time.sleep(.05)
 
-def green_off():
-	for t in green_threads:
-		t.stop()
-		t.join()
-	rpi.setmode(rpi.BCM)
-	rpi.setwarnings(False)
-	rpi.setup(pin_green,rpi.OUT)
-	rpi.output(pin_green,rpi.LOW)
+# def green_off():
+# 	for t in green_threads:
+# 		t.stop()
+# 		t.join()
+# 	rpi.setmode(rpi.BCM)
+# 	rpi.setwarnings(False)
+# 	rpi.setup(pin_green,rpi.OUT)
+# 	rpi.output(pin_green,rpi.LOW)
 
 
-def green_on():
-    t = MyThread(target=thread_on)
-    t.start()
-    green_threads.append(t)
+# def green_on():
+#     t = MyThread(target=thread_on)
+#     t.start()
+#     green_threads.append(t)
    
 
 
