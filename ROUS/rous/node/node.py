@@ -25,7 +25,7 @@ def wait_for_message(sock):
         data, (host,port) = sock.recvfrom(19)
         message = (data,(host,port))        
 
-        if not filter_message(host):
+        if not filter_message(host, data):
             print
             print self_ip+" RECIEVED: "+message[0]+" "+message[1][0]+" "+str(message[1][1])
 
@@ -39,10 +39,10 @@ def wait_for_message(sock):
 
 # if host is in list return empty true
 # else return original list
-def filter_message(host):
+def filter_message(host, data):
     for h in utils.read_from_whitelist(self_ip):
         for s in h:
-            if(host == s.rstrip()):
+            if((host == s.rstrip()) or (str(data) == "stop") or (data.isdigit())):
                 #log.info("%s - FILTERED message from: %s",self_ip,s.rstrip())
                 return True
     return False
@@ -97,14 +97,15 @@ def place_bid(my_bid):
 
 
 def thread_check_time():
-    TTL = .3
+    TTL = .5
     timeout = time.time()+TTL
     
     global stop
     while True:
         if(time.time() > timeout):
-            stop = False
-            #network.send_multicast_message(self_ip,"adadadadadadadaa")
+            stop = True
+            time.sleep(.1)
+            network.send_multicast_message("stop",self_ip)
             print "stop"
             break
 
@@ -119,15 +120,20 @@ def check_time():
 # bid recieved as (bid, (host, port))
 def wait_for_bids(sock, bids):
     global stop
-    stop = True
+    stop = False
     
     check_time()
-    bid, (host,port) = sock.recvfrom(1024)
-    print bid
+    while True:
+        
+        if stop:
+            break
+
+        bid, (host,port) = sock.recvfrom(4)
+        #print bid
         #break
-    if not filter_message(host):
-        if bid.isdigit():
-            bids.append(int(bid))
+        if not filter_message(host, ""):
+            if bid.isdigit():
+                bids.append(int(bid))
     #time.sleep(.1)
 
 
