@@ -16,19 +16,19 @@ import rous.utils.network as network
 
 threads = []
 self_ip = network.find_my_ip()
-queue = Queue()
 
 
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
     while True:
+
         data, (host,port) = sock.recvfrom(19)
-        message = (data,(host,port))
-        #log.info("%s - RECIEVED: %s", self_ip, message)
-        print
-        print self_ip+" RECIEVED: "+message[0]+" "+message[1][0]+" "+str(message[1][1])
+        message = (data,(host,port))        
 
         if not filter_message(host):
+            print
+            print self_ip+" RECIEVED: "+message[0]+" "+message[1][0]+" "+str(message[1][1])
+
             if message:
                 msg_str = parse_message(message)
                 if check_service_exists(msg_str):
@@ -70,7 +70,6 @@ def check_service_exists(msg_str):
 #
 def bid_on_service(sock):
     bids = []
-
     my_bid = random.randint(1,100)
     place_bid(my_bid)
     wait_for_bids(sock, bids)
@@ -98,12 +97,15 @@ def place_bid(my_bid):
 
 
 def thread_check_time():
-    TTL = 2
+    TTL = .3
     timeout = time.time()+TTL
+    
     global stop
     while True:
         if(time.time() > timeout):
-            stop = True
+            stop = False
+            #network.send_multicast_message(self_ip,"adadadadadadadaa")
+            print "stop"
             break
 
 
@@ -117,20 +119,16 @@ def check_time():
 # bid recieved as (bid, (host, port))
 def wait_for_bids(sock, bids):
     global stop
-    stop = False
+    stop = True
     
     check_time()
-    while True:
-        if stop:
-            break
-        print stop
-        if sock.recv:
-            bid, (host,port) = sock.recvfrom(3)
-
-            if not filter_message(host):
-                if bid.isdigit():
-                    bids.append(int(bid))
-
+    bid, (host,port) = sock.recvfrom(1024)
+    print bid
+        #break
+    if not filter_message(host):
+        if bid.isdigit():
+            bids.append(int(bid))
+    #time.sleep(.1)
 
 
 def main():
