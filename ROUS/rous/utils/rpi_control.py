@@ -4,14 +4,13 @@ import threading
 import logging as log
 import rous.utils.utils as utils
 
-pin_green = 17
-pin_yellow = 18
-green_threads = []
-yellow_threads = []
+
 threads = []
 p1 = 18
 # p2 = 17
 p3 = 23
+
+
 rpi.setmode(rpi.BCM)
 rpi.setwarnings(False)
 rpi.setup(p1,rpi.OUT)
@@ -20,28 +19,37 @@ rpi.setup(p3,rpi.OUT)
 
 
 def led_solid_green_on():
-	#thread = threading.currentThread()
-	for t in threads:
-		while getattr(t, "do_run", True):
-			rpi.output(p1,rpi.HIGH)
-			# rpi.output(p2,rpi.LOW)
-			rpi.output(p3,rpi.LOW)
+	# thread = threading.currentThread()
+	# for t in threads:
+	while getattr(threads[0], "exit", True):
+		rpi.output(p1,rpi.HIGH)
+		# rpi.output(p2,rpi.LOW)
+		rpi.output(p3,rpi.LOW)
+		time.sleep(.1)
 
 
 def green_off():
-	rpi.output(p1,rpi.LOW)
-	# rpi.output(p2,rpi.LOW)
-	rpi.output(p3,rpi.LOW)
-	for t in threads:
-		t.do_run = False
-		t.join()
+	if threads:
+
+		threads[0].exit = False
+
+		threads[0].join()
+		rpi.output(p1,rpi.LOW)
+		# rpi.output(p2,rpi.LOW)
+		rpi.output(p3,rpi.LOW)
+		del threads[:]
+		
 		
 
 
 def green_on():
-	t = threading.Thread(target=led_solid_green_on)
-	threads.append(t)
-	t.start()
+	if not threads:
+		t = threading.Thread(target=led_solid_green_on)
+		threads.append(t)
+		# print "on"
+		# print threads
+		t.start()
+
 
 
 

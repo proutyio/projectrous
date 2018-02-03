@@ -33,13 +33,13 @@ def run_service(service, address):
 		# log.info("%s - RUNNING Service: %s",address,service)
 		
 
-		# services = {"led:solid:green:on" : led_solid_green_on(address),
-		# 			"led:solid:green:off" : led_solid_green_off(address),
-		# 			}
+		
 		# services[service]
 	#except:
 	#	log.error("%s - FAILED to run service: %s",address,service)
-
+services = {"led:solid:green:on" : "",
+			"led:solid:green:off" : "",
+ 			}
 
 def all_services():
 	return services

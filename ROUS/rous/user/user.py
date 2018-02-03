@@ -16,11 +16,12 @@ def start_gui():
 		print "-----------------"	
 		while exit:
 			print
-			print "Option 1: Green ON"
-			print "Option 2: Green OFF"
-			print "Option 3: Yellow ON"
-			print "Option 4: Yellow OFF"
+			print "Option 1: ON"
+			print "Option 2: OFF"
+			# print "Option 3: Yellow ON"
+			# print "Option 4: Yellow OFF"
 			print 
+			print
 
 
 			services = {1 : "led:solid:green:on",

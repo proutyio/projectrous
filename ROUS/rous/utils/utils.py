@@ -25,6 +25,7 @@ def read_from_whitelist(address):
     try:
         f = open(whitelist, "r")
         lst = [line.split(',') for line in f.readlines()]
+        f.close()
         return lst
     except:
         log.error("%s - FAILED to read whitelist",address)
@@ -49,6 +50,7 @@ def erase_text_file(text_file, address):
     try:
         f = open(text_file, 'r+')
         f.truncate()
+        f.close()
     except:
         log.error("%s - FAILED to erase text file",address)
 

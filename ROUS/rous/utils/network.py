@@ -11,8 +11,8 @@ import rous.utils.utils as utils
 
 host = '224.0.0.0'
 port = 22400
-multicast_group = (host, port)
 server_address = ('', port)
+multicast_group = (host, port)
 mac_list = ['b8:27:eb','00:0f:60']
 
 
@@ -37,35 +37,31 @@ def find_my_ip():
 
 #
 def start_multicast_reciever(address):
-	try:
-	    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	    sock.bind(server_address)
-	    sock.setsockopt(socket.IPPROTO_IP, 
-	                    socket.IP_ADD_MEMBERSHIP, 
-	                    struct.pack('4sL', socket.inet_aton(host), socket.INADDR_ANY)
-	                    )
-	    log.info("%s - STARTED multicast reciever", address)
-	    return sock
-	except:
-		log.error("%s - FAILED to start multicast reciever", address)
-
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	sock.bind(server_address)
+	sock.setsockopt(socket.IPPROTO_IP, 
+                    socket.IP_ADD_MEMBERSHIP, 
+                    struct.pack('4sL', socket.inet_aton(host), socket.INADDR_ANY)
+                    )
+	log.info("%s - STARTED multicast reciever", address)
+	return sock
+	
 
 
 #
 def send_multicast_message(message, address):
-	try:
+	#try:
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		sock.settimeout(0.2)
 		sock.setsockopt(socket.IPPROTO_IP, 
 						socket.IP_MULTICAST_TTL, 
 						struct.pack('b', 1)
 						)
 		sent = sock.sendto(str(message), multicast_group)
-		log.info("%s - SENT: %s", address, message)
 		sock.close()
-		return
-	except:
-		log.error("%s - FAILED to send: %s", address, message)
+		log.info("%s - SENT: %s", address, message)
+		
+	#except:
+		#log.error("%s - FAILED to send: %s", address, message)
 
 
 
