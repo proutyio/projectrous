@@ -1,0 +1,21 @@
+/* All */
+
+body,
+html {
+    font-family: "Arial", Arial, serif;
+    margin:0;
+    padding:0;
+    color:#000;
+    background-color: darkcyan;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height:auto;
+}
+main{
+    max-height:-webkit-fill-available;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
