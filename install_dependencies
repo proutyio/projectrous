@@ -5,13 +5,12 @@ clear
 echo " Hi!, installing ROUS dependencies..."
 
 apt-get update
-apt-get install -y apache2 apache2-doc apache2-utils 
-apt-get install -y libapache2-mod-php php php-pear php-xcache 
-apt-get install -y php-mysql 
-apt-get install -y mysql-server mysql-client 
 apt-get install -y cups 
 apt-get install -y python-cups 
 apt-get install -y python-pip
+apt-get dist-upgrade
+curl -sL https://deb.nodesource.com/setup_8.x
+apt-get install -y nodejs
 
 
 if [ $( stat --printf="%s" requirements.txt ) -gt 0 ]
