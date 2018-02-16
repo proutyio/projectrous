@@ -19,8 +19,6 @@ rpi.setup(p3,rpi.OUT)
 
 
 def led_solid_green_on():
-	# thread = threading.currentThread()
-	# for t in threads:
 	while getattr(threads[0], "exit", True):
 		rpi.output(p1,rpi.HIGH)
 		# rpi.output(p2,rpi.LOW)
@@ -30,9 +28,7 @@ def led_solid_green_on():
 
 def green_off():
 	if threads:
-
 		threads[0].exit = False
-
 		threads[0].join()
 		rpi.output(p1,rpi.LOW)
 		# rpi.output(p2,rpi.LOW)
@@ -40,14 +36,10 @@ def green_off():
 		del threads[:]
 		
 		
-
-
 def green_on():
 	if not threads:
 		t = threading.Thread(target=led_solid_green_on)
 		threads.append(t)
-		# print "on"
-		# print threads
 		t.start()
 
 

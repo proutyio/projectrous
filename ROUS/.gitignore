@@ -1,3 +1,4 @@
 *.pyc
 *.log
 whitelist.txt
+node_modules/

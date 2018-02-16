@@ -13,8 +13,6 @@ host = '224.0.0.0'
 port = 22400
 server_address = ('', port)
 multicast_group = (host, port)
-mac_list = ['b8:27:eb','00:0f:60']
-
 
 
 # make a fake internet query, grab hostname, close socket
@@ -45,7 +43,7 @@ def start_multicast_reciever(address):
                     )
 	log.info("%s - STARTED multicast reciever", address)
 	return sock
-	
+
 
 
 #

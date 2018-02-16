@@ -22,7 +22,7 @@ self_ip = network.find_my_ip()
 def wait_for_message(sock):
     while True:
 
-        data, (host,port) = sock.recvfrom(19)
+        data, (host,port) = sock.recvfrom(1024)
         message = (data,(host,port))        
 
         if not filter_message(host, data):
@@ -70,7 +70,8 @@ def check_service_exists(msg_str):
 #
 def bid_on_service(sock):
     bids = []
-    my_bid = random.randint(1,100)
+    my_bid = random.randint(1,1000)
+
     place_bid(my_bid)
     wait_for_bids(sock, bids)
 
@@ -96,23 +97,20 @@ def place_bid(my_bid):
 
 
 
-def thread_check_time():
-    TTL = .5
+def thread_timer():
+    TTL = .4
     timeout = time.time()+TTL
     
     global stop
     while True:
         if(time.time() > timeout):
             stop = True
-            time.sleep(.1)
             network.send_multicast_message("stop",self_ip)
-            print "stop"
             break
 
 
-
-def check_time():
-    t = threading.Thread(target=thread_check_time)
+def timer():
+    t = threading.Thread(target=thread_timer)
     t.start()
 
 
@@ -122,19 +120,17 @@ def wait_for_bids(sock, bids):
     global stop
     stop = False
     
-    check_time()
+    timer()
     while True:
-        
         if stop:
+            stop = False
             break
+        print stop
+        bid, (host,port) = sock.recvfrom(1024)
 
-        bid, (host,port) = sock.recvfrom(4)
-        #print bid
-        #break
         if not filter_message(host, ""):
             if bid.isdigit():
                 bids.append(int(bid))
-    #time.sleep(.1)
 
 
 def main():
