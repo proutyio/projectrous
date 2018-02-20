@@ -8,7 +8,7 @@ apt-get update
 apt-get install -y cups 
 apt-get install -y python-cups 
 apt-get install -y python-pip
-apt-get dist-upgrade
+apt-get -y dist-upgrade
 curl -sL https://deb.nodesource.com/setup_8.x
 apt-get install -y nodejs
 
@@ -19,3 +19,6 @@ then
 else
     printf "No requirments necessary\n"
 fi
+
+
+npm install -g -y create-react-app
