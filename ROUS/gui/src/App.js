@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { columns } from 'react-columns';
 import beaver1 from './beaver1.svg';
 import './App.css';
 import {LedsForm, Dropdown, LedState, PrintForm} from './user-objects.js';
@@ -10,7 +10,7 @@ class App extends Component {
   
   render() {
     
-
+    var Columns = require('react-columns');
     return (
       <div className="App">
         <header className="App-header">
@@ -20,10 +20,10 @@ class App extends Component {
         <p className="App-intro">
          
         </p>
-        
-        <LedsForm />
+        <Columns columns="2" gap="10px">
         <PrintForm />
-        
+        <LedsForm />  
+        </Columns>
       
       
       </div>

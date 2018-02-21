@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { columns } from 'react-columns';
 import beaver1 from './beaver1.svg';
 import './App.css';
 
@@ -60,9 +61,20 @@ class LedState extends React.Component {
 export
 class LedsForm extends React.Component{
   render(){
+    var Columns = require('react-columns');
     return(
       <div className="LedsForm" >
-        <h2>Led's</h2>
+        <h2>LED's</h2>
+        <div className="LedButtons">
+          <Columns columns="6" gap="5px">
+            <div class="LED_Button" onClick="" id="red_LED" />
+            <div class="LED_Button" onClick="" id="yellow_LED" />
+            <div class="LED_Button" onClick="" id="green_LED" />
+            <div class="LED_Button" onClick="" id="blue_LED" />
+            <div class="LED_Button" onClick="" id="pink_LED" />
+            <div class="LED_Button" onClick="" id="white_LED" />
+          </Columns>
+        </div>
         <Dropdown />
         <LedState />
       </div>
