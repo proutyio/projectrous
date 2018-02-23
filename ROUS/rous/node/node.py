@@ -26,9 +26,12 @@ def wait_for_message(sock):
         message = (data,(host,port))        
 
         if not filter_message(host, data):
-            print
-            print self_ip+" RECIEVED: "+message[0]+" "+message[1][0]+" "+str(message[1][1])
-
+            # print
+            # print self_ip+" RECIEVED: "+message[0]+" "+message[1][0]+" "+str(message[1][1])
+            network.send_multicast_message(self_ip+" RECIEVED: "+
+                                                    message[0]+" "+
+                                                    message[1][0]+
+                                                    " "+str(message[1][1]))
             if message:
                 msg_str = parse_message(message)
                 if check_service_exists(msg_str):
@@ -37,7 +40,7 @@ def wait_for_message(sock):
 
 
 
-# if host is in list return empty true
+# if host is in list return true, returns empty list
 # else return original list
 def filter_message(host, data):
     for h in utils.read_from_whitelist(self_ip):
@@ -58,7 +61,9 @@ def parse_message(message):
 
 
 
-#
+#calls function in services module that returns list of
+#   services in services module. Then loop list and find if
+#   input string is in list.
 def check_service_exists(msg_str):
     for s in services.all_services():
         if(msg_str == s): 
