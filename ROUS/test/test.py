@@ -1,5 +1,18 @@
-
 import rous.utils.utils as utils
+import rous.utils.network as network
+
+
+
+def send():
+	print "test"
+	network.send_multicast_message("testing_send","address")
+send()
+
+
+
+
+
+
 
 
 # def test_node_dicovery():
