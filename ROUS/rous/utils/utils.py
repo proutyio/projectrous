@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from os import path
 import sys
 import signal
 import commands
@@ -61,3 +62,15 @@ def handle_crtl_z(address, signal, frame):
     sys.exit(0)
 
 
+
+def root_path():
+    current = path.dirname(__file__)
+    root = path.abspath(path.join(current,"..",".."))
+    return root
+
+
+def file_path(basepath):
+    try:
+        return path.abspath(path.join(root_path(),basepath))
+    except:
+        print "file path not found"

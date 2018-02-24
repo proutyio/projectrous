@@ -1,21 +1,25 @@
 import ConfigParser
 import imp
+import rous.utils.utils
 
-path = "default.ini"
+path = "rous/node/configuration.ini"
+
+#
+def config_path(basepath):
+	return utils.file_path(basepath)
 
 
 # returns a config file object
-def configparser(file):
+def config_parser(file):
 	config = ConfigParser.SafeConfigParser()
 	config.read(file)
 	return config
 
 
-
 # scans config file and returns list of all
 # 	the services that are defined
 def all_services():
-	config = configparser(path)
+	config = config_parser( path )
 	services = []
 	for section in config.sections():
 		for (function, file) in config.items(section): 
@@ -24,13 +28,15 @@ def all_services():
 	return services
 
 
-
 #
 def call_service(service, sender_address):
-	config = configparser(path)
+	config = config_parser( config_path(path) )
 	for section in config.sections():
 		for (function, file) in config.items(section): 
-			if (function == service):
-				obj = imp.load_source(function, file)
-				# this calls the function
-				getattr(obj, function)(sender_address)
+			if(function == service):
+				filepath = utils.file_path(file)
+				module = imp.load_source(function, filepath)
+				call_func = getattr(module, function)
+				call_func(sender_address)
+				return True
+	return False
