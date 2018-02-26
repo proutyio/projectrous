@@ -1,22 +1,33 @@
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 8002;
-
+var port = process.env.PORT || 4242;
 
 
 function react_backend() {
-	app.get('/test', (req, res) => {
-	  res.send({ test: 'test' });
-	});
-
-	// app.get('/', function(req, res) {
-	//     res.sendFile(path.join(__dirname + '/static/index.html'));
-	// });
-
+	routes();
 	app.listen(port, () => console.log(`Listening on port ${port}`));
 }
 react_backend();
 
+
+
+function routes() {
+	app.get('/user', function(req, res) {
+	    res.sendFile(__dirname + '/static/user.html');
+	});
+
+	app.get('/admin', function(req, res) {
+	    res.sendFile(__dirname + '/static/admin.html');
+	});
+
+	app.get('/test', function(req, res) {
+	  res.send({ test: 'test' });
+	});
+
+	app.post('/sendmessage', function(req,res){
+		console.log("working");
+	});
+}
 
 
 function multicast_listener() {
