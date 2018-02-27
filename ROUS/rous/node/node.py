@@ -7,14 +7,12 @@ import random
 import threading
 import time
 import logging as log
-from Queue import Queue
 from functools import partial
 import rous.utils.utils as utils
 import rous.utils.services as services
 import rous.utils.network as network
 
 
-threads = []
 self_ip = network.find_my_ip()
 
 

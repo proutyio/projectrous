@@ -2,18 +2,18 @@ import os
 import sys
 import time
 import logging as log
-import rous.utils.config as cfg
+import rous.utils.config as config
 import rous.utils.printer as printer
 # import rous.utils.rpi_control as rpi
 
 
 
 def all_services():
-	return cfg.all_services()
+	return config.all_services()
 
 
 def run_service(service, sender_address):
-	if not cfg.call_service(service, sender_address):
+	if not config.call_service(service, sender_address):
 		print "failed"
 		log.info("%s Error - Failed to call serivce", sender_address)
 
