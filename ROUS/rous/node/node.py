@@ -37,6 +37,9 @@ def wait_for_message(sock):
             msg_str = parse_message(message)
             if check_service_exists(msg_str):
                 if bid_on_service(sock):
+                    network.send_multicast_message("MESSAGE: "+message[0]
+                        +" "+message[1][0]
+                        +" "+str(message[1][1]), self_ip)
                     services.run_service(msg_str, self_ip)
 
 
@@ -44,6 +47,7 @@ def wait_for_message(sock):
 # if host is in list return true, returns empty list
 # else return original list
 def filter_message(host, data):
+    #network.send_multicast_message("TRUST "+self_ip+" checking message", self_ip)
     for h in utils.read_from_whitelist(self_ip):
         for s in h:
             if((host == s.rstrip()) or (str(data) == "stop") or (data.isdigit())):
@@ -66,6 +70,7 @@ def parse_message(message):
 #   services in services module. Then loop list and find if
 #   input string is in list.
 def check_service_exists(msg_str):
+    #network.send_multicast_message("CHECK "+self_ip+" checking if service exists", self_ip)
     for s in services.all_services():
         if(msg_str == s): 
             return True
@@ -97,7 +102,8 @@ def bid_on_service(sock):
 
 
 # thread dies after it sends bid to multicast group
-def place_bid(my_bid):  
+def place_bid(my_bid):
+    #network.send_multicast_message("PLACE BID "+self_ip+" waiting on messages", self_ip) 
     t = threading.Thread(target=network.send_multicast_message, args=(my_bid, self_ip))
     t.start()
 
@@ -123,6 +129,7 @@ def timer():
 
 # bid recieved as (bid, (host, port))
 def wait_for_bids(sock, bids):
+    #network.send_multicast_message("BID WAIT "+self_ip+" waiting on bids", self_ip)
     global stop
     stop = False
     
@@ -141,7 +148,7 @@ def wait_for_bids(sock, bids):
 
 def main():
     #try:
-        print "start"
+        network.send_multicast_message("STARTING "+self_ip+" node starting up", self_ip)
         sock = network.start_multicast_reciever(self_ip)
         wait_for_message(sock)
    # except:

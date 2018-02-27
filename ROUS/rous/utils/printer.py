@@ -6,6 +6,9 @@ import cups
 def find_printer():
 	conn = cups.Connection()
 	printers = conn.getPrinters()
+	# print printers
+	# for p in printers:
+	# 	print p
 	return (conn, printers.keys()[0])
 
 
