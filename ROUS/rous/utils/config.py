@@ -1,6 +1,6 @@
 import ConfigParser
 import imp
-import rous.utils.utils
+import rous.utils.utils as utils
 
 path = "rous/node/configuration.ini"
 

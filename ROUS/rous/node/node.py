@@ -23,20 +23,23 @@ def wait_for_message(sock):
     while True:
 
         data, (host,port) = sock.recvfrom(1024)
-        message = (data,(host,port))        
+        message = (data,(host,port))  
 
-        if not filter_message(host, data):
+        #print message      
+
+      #  if not filter_message(host, data):
             # print
             # print self_ip+" RECIEVED: "+message[0]+" "+message[1][0]+" "+str(message[1][1])
-            network.send_multicast_message(self_ip+" RECIEVED: "+
-                                                    message[0]+" "+
-                                                    message[1][0]+
-                                                    " "+str(message[1][1]))
-            if message:
-                msg_str = parse_message(message)
-                if check_service_exists(msg_str):
-                    if bid_on_service(sock):
-                        services.run_service(msg_str, self_ip)
+        # network.send_multicast_message(self_ip+" RECIEVED: "+
+        #                                         message[0]+" "+
+        #                                         message[1][0]+
+        #                                         " "+str(message[1][1]))
+        # print message
+        if message:
+            msg_str = parse_message(message)
+            if check_service_exists(msg_str):
+                if bid_on_service(sock):
+                    services.run_service(msg_str, self_ip)
 
 
 
@@ -84,7 +87,7 @@ def bid_on_service(sock):
         print "My Bid: "+str(my_bid)
         print "Bids: "+str(bids)
    
-    if bids and (my_bid > max(bids)):
+    if bids and (my_bid >= max(bids)):
         log.info("%s - won bid", self_ip)
         print "\tWON"
         return True
@@ -133,13 +136,14 @@ def wait_for_bids(sock, bids):
         print stop
         bid, (host,port) = sock.recvfrom(1024)
 
-        if not filter_message(host, ""):
-            if bid.isdigit():
-                bids.append(int(bid))
+        #if not filter_message(host, ""):
+        if bid.isdigit():
+            bids.append(int(bid))
 
 
 def main():
     #try:
+        print "start"
         sock = network.start_multicast_reciever(self_ip)
         wait_for_message(sock)
    # except:

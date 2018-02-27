@@ -1,14 +1,19 @@
+import os
+import sys
+import time
 import logging as log
+import rous.utils.config as cfg
+import rous.utils.printer as printer
 # import rous.utils.rpi_control as rpi
-import config
+
 
 
 def all_services():
-	return config.all_services()
+	return cfg.all_services()
 
 
-def call_service(service, sender_address):
-	if not config.call_service(service, sender_address):
+def run_service(service, sender_address):
+	if not cfg.call_service(service, sender_address):
 		print "failed"
 		log.info("%s Error - Failed to call serivce", sender_address)
 
@@ -22,4 +27,9 @@ def green_on(sender_address):
 # def green_off(sender_address):
 # 	rpi.green_off()
 # 	log.info("%s - LED: green off", sender_address)	
+
+
+
+def print_file(sender_address):
+	printer.print_file("rous/utils/m.txt")
 

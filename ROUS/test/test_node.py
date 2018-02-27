@@ -1,4 +1,4 @@
-import rous.node.node as node
+# import rous.node.node as node
 
 
 # def test_services():
@@ -12,3 +12,6 @@ import rous.node.node as node
 # test_services()
 
 
+# import test
+
+# test.print_file("m.txt")
