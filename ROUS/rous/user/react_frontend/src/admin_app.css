@@ -1,0 +1,51 @@
+html{
+  background-color: rgb(80, 132, 228);
+  background: repeating-linear-gradient(45deg, #2f91b8 0%, #2f91b8 10%, #436599 0%, #436599 50%) 0 / 15px 15px;
+}
+
+.App {
+  text-align: center;
+  
+}
+
+.App-logo {
+  
+  animation: App-logo-spin infinite 4s linear;
+  
+  background: repeating-linear-gradient(45deg, lightskyblue);
+  height: 80px;
+
+}
+
+.App-header {
+  
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: rgb(255, 255, 255);
+ 
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); left: 0%; }
+  to { transform: rotate(-360deg); left: 100%; }
+}
+
+.master_log_box {
+  background-color: black;
+  height: 600px;
+  width: 500px;
+  margin: 0 auto;
+  vertical-align: text-bottom;
+}
+textarea {
+  resize: none;
+}
+
+#node_icon{
+  background-image: url("beaver1.svg");
+}
