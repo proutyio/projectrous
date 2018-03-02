@@ -36,7 +36,7 @@ def call_service(service, sender_address):
 			if(function == service):
 				filepath = utils.file_path(file)
 				module = imp.load_source(function, filepath)
-				call_func = getattr(module, function)
+				call_func = getattr(module, function) #the goods, magic is here
 				call_func(sender_address)
 				return True
 	return False
