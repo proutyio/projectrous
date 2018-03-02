@@ -95,6 +95,7 @@ class PrintForm extends React.Component{
           onClick={(event)=> { 
                 event.target.value = null
             }}/>
+        <button type="submit" value="submit" />
       </div>
     );
   }

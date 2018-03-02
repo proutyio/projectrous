@@ -11,18 +11,31 @@ html{
 .App-logo {
   
   animation: App-logo-spin infinite 4s linear;
-  
+  margin-right:auto;
   background: repeating-linear-gradient(45deg, lightskyblue);
   height: 80px;
 
 }
+.App-title {
 
-.App-header {
+
+}
+.App-content {
+  display:flex;
+  flex-direction: row;
+  align-content: center;
   
+  
+}
+.App-header {
+  display: flex;
   background-color: #222;
   height: 150px;
   padding: 20px;
   color: rgb(255, 255, 255);
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
  
 }
 
@@ -34,18 +47,53 @@ html{
   from { transform: rotate(0deg); left: 0%; }
   to { transform: rotate(-360deg); left: 100%; }
 }
-
+#left_side {
+  flex-grow: 1;
+  align-self: auto;
+}
+#right_side {
+  flex-grow: 2;
+}
 .master_log_box {
   background-color: black;
   height: 600px;
   width: 500px;
   margin: 0 auto;
   vertical-align: text-bottom;
+  color: #D73F09;
 }
 textarea {
   resize: none;
 }
 
-#node_icon{
-  background-image: url("beaver1.svg");
+.node_icon {
+  height: 100px;
+  width: 100px;
+  display: flex;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background-color: #222;
+
+}
+.node_icon_img {
+  transform: scaleX(-1);
+  height: 70px;
+  width:70px;
+}
+.node_container {
+  display:flex;
+  flex-direction:  row;
+  flex-grow: 1;
+  height: 150px;
+  align-items: center;
+}
+
+
+.master_log_container {
+  flex-grow: 1;
+}
+.multi_node_container {
+  flex-grow: 1;
+  flex-grow: column;
 }

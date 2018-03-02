@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { columns } from 'react-columns';
 import beaver1 from './beaver1.svg';
 import './admin_app.css';
-import {Dropdown, Master_log, Node} from './admin_objects.js';
+import { Master_log, Node } from './admin_objects.js';
 
 class App extends Component {
   
@@ -14,19 +14,24 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
+          <h1 className="App-title"><b>ROUS</b> Admin</h1>
           <div className="beaver_container">
             <img src= {beaver1} className="App-logo" alt="logo" />
           </div>
-          <h1 className="App-title">Welcome to ROUS</h1>
+          
         </header>
-        <p className="App-intro">
-         
-        </p>
-        <Columns columns="2" gap="10px">
-          <Master_log  />
-          <Node />
-        </Columns>
-      
+        <div className="App-content">
+          <p className="App-intro"> </p>
+          <div id="left_side">
+            <Master_log  />
+            </div>
+            <div id="right_side">
+              <Node  />
+              <Node  />
+              <Node  />
+            </div>
+            
+        </div>
       
       </div>
     );
