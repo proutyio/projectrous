@@ -8,6 +8,7 @@ import re
 import threading
 import logging as log
 import rous.utils.utils as utils
+import rous.utils.encryption as encryption
 
 
 mcast_host = '224.0.0.0'
@@ -46,7 +47,7 @@ def start_multicast_reciever(address):
 
 
 #
-def send_multicast_message(message, address):
+def send_multicast_message(message, key, address):
 	#try:
 		multicast_group = (mcast_host, mcast_port)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -54,7 +55,8 @@ def send_multicast_message(message, address):
 						socket.IP_MULTICAST_TTL, 
 						struct.pack('b', 1)
 						)
-		sent = sock.sendto(str(message), multicast_group)
+		encrypt_message = encryption.encrypt(str(message), key)
+		sent = sock.sendto(encrypt_message, multicast_group)
 		sock.close()
 		log.info("%s - SENT: %s", address, message)
 		
@@ -65,8 +67,7 @@ def send_multicast_message(message, address):
 
 #
 def thread_tcp_server():
-	# host = find_my_ip()
-	host = "localhost"
+	host = find_my_ip()
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	server_address = (host, tcp_port)
 	sock.bind(server_address)
@@ -85,17 +86,17 @@ def thread_tcp_server():
 
 
 #
-def start_tcp_server():
+def start_tcp_server(address):
     t = threading.Thread(target=thread_tcp_server)
     t.start()
 
 
 
 
-#
+# send message to myself, I use this to stop the tcp server thread
+#	with a "stop" message 
 def send_tcp_message(message):
-	# host = find_my_ip()
-	host = "localhost"
+	host = find_my_ip()
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	server_address = (host, tcp_port)
 	sock.connect(server_address)

@@ -57,13 +57,6 @@ def erase_text_file(text_file, address):
 
 
 #
-def handle_crtl_z(address, signal, frame):
-    log.info("%s - Crtl Z: Server shutting down",address)
-    sys.exit(0)
-
-
-
-#
 def root_path():
     current = path.dirname(__file__)
     root = path.abspath(path.join(current,"..",".."))
@@ -76,3 +69,4 @@ def file_path(basepath):
         return path.abspath(path.join(root_path(),basepath))
     except:
         print "file path not found"
+

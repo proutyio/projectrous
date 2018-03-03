@@ -1,24 +1,24 @@
 from Crypto.Cipher import AES
 from Crypto import Random
 
-key = 'Sixteen byte key'
 
-
-def encrypt(key, message):
+def encrypt(message, key):
 	iv = Random.new().read(AES.block_size)
-	cipher = AES.new(key, AES.MODE_CFB, iv)
+	cipher = AES.new(read_key(key), AES.MODE_CFB, iv)
 	msg = iv + cipher.encrypt(message)
 	return msg.encode("hex")
 
 
-def decrypt(key, message):
+def decrypt(message, key):
 	iv = Random.new().read(AES.block_size)
-	cipher = AES.new(key, AES.MODE_CFB, iv)
+	cipher = AES.new(read_key(key), AES.MODE_CFB, iv)
 	msg = cipher.decrypt(message.decode("hex"))
 	return msg[len(iv):]
 
-emsg = encrypt(key, "message")
-print emsg
 
-dmsg = decrypt(key, emsg)
-print dmsg
+def read_key(key):
+	print key
+	# try:
+	f = open(key, 'r') 
+	return f.read() 
+	# except:

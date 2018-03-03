@@ -11,6 +11,7 @@ from functools import partial
 import rous.utils.utils as utils
 import rous.utils.services as services
 import rous.utils.network as network
+import rous.utils.encryption as encryption
 
 
 ####    MESSAGE FORMAT: ####
@@ -20,10 +21,12 @@ import rous.utils.network as network
 #  service        = {"tag", "service", "params"}
 #  info, error    = {"tag", "message"}
 #  confirm        = {"tag", "id"}
+#  whois          = {"tag", "address"}
 #
 #############################
 
-
+ukey = "rous/node/keys/ukey.txt"
+akey = "rous/node/keys/akey.txt"
 self_ip = ""
 
 
@@ -34,8 +37,17 @@ def wait_for_message(sock):
         message = (data,(host,port))  
 
         if message:
-            if not check_trust(host, data):
-                filter_by_tag(message, sock)
+            print decrypt_message(message)
+            # if not check_trust(host, data):
+                # filter_by_tag(message, sock)
+
+
+
+#
+def decrypt_message(message):
+    (msg, (data, host)) = message
+    return encryption.decrypt(msg, ukey)
+
 
 
 
@@ -68,7 +80,7 @@ def service_tag(message, sock):
             network.send_multicast_message("info,"+self_ip+"WON BID", self_ip)
             services.run_service(extract_message(message),
                                  extract_parameters(message),
-                                 self_ip)
+                                 ukey,self_ip)
 
 
 #
@@ -89,7 +101,7 @@ def extract_tag(message):
         tag = message[0].split(",")[0]
         return tag
     except:
-        network.send_multicast_message("error, ERROR - tag missing")
+        network.send_multicast_message("error, ERROR - tag missing",ukey,self_ip)
 
 
 
@@ -100,7 +112,7 @@ def extract_message(message):
         msg = message[0].split(",")[1]
         return msg.strip()
     except:
-        network.send_multicast_message("error, ERROR - message missing")
+        network.send_multicast_message("error, ERROR - message missing",ukey,self_ip)
 
 
 
@@ -151,8 +163,8 @@ def bid_on_service(sock):
 
 # thread dies after it sends bid to multicast group
 def place_bid(my_bid):
-    network.send_multicast_message("info,"+self_ip+": PLACED BID", self_ip) 
-    t = threading.Thread(target=network.send_multicast_message, args=(my_bid, self_ip))
+    network.send_multicast_message("info,"+self_ip+": PLACED BID",ukey,self_ip) 
+    t = threading.Thread(target=network.send_multicast_message, args=(my_bid,ukey,self_ip))
     t.start()
 
 
@@ -164,7 +176,7 @@ def thread_timer():
     while True:
         if(time.time() > timeout):
             stop = True
-            network.send_multicast_message("",self_ip)#dont delete, cycles bid loop
+            network.send_multicast_message("",ukey,self_ip)#dont delete, cycles bid loop
             break
 
 #
@@ -195,19 +207,35 @@ def find_my_ip():
     return
 
 
+# send out "stop" message to stop tcp message
+#   when ctrl z signal comes in
+def stop_tcp_server():
+    network.send_tcp_message("stop")
+
+
+#
+def handle_crtl_c(signal, frame):
+    print "\nSIGNAL: ctrl c"
+    stop_tcp_server()
+    sys.exit(0)
+
 
 #
 def main():
-    #try:
+    # try:
         find_my_ip()
-        network.send_multicast_message("info,"+self_ip+": STARTING", self_ip)
-        
-        sock = network.start_multicast_reciever(self_ip)
-        wait_for_message(sock)
-   # except:
-        # log.error("%s - ERROR - main failed",self_ip)
+        network.send_multicast_message("info,"+self_ip+": STARTING mcast reciever",ukey,self_ip)
+        mcast_sock = network.start_multicast_reciever(self_ip)
+
+        network.send_multicast_message("info,"+self_ip+": STARTING tcp server",ukey,self_ip)
+        tcp_sock = network.start_tcp_server(self_ip)
+
+        network.send_multicast_message("info,"+self_ip+": WAITING for messages",ukey,self_ip)
+        wait_for_message(mcast_sock)
+    # except:
+        # network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
 
 
-signal.signal(signal.SIGINT, partial(utils.handle_crtl_z, self_ip))
+signal.signal(signal.SIGINT, handle_crtl_c)
 if __name__ == "__main__":
     main()

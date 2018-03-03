@@ -11,7 +11,7 @@ import rous.utils.printer as printer
 
 
 def test_tcp():
-	network.send_tcp_message("message")
+	network.send_tcp_message("stop")
 
 test_tcp()
 

@@ -60,7 +60,7 @@ function multicast_listener() {
 	});
 	listener.bind(mcast_port);
 }
-multicast_listener();
+//multicast_listener();
 
 
 
