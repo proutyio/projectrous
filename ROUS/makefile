@@ -30,8 +30,8 @@ test_node: test/test_node.py
 # 	python -m test.test_user
 
 
-# test_admin: test/test_admin.py
-# 	python -m test.test_admin
+test_admin: test/test_admin.py
+	python -m test.test_admin
 
 
 test: test/test.py

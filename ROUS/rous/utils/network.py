@@ -5,14 +5,14 @@ import commands
 import socket
 import struct
 import re
+import threading
 import logging as log
 import rous.utils.utils as utils
 
 
-host = '224.0.0.0'
-port = 22400
-server_address = ('', port)
-multicast_group = (host, port)
+mcast_host = '224.0.0.0'
+mcast_port = 22400
+tcp_port = 24242
 
 
 # make a fake internet query, grab hostname, close socket
@@ -24,9 +24,7 @@ def find_my_ip():
 		sock.connect(("1.1.1.1", 80))
 		ip = sock.getsockname()[0]
 		sock.close()
-
-		#ignore message from myself
-		utils.write_to_whitelist([ip],ip)
+		utils.write_to_whitelist([ip],ip)#ignore message from myself
 		return ip
 	except:
 		log.error("FAILED to find my IP address")
@@ -35,11 +33,12 @@ def find_my_ip():
 
 #
 def start_multicast_reciever(address):
+	server_address = ('', mcast_port)
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	sock.bind(server_address)
 	sock.setsockopt(socket.IPPROTO_IP, 
                     socket.IP_ADD_MEMBERSHIP, 
-                    struct.pack('4sL', socket.inet_aton(host), socket.INADDR_ANY)
+                    struct.pack('4sL', socket.inet_aton(mcast_host), socket.INADDR_ANY)
                     )
 	log.info("%s - STARTED multicast reciever", address)
 	return sock
@@ -49,6 +48,7 @@ def start_multicast_reciever(address):
 #
 def send_multicast_message(message, address):
 	#try:
+		multicast_group = (mcast_host, mcast_port)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		sock.setsockopt(socket.IPPROTO_IP, 
 						socket.IP_MULTICAST_TTL, 
@@ -60,6 +60,59 @@ def send_multicast_message(message, address):
 		
 	#except:
 		#log.error("%s - FAILED to send: %s", address, message)
+
+
+
+#
+def thread_tcp_server():
+	# host = find_my_ip()
+	host = "localhost"
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	server_address = (host, tcp_port)
+	sock.bind(server_address)
+	sock.listen(1)
+	while True:
+	    conn, address = sock.accept()
+	    try:
+	    	data = conn.recv(1024)
+	    	print data
+
+	    	if data == "stop":
+	    		break
+	    finally:
+	    	conn.close()
+	
+
+
+#
+def start_tcp_server():
+    t = threading.Thread(target=thread_tcp_server)
+    t.start()
+
+
+
+
+#
+def send_tcp_message(message):
+	# host = find_my_ip()
+	host = "localhost"
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	server_address = (host, tcp_port)
+	sock.connect(server_address)
+	try:
+		data = message
+		sock.sendall(data)
+	finally:
+		sock.close()
+		return
+
+
+
+
+
+
+
+
 
 
 

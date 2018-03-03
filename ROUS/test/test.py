@@ -2,30 +2,27 @@ import cups
 import os
 import sys
 import io
-import rous.utils.utils as utils
+import socket
+# import rous.utils.utils as utils
 import rous.utils.network as network
 import rous.utils.printer as printer
 
 
 
-# def find_printer():
-# 	conn = cups.Connection()
-# 	printers = conn.getPrinters()
-# 	return (conn, printers.keys()[0])
 
+def test_tcp():
+	network.send_tcp_message("message")
 
-# def print_file(file):
-# 	(conn, printer) = find_printer()
-# 	conn.printFile(printer, file, file, {"cpi": "12", "lpi": "8"})
+test_tcp()
 
 
 
 
 
-def send():
-	print "print_file"
-	network.send_multicast_message("print_file","address")
-send()
+# def send():
+# 	print "print_file"
+# 	network.send_multicast_message("print_file","address")
+# send()
 
 
 

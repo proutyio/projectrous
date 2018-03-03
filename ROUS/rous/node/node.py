@@ -15,11 +15,11 @@ import rous.utils.network as network
 
 ####    MESSAGE FORMAT: ####
 #
-#   tag              format
+#    tag               format
 #
-#  service   = {"tag", "service", "params"}
-#  info      = {"tag", "message"}
-#  confirm   = {"tag", "id"}
+#  service        = {"tag", "service", "params"}
+#  info, error    = {"tag", "message"}
+#  confirm        = {"tag", "id"}
 #
 #############################
 
@@ -34,8 +34,8 @@ def wait_for_message(sock):
         message = (data,(host,port))  
 
         if message:
-            if check_trust(host, data):
-                filter_by_tag(message)
+            if not check_trust(host, data):
+                filter_by_tag(message, sock)
 
 
 
@@ -46,8 +46,6 @@ def check_trust(host, data):
     for h in utils.read_from_whitelist(self_ip):
         for s in h:
             if((host == s.rstrip()) or (data.isdigit())):
-                network.send_multicast_message(
-                    "info, UNTRUSTED node - filtered message from: %s",self_ip,s.rstrip())
                 return False
     return True
 
@@ -55,36 +53,32 @@ def check_trust(host, data):
 
 
 # choose the path the message will take
-def filter_by_tag(message):    
-    if extract_tag(message) == "service": service_tag(message)
+def filter_by_tag(message, sock): 
+    if extract_tag(message) == "service": service_tag(message, sock)
     elif extract_tag(message) == "info":  info_tag()
     elif extract_tag(message) == "error": error_tag()
+    else: return
 
 
 
 #
-def service_tag(message):
+def service_tag(message, sock):
     if check_service_exists( extract_message(message) ):
         if bid_on_service(sock):
-            network.send_multicast_message("info,"+message[0]
-                +" "+message[1][0]
-                +" "+str(message[1][1]), self_ip)
-            services.run_service(msg, self_ip)
-            return True
-    else:
-        return False
-
+            network.send_multicast_message("info,"+self_ip+"WON BID", self_ip)
+            services.run_service(extract_message(message),
+                                 extract_parameters(message),
+                                 self_ip)
 
 
 #
 def info_tag():
-    pass
-
+    print "info tag"
 
 
 #
 def error_tag():
-    pass
+    print "error tag"
 
 
 
@@ -93,10 +87,9 @@ def error_tag():
 def extract_tag(message):
     try:
         tag = message[0].split(",")[0]
+        return tag
     except:
-        print "tag missing"
-        #send error message out
-    return tag
+        network.send_multicast_message("error, ERROR - tag missing")
 
 
 
@@ -105,10 +98,9 @@ def extract_tag(message):
 def extract_message(message): 
     try:
         msg = message[0].split(",")[1]
-     except:
-        print "message missing"
-        #send error message out
-    return msg
+        return msg.strip()
+    except:
+        network.send_multicast_message("error, ERROR - message missing")
 
 
 
@@ -128,7 +120,6 @@ def extract_parameters(message):
 #   services in services module. Then loop list and find if
 #   input string is in list.
 def check_service_exists(msg):
-    #network.send_multicast_message("CHECK "+self_ip+" checking if service exists", self_ip)
     for s in services.all_services():
         if(msg == s): 
             return True
@@ -173,6 +164,7 @@ def thread_timer():
     while True:
         if(time.time() > timeout):
             stop = True
+            network.send_multicast_message("",self_ip)#dont delete, cycles bid loop
             break
 
 #
@@ -192,14 +184,15 @@ def wait_for_bids(sock, bids):
             stop = False
             break
         bid, (host,port) = sock.recvfrom(1024)
-        #if not check_trust(host, ""):
-        if bid.isdigit():
-            bids.append(int(bid))
+        if not check_trust(host, ""):
+            if bid.isdigit():
+                bids.append(int(bid))
 
 
 #
 def find_my_ip():
     self_ip = network.find_my_ip()
+    return
 
 
 

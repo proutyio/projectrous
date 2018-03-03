@@ -12,7 +12,7 @@ def all_services():
 	return config.all_services()
 
 
-def run_service(service, sender_address):
+def run_service(service, params, sender_address):
 	if not config.call_service(service, sender_address):
 		print "failed"
 		log.info("%s Error - Failed to call serivce", sender_address)

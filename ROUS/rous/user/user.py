@@ -14,4 +14,4 @@ def start_frontend():
 
 
 start_backend()
-start_frontend()
+#start_frontend()

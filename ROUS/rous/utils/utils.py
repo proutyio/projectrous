@@ -63,12 +63,14 @@ def handle_crtl_z(address, signal, frame):
 
 
 
+#
 def root_path():
     current = path.dirname(__file__)
     root = path.abspath(path.join(current,"..",".."))
     return root
 
 
+#
 def file_path(basepath):
     try:
         return path.abspath(path.join(root_path(),basepath))
