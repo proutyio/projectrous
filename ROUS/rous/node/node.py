@@ -25,10 +25,9 @@ import rous.utils.encryption as encryption
 #
 #############################
 
-ukey = "rous/node/keys/ukey.txt"
-akey = "rous/node/keys/akey.txt"
 self_ip = ""
-
+ukey = utils.ukey()
+akey = utils.akey()
 
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
@@ -39,7 +38,7 @@ def wait_for_message(sock):
         if message:
             print decrypt_message(message)
             # if not check_trust(host, data):
-                # filter_by_tag(message, sock)
+                # choose_path(message, sock)
 
 
 
@@ -65,31 +64,31 @@ def check_trust(host, data):
 
 
 # choose the path the message will take
-def filter_by_tag(message, sock): 
-    if extract_tag(message) == "service": service_tag(message, sock)
-    elif extract_tag(message) == "info":  info_tag()
-    elif extract_tag(message) == "error": error_tag()
+def choose_path(message, sock): 
+    if extract_tag(message) == "service": service_path(message, sock)
+    elif extract_tag(message) == "info":  info_path()
+    elif extract_tag(message) == "error": error_path()
     else: return
 
 
 
 #
-def service_tag(message, sock):
+def service_path(message, sock):
     if check_service_exists( extract_message(message) ):
         if bid_on_service(sock):
-            network.send_multicast_message("info,"+self_ip+"WON BID", self_ip)
+            network.send_multicast_message("info,"+self_ip+"WON BID",ukey,self_ip)
             services.run_service(extract_message(message),
                                  extract_parameters(message),
-                                 ukey,self_ip)
+                                 self_ip)
 
 
 #
-def info_tag():
+def info_path():
     print "info tag"
 
 
 #
-def error_tag():
+def error_path():
     print "error tag"
 
 

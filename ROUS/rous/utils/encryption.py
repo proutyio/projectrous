@@ -17,7 +17,6 @@ def decrypt(message, key):
 
 
 def read_key(key):
-	print key
 	# try:
 	f = open(key, 'r') 
 	return f.read() 

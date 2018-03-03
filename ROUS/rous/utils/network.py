@@ -76,10 +76,24 @@ def thread_tcp_server():
 	    conn, address = sock.accept()
 	    try:
 	    	data = conn.recv(1024)
-	    	print data
-
 	    	if data == "stop":
 	    		break
+	    	try:
+	    		msg = data.split(",")
+	    		if msg[0] == "key":
+	    			print msg[0]
+	    			if msg[1].strip() == "ukey": 
+	    				key = utils.ukey()
+	    				print msg[1]
+	    				
+	    				newkey = msg[2].strip()
+	    				print len(newkey)
+
+	    				if len(newkey) == 16:
+	    					print newkey
+	    					utils.write_new_key(key, newkey, host)
+	    	except:
+	    		pass
 	    finally:
 	    	conn.close()
 	

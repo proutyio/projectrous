@@ -11,7 +11,7 @@ import rous.utils.printer as printer
 
 
 def test_tcp():
-	network.send_tcp_message("stop")
+	network.send_tcp_message("key, ukey, thisisanewkeyyes")
 
 test_tcp()
 
