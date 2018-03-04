@@ -1,5 +1,6 @@
 from Crypto.Cipher import AES
 from Crypto import Random
+import uuid
 
 
 def encrypt(message, key):
@@ -17,7 +18,13 @@ def decrypt(message, key):
 
 
 def read_key(key):
-	# try:
-	f = open(key, 'r') 
-	return f.read() 
-	# except:
+	try:
+		f = open(key, 'r') 
+		return f.read() 
+	except:
+		print "FAILED to read new key from file"
+
+
+# random key
+def newkey():
+	return uuid.uuid4().hex

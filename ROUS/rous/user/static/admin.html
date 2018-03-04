@@ -19,12 +19,25 @@
 
 			<div class="jumbotron">
 				<div class="text-center">
-					<form action="/listener_data" method="get">
+					<form action="/listenerdata" method="get">
 						<button class="btn btn-primary btn-lg" type="submit"><h3>Get Data</h3></button>
 					</form>
 				</div>
 			</div>
 
+			<div class="jumbotron">
+				<div class="text-center">
+					<form action="/removetrust" method="post">
+						<div class="form-group">
+							<h4>REMOVE TRUST</h4>
+  							<label>IP of untrusted node:</label>  <input type="text" name="message">
+  							<br>
+  							<br>
+  						</div>
+  						<input class="btn btn-primary btn-lg" type="submit" value="Submit">
+					</form>
+				</div>
+			</div>
 		</div>
 		<div class="col-md-2"></div>
 	</body>

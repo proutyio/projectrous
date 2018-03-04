@@ -33,7 +33,7 @@ def find_my_ip():
 
 
 #
-def start_multicast_reciever(address):
+def start_multicast_receiver(address):
 	server_address = ('', mcast_port)
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	sock.bind(server_address)
@@ -41,7 +41,7 @@ def start_multicast_reciever(address):
                     socket.IP_ADD_MEMBERSHIP, 
                     struct.pack('4sL', socket.inet_aton(mcast_host), socket.INADDR_ANY)
                     )
-	log.info("%s - STARTED multicast reciever", address)
+	log.info("%s - STARTED multicast receiver", address)
 	return sock
 
 
@@ -58,14 +58,14 @@ def send_multicast_message(message, key, address):
 		encrypt_message = encryption.encrypt(str(message), key)
 		sent = sock.sendto(encrypt_message, multicast_group)
 		sock.close()
-		log.info("%s - SENT: %s", address, message)
+		#log.info("%s - SENT: %s", address, message)
 		
 	#except:
 		#log.error("%s - FAILED to send: %s", address, message)
 
 
 
-#
+# format: ("tag", "keytype", "newkey")
 def thread_tcp_server():
 	host = find_my_ip()
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -76,27 +76,26 @@ def thread_tcp_server():
 	    conn, address = sock.accept()
 	    try:
 	    	data = conn.recv(1024)
-	    	if data == "stop":
+	    	if(data == "stop"): 
 	    		break
-	    	try:
-	    		msg = data.split(",")
-	    		if msg[0] == "key":
-	    			print msg[0]
-	    			if msg[1].strip() == "ukey": 
-	    				key = utils.ukey()
-	    				print msg[1]
-	    				
-	    				newkey = msg[2].strip()
-	    				print len(newkey)
-
-	    				if len(newkey) == 16:
-	    					print newkey
-	    					utils.write_new_key(key, newkey, host)
-	    	except:
-	    		pass
+	    	check_update_key(data, host)
 	    finally:
 	    	conn.close()
+
 	
+#
+def check_update_key(data, host):
+	try:
+		msg = data.split(",")
+		if msg[0] == "key":
+			if msg[1].strip() == "ukey": 
+				key = utils.ukey()	    				
+				newkey = msg[2].strip()
+				if len(newkey) == 32:
+					utils.write_new_key(key, newkey, host)
+	except:
+		pass
+
 
 
 #
@@ -110,6 +109,7 @@ def start_tcp_server(address):
 # send message to myself, I use this to stop the tcp server thread
 #	with a "stop" message 
 def send_tcp_message(message):
+	# try:
 	host = find_my_ip()
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	server_address = (host, tcp_port)
@@ -120,6 +120,7 @@ def send_tcp_message(message):
 	finally:
 		sock.close()
 		return
+	# except:
 
 
 

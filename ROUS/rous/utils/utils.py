@@ -11,8 +11,8 @@ log_file = "rous.log"
 whitelist = "rous/utils/whitelist.txt"
 
 
-def ukey(): return "rous/node/keys/ukey.txt"
-def akey(): return "rous/node/keys/akey.txt"
+def ukey(): return "rous/utils/keys/ukey.txt"
+def akey(): return "rous/utils/keys/akey.txt"
 
 #
 def setup_logger():
@@ -51,13 +51,13 @@ def write_to_whitelist(lst, address):
 
 #
 def write_new_key(file, newkey, address):
-    erase_text_file(file, address)
-    try:
+        erase_text_file(file, address)
+    # try:
         f = open(file, "a")
         f.write(newkey)
         f.close()
-    except:
-        log.error("%s - FAILED to write to new key",address)
+    # except:
+        # log.error("%s - FAILED to write to new key",address)
 
 
 #

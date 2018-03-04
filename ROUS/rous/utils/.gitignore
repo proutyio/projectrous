@@ -1,0 +1,5 @@
+*.pyc
+*.log
+*.txt
+*/node_modules
+/keys

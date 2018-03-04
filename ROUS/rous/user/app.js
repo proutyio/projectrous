@@ -1,21 +1,27 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var port = process.env.PORT || 4242;
+var crypto = require('crypto');
+var net = require('net');
+
+var http_port = process.env.PORT || 4242;
 var mcast_port = 22400;
+var tcp_port = 24242;
 var mcast_host = "224.0.0.0";
+
 var dgram = require('dgram'); 
 var listener_data = [];
 var items = 0;
 
-//## http server ########################################
 
+
+//## HTTP SERVER ##
 function react_backend() {
 	routes();
-	app.listen(port);
+	console.log("\nstarting http server")
+	app.listen(http_port);
 }
 react_backend();
-
 
 function routes() {
 	app.use(bodyParser.urlencoded({
@@ -30,7 +36,7 @@ function routes() {
 	    res.sendFile(__dirname + '/static/admin.html');
 	});
 
-	app.get('/listener_data', function(req, res) {
+	app.get('/listenerdata', function(req, res) {
 	  res.send({ data: get_listener_data() });
 	});
 
@@ -38,12 +44,19 @@ function routes() {
 		console.log(req.body.message);
 		multicast_sender(req.body.message);
 	});
+
+	app.post('/removetrust', function(req,res){
+		var ip = req.body.message
+		console.log(ip);
+		send_tcp_message(ip, "key, ukey, "+newkey())
+	});
 }
+//#############
 
 
 
-//## multicast socket ########################################
 
+//## MULTICAST ##
 function multicast_listener() {
 	var listener = dgram.createSocket({type:'udp4',reuseAddr:true});
 	listener.on('listening', function () {
@@ -62,15 +75,10 @@ function multicast_listener() {
 }
 //multicast_listener();
 
-
-
-function get_listener_data(){
-	data = listener_data;
-	//items = 0;
+function listener_data(){
+	var data = listener_data;
 	return data;
 }
-
-
 
 function multicast_sender(message) {
 	var server = dgram.createSocket({ type: 'udp4', reuseAddr: true });
@@ -82,3 +90,27 @@ function multicast_sender(message) {
 	server.send(message, 0, message.length,mcast_port,mcast_host);	
 	return;
 }
+//#############
+
+
+
+
+//## TCP ##
+function send_tcp_message(IP, message) { 
+	var client = new net.Socket();
+	client.connect(24242, '192.168.0.3', function() {
+		console.log('Connected');
+		client.write(message);
+	});
+	//client.destroy();
+}
+//#############
+
+
+
+
+//## UTILITIES ##
+function newkey() { 
+	return crypto.randomBytes(16).toString('hex');
+}
+//#############

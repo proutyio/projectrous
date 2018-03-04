@@ -6,12 +6,14 @@ import socket
 # import rous.utils.utils as utils
 import rous.utils.network as network
 import rous.utils.printer as printer
+import rous.utils.encryption as encryption
 
 
 
 
 def test_tcp():
-	network.send_tcp_message("key, ukey, thisisanewkeyyes")
+	newkey = encryption.newkey()
+	network.send_tcp_message("key, ukey,"+newkey)
 
 test_tcp()
 

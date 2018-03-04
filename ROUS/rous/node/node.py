@@ -14,7 +14,7 @@ import rous.utils.network as network
 import rous.utils.encryption as encryption
 
 
-####    MESSAGE FORMAT: ####
+#### MCAST MESSAGE FORMAT: ####
 #
 #    tag               format
 #
@@ -25,7 +25,16 @@ import rous.utils.encryption as encryption
 #
 #############################
 
-self_ip = ""
+#### TCP MESSAGE FORMAT: ####
+#
+#    tag            format
+#
+#    key    = {"tag", "keytype", "newkey"}
+#
+#############################
+
+
+self_ip = network.find_my_ip()
 ukey = utils.ukey()
 akey = utils.akey()
 
@@ -46,7 +55,6 @@ def wait_for_message(sock):
 def decrypt_message(message):
     (msg, (data, host)) = message
     return encryption.decrypt(msg, ukey)
-
 
 
 
@@ -81,16 +89,11 @@ def service_path(message, sock):
                                  extract_parameters(message),
                                  self_ip)
 
+#
+def info_path(): pass
 
 #
-def info_path():
-    print "info tag"
-
-
-#
-def error_path():
-    print "error tag"
-
+def error_path(): pass
 
 
 # takes in a tuple of (msg, (h,p))
@@ -200,11 +203,6 @@ def wait_for_bids(sock, bids):
                 bids.append(int(bid))
 
 
-#
-def find_my_ip():
-    self_ip = network.find_my_ip()
-    return
-
 
 # send out "stop" message to stop tcp message
 #   when ctrl z signal comes in
@@ -222,14 +220,13 @@ def handle_crtl_c(signal, frame):
 #
 def main():
     # try:
-        find_my_ip()
-        network.send_multicast_message("info,"+self_ip+": STARTING mcast reciever",ukey,self_ip)
-        mcast_sock = network.start_multicast_reciever(self_ip)
+        mcast_sock = network.start_multicast_receiver(self_ip)
+        network.send_multicast_message("info, "+self_ip+": STARTING mcast reciever",ukey,self_ip)
 
-        network.send_multicast_message("info,"+self_ip+": STARTING tcp server",ukey,self_ip)
+        network.send_multicast_message("info, "+self_ip+": STARTING tcp server",ukey,self_ip)
         tcp_sock = network.start_tcp_server(self_ip)
 
-        network.send_multicast_message("info,"+self_ip+": WAITING for messages",ukey,self_ip)
+        network.send_multicast_message("info, "+self_ip+": WAITING for messages",ukey,self_ip)
         wait_for_message(mcast_sock)
     # except:
         # network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
