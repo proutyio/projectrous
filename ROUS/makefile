@@ -45,5 +45,6 @@ clean:
 	rm -f rous/user/*.pyc
 	rm -f rous/admin/*.pyc
 	rm -f rous/utils/*.pyc
+	rm -f rous/utils/*.txt
 	rm -f test/*pyc
 	rm -f rous.log

@@ -21,7 +21,7 @@ import rous.utils.encryption as encryption
 #  service        = {"tag", "service", "params"}
 #  info, error    = {"tag", "message"}
 #  confirm        = {"tag", "id"}
-#  whois          = {"tag", "address"}
+#  whois          = {"tag"}
 #
 #############################
 
@@ -91,9 +91,11 @@ def service_path(message, sock):
 
 #
 def info_path(): pass
+def error_path(): pass
 
 #
-def error_path(): pass
+def whois_path():
+    send_multicast_message("info, whois, "+self_ip)
 
 
 # takes in a tuple of (msg, (h,p))

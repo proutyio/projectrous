@@ -11,6 +11,7 @@ var mcast_host = "224.0.0.0";
 
 var dgram = require('dgram'); 
 var listener_data = [];
+var nodes = []
 var items = 0;
 
 
@@ -37,18 +38,23 @@ function routes() {
 	});
 
 	app.get('/listenerdata', function(req, res) {
-	  res.send({ data: get_listener_data() });
+	  res.send({ data: listener_data() });
 	});
 
 	app.post('/sendmessage', function(req,res){
 		console.log(req.body.message);
-		multicast_sender(req.body.message);
+		send_multicast_message(req.body.message);
 	});
 
 	app.post('/removetrust', function(req,res){
 		var ip = req.body.message
 		console.log(ip);
 		send_tcp_message(ip, "key, ukey, "+newkey())
+	});
+
+	app.get("/findnodes", function(req, res) {
+		find_nodes()
+		// res.send({ data: get_listener_data() });
 	});
 }
 //#############
@@ -57,30 +63,28 @@ function routes() {
 
 
 //## MULTICAST ##
-function multicast_listener() {
+function start_multicast_listener() {
 	var listener = dgram.createSocket({type:'udp4',reuseAddr:true});
 	listener.on('listening', function () {
 	    var address = listener.address();	    
 	    listener.setBroadcast(true)
 	    listener.setMulticastTTL(128); 
 	    listener.addMembership(mcast_host);
-	    //console.log('Listening on: '+address.address+":"+address.port);
 	});
 	listener.on('message', function (message, remote) {   
-	    //console.log('RECIEVED: '+message+'\tFROM: '+remote.address+':'+remote.port);
 	    listener_data[items] = message+','+remote.address+':'+remote.port;
 	    items++;
 	});
 	listener.bind(mcast_port);
 }
-//multicast_listener();
+start_multicast_listener();
 
 function listener_data(){
 	var data = listener_data;
 	return data;
 }
 
-function multicast_sender(message) {
+function send_multicast_message(message) {
 	var server = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 	server.bind(mcast_port+1, function(){
     	server.setBroadcast(true);
@@ -90,6 +94,33 @@ function multicast_sender(message) {
 	server.send(message, 0, message.length,mcast_port,mcast_host);	
 	return;
 }
+
+function find_nodes() {
+	send_multicast_message("whois");
+	var count = 0;
+	try {
+		listener_data.forEach(function(data){
+			var data = data.split(",")
+			if(data[0] == "whois"){
+				var ip = data[1].split(":")[0];
+				if(nodes.length == 0){
+					nodes[count] = ip;
+					count++;
+				}
+				else{
+					nodes.forEach(function(n_ip){
+						if(ip != n_ip){
+							nodes[count] = ip;
+							count++;
+						}
+					});
+				}
+			}
+		});
+	}catch(error){ console.log(error+" - find nodes failed");}
+	console.log(nodes)
+}
+find_nodes();
 //#############
 
 
@@ -98,11 +129,9 @@ function multicast_sender(message) {
 //## TCP ##
 function send_tcp_message(IP, message) { 
 	var client = new net.Socket();
-	client.connect(24242, '192.168.0.3', function() {
-		console.log('Connected');
+	client.connect(tcp_port, IP.toString(), function() {
 		client.write(message);
 	});
-	//client.destroy();
 }
 //#############
 
