@@ -48,19 +48,24 @@ class Master_log extends React.Component {
 
 export
 class Node extends React.Component {
-  get_ip(){
-      return "";
-  }
-  get_status(){
+  async loadNodeData(){
+    const res = await fetch("/listenerData")
+    const {ip} = await res.json()
+    this.setState({ip})  
 
+
+    // const json = await res.json()
+    // this.setState({ip: 'I lied'})  
   }
-  get_bid(){ 
-      return "";
+
+  componentDidMount() {
+    this.loadNodeData()
+    this.timer = setInterval(() => this.loadNodeData(), 5000);
   }
-  get_services(){
-    return "";
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
-  
   
   render(){
     var Columns = require('react-columns');
@@ -70,7 +75,7 @@ class Node extends React.Component {
           <img src={ beaver1 } className="node_icon_img"></img>
         </div>
         <div className="node_stats_tags">
-          <p>Node: {this.get_ip}</p>
+          <p>Node: {this.state.ip}</p>
           <p>Status: {this.get_status}</p>
           <p>Bid: {this.get_bid}</p>
           <p>Services:</p>
