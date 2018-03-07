@@ -74,6 +74,7 @@ def check_trust(host, data):
 # choose the path the message will take
 def choose_path(message, sock): 
     if extract_tag(message) == "service": service_path(message, sock)
+    elif extract_tag(message) == "whois": whois_path()
     elif extract_tag(message) == "info":  info_path()
     elif extract_tag(message) == "error": error_path()
     else: return
@@ -89,13 +90,15 @@ def service_path(message, sock):
                                  extract_parameters(message),
                                  self_ip)
 
-#
-def info_path(): pass
-def error_path(): pass
 
 #
 def whois_path():
     send_multicast_message("info, whois, "+self_ip)
+
+
+# these are here incase I want to use them later.
+def info_path(): pass
+def error_path(): pass
 
 
 # takes in a tuple of (msg, (h,p))

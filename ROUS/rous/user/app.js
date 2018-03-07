@@ -4,16 +4,16 @@ var app = express();
 var dgram = require('dgram'); 
 var crypto = require('crypto');
 var net = require('net');
+var cors = require('cors')
 var PythonShell = require('python-shell');
+
+var multicast = require('./multicast');
+var tcp = require('./tcp');
 
 var http_port = process.env.PORT || 4242;
 var mcast_port = 22400;
 var tcp_port = 24242;
 var mcast_host = "224.0.0.0";
-
-var listener_data = [];
-var nodes = [];
-var items = 0;
 
 var ukey = '../utils/keys/ukey.txt';
 var script_encrypt = 'scripts/encrypt.py';
@@ -21,14 +21,24 @@ var script_decrypt = 'scripts/decrypt.py';
 var decrypt = new PythonShell(script_decrypt);
 var encrypt = new PythonShell(script_encrypt);
 
+var listener_data = [];
+var nodes = [];
+var items = 0;
 
 
-//## HTTP SERVER ##
+app.use(cors({
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 
+}))
+
+
 function react_backend() {
 	routes();
 	console.log("\nstarting http server");
 	app.listen(http_port);
 }
+
+
 
 function routes() {
 	app.use(bodyParser.urlencoded({
@@ -44,7 +54,7 @@ function routes() {
 	});
 
 	app.get('/listenerdata', function(req, res) {
-	  res.send({ data: listener_data() });
+	  res.send("WORKING" );
 	});
 
 	app.post('/sendmessage', function(req,res){
@@ -59,65 +69,14 @@ function routes() {
 	});
 
 	app.get("/findnodes", function(req, res) {
-		find_nodes();
-		// res.send({ data: get_listener_data() });
+		find_nodes()
+		res.send({ data: nodes });
 	});
-}
-//#############
-
-
-
-
-//## MULTICAST ##
-function start_multicast_listener() {
-	var listener = dgram.createSocket({type:'udp4',reuseAddr:true});
-	listener.on('listening', function () {
-	    var address = listener.address();	    
-	    listener.setBroadcast(true);
-	    listener.setMulticastTTL(128); 
-	    listener.addMembership(mcast_host);
-	});
-	listener.on('message', function (message, remote) {
-
-		console.log("\n"+message+"\n");
-
-		decrypt.send(message);
-		decrypt.send(JSON.stringify( {'ukey':ukey} ));
-		decrypt.on('message', function(d_msg){ 
-			// listener_data[items] = d_msg+','+remote.address+':'+remote.port;
-		 //    items++;
-			console.log(d_msg);
-		});
-		decrypt.end(); 
-	});
-	listener.bind(mcast_port);
-}
-
-
-function listener_data(){
-	var data = listener_data;
-	return data;
-}
-
-
-function send_multicast_message(message) {
-	var server = dgram.createSocket({ type: 'udp4', reuseAddr: true });
-	server.bind(mcast_port+1, function(){
-    	server.setBroadcast(true);
-    	server.setMulticastTTL(128);
-    	server.addMembership(mcast_host);
-	});
-	encrypt.send(JSON.stringify( {'message':message,'ukey':ukey} ));
-	encrypt.on('message', function(e_msg){
-		server.send(e_msg, 0, e_msg.length, mcast_port, mcast_host);
-	});
-	encrypt.end();
-	return;
 }
 
 
 function find_nodes() {
-	send_multicast_message("whois");
+	multicast.sender("whois");
 	var count = 0;
 	try {
 		listener_data.forEach(function(data){
@@ -140,31 +99,17 @@ function find_nodes() {
 		});
 	}catch(error){ console.log(error+" - find nodes failed"); }
 }
-//#############
 
 
-
-
-//## TCP ##
-function send_tcp_message(IP, message) { 
-	var client = new net.Socket();
-	client.connect(tcp_port, IP.toString(), function() {
-		client.write(message);
-	});
-}
-//#############
-
-
-
-
-//## UTILITIES ##
 function newkey() { 
 	return crypto.randomBytes(16).toString('hex');
 }
-//#############
 
 
 
 
-react_backend();
-start_multicast_listener();
+
+//react_backend();
+//multicast.listener
+find_nodes()
+//start_multicast_listener();
