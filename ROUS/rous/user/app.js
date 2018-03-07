@@ -1,25 +1,15 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var dgram = require('dgram'); 
 var crypto = require('crypto');
 var net = require('net');
 var cors = require('cors')
-var PythonShell = require('python-shell');
 
 var multicast = require('./multicast');
 var tcp = require('./tcp');
 
-var http_port = process.env.PORT || 4242;
-var mcast_port = 22400;
+var http_port = process.env.PORT || 4243;
 var tcp_port = 24242;
-var mcast_host = "224.0.0.0";
-
-var ukey = '../utils/keys/ukey.txt';
-var script_encrypt = 'scripts/encrypt.py';
-var script_decrypt = 'scripts/decrypt.py';
-var decrypt = new PythonShell(script_decrypt);
-var encrypt = new PythonShell(script_encrypt);
 
 var listener_data = [];
 var nodes = [];
@@ -54,18 +44,17 @@ function routes() {
 	});
 
 	app.get('/listenerdata', function(req, res) {
-	  res.send("WORKING" );
+	  res.send(listener_data );
 	});
 
 	app.post('/sendmessage', function(req,res){
-		// console.log(req.body.message);
-		send_multicast_message(req.body.message);
+		multicast.sender(req.body.message);
 	});
 
 	app.post('/removetrust', function(req,res){
 		var ip = req.body.message;
 		console.log(ip);
-		send_tcp_message(ip, "key, ukey, "+newkey())
+		tcp.sender(ip, "key, ukey, "+newkey())
 	});
 
 	app.get("/findnodes", function(req, res) {
@@ -109,7 +98,7 @@ function newkey() {
 
 
 
-//react_backend();
-//multicast.listener
-find_nodes()
+react_backend();
+multicast.listener(listener_data)
+//find_nodes()
 //start_multicast_listener();

@@ -45,9 +45,9 @@ def wait_for_message(sock):
         message = (data,(host,port))  
 
         if message:
-            print decrypt_message(message)
-            # if not check_trust(host, data):
-                # choose_path(message, sock)
+            msg = decrypt_message(message)
+           # if not check_trust(host, data):
+            choose_path(msg, sock)
 
 
 
@@ -93,7 +93,7 @@ def service_path(message, sock):
 
 #
 def whois_path():
-    send_multicast_message("info, whois, "+self_ip)
+    network.send_multicast_message("info, whois, "+self_ip,ukey,self_ip)
 
 
 # these are here incase I want to use them later.
@@ -105,7 +105,7 @@ def error_path(): pass
 # returns string 
 def extract_tag(message):
     try:
-        tag = message[0].split(",")[0]
+        tag = message.split(",")[0]
         return tag
     except:
         network.send_multicast_message("error, ERROR - tag missing",ukey,self_ip)

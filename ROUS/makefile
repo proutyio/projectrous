@@ -48,3 +48,4 @@ clean:
 	rm -f rous/utils/*.txt
 	rm -f test/*pyc
 	rm -f rous.log
+	rm -rf rous/user/node_modules

@@ -10,10 +10,12 @@ var script_decrypt = 'scripts/decrypt.py';
 var decrypt = new PythonShell(script_decrypt);
 var encrypt = new PythonShell(script_encrypt);
 
+var items = 0;
+
 
 module.exports = 
 {
-	listener: function () {
+	listener: function(data) {
 		var listener = dgram.createSocket({type:'udp4',reuseAddr:true});
 		listener.on('listening', function () {
 		    var address = listener.address();	    
@@ -22,12 +24,13 @@ module.exports =
 		    listener.addMembership(mcast_host);
 		});
 		listener.on('message', function (message, remote) {
+			console.log(message);
 			decrypt.send(message);
 			decrypt.send(JSON.stringify( {'ukey':ukey} ));
 			decrypt.on('message', function(d_msg){ 
-				listener_data[items] = d_msg+','+remote.address+':'+remote.port;
+				data[items] = d_msg+','+remote.address+':'+remote.port;
 			    items++;
-				console.log(d_msg);
+				console.log(d_msg+"dmsg");
 			});
 			decrypt.end(); 
 		});
