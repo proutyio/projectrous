@@ -5,7 +5,7 @@ import rous.utils.utils as utils
 
 def start_backend():
 	filepath = utils.root_path()+"/rous/user/"
-	call("node app.js &", cwd=filepath, shell=True)
+	call("FLASK_APP=app.py flask run --host=0.0.0.0 --port=4242", cwd=filepath, shell=True)
 
 
 def start_frontend():
