@@ -41,11 +41,11 @@ akey = utils.akey()
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
     while True:
-        data, (host,port) = sock.recvfrom(1024)
-        message = (data,(host,port))  
+        message, (host,port) = sock.recvfrom(1024)
 
         if message:
             msg = decrypt_message(message)
+            print msg
            # if not check_trust(host, data):
             choose_path(msg, sock)
 
@@ -53,8 +53,7 @@ def wait_for_message(sock):
 
 #
 def decrypt_message(message):
-    (msg, (data, host)) = message
-    return encryption.decrypt(msg, ukey)
+    return encryption.decrypt(message, ukey)
 
 
 
@@ -74,9 +73,9 @@ def check_trust(host, data):
 # choose the path the message will take
 def choose_path(message, sock): 
     if extract_tag(message) == "service": service_path(message, sock)
-    elif extract_tag(message) == "whois": whois_path()
     elif extract_tag(message) == "info":  info_path()
     elif extract_tag(message) == "error": error_path()
+    elif message == "whois": whois_path()
     else: return
 
 
@@ -101,7 +100,7 @@ def info_path(): pass
 def error_path(): pass
 
 
-# takes in a tuple of (msg, (h,p))
+# takes in "tag, ..."
 # returns string 
 def extract_tag(message):
     try:
@@ -228,8 +227,8 @@ def main():
         mcast_sock = network.start_multicast_receiver(self_ip)
         network.send_multicast_message("info, "+self_ip+": STARTING mcast reciever",ukey,self_ip)
 
-        network.send_multicast_message("info, "+self_ip+": STARTING tcp server",ukey,self_ip)
-        tcp_sock = network.start_tcp_server(self_ip)
+        #network.send_multicast_message("info, "+self_ip+": STARTING tcp server",ukey,self_ip)
+        #tcp_sock = network.start_tcp_server(self_ip)
 
         network.send_multicast_message("info, "+self_ip+": WAITING for messages",ukey,self_ip)
         wait_for_message(mcast_sock)

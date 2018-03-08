@@ -8,7 +8,7 @@ var cors = require('cors')
 var multicast = require('./multicast');
 var tcp = require('./tcp');
 
-var http_port = process.env.PORT || 4243;
+var http_port = process.env.PORT || 4242;
 var tcp_port = 24242;
 
 var listener_data = [];
@@ -99,6 +99,6 @@ function newkey() {
 
 
 react_backend();
-multicast.listener(listener_data)
+//multicast.listener(listener_data)
 //find_nodes()
 //start_multicast_listener();
