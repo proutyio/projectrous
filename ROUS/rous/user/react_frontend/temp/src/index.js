@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import axios from 'axios';
 import { Table, Row, Col } from "react-bootstrap";
 
-import { NodeTable, PageTitle, TopNavBar, TestGet, Log, DisableNodeTable } from "./components";
+import { NodeTable, PageTitle, TopNavBar, TestGet, Log, DisableNodeTable, AddNode } from "./components";
 
 const App = () => (
   <Table>
@@ -14,7 +14,6 @@ const App = () => (
 
       <Col xs={10} md={8}>
         {PageTitle}
-        
       </Col>
       <Col xs={1} md={2} />
     </Row>
@@ -27,6 +26,8 @@ const App = () => (
         </Col>
         <Col xs={5} md={8}>
         <NodeTable />
+        <AddNode />
+        
         </Col>
       <Col xs={1} md={2} />
     </Row>

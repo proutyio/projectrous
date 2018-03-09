@@ -29,7 +29,7 @@ export const TopNavBar = (
 
 export const PageTitle = (
   <Well>
-    <h2 style={{ textAlign: "center" }}>Administration Page</h2>
+    <h2 style={{ textAlign: "center" }}>Admin Page</h2>
   </Well>
 );
 
@@ -44,9 +44,9 @@ export class NodeTable extends React.Component {
             <th> State </th>
           </tr>
         </thead>
-        <tbody>         
-            <Node />        
-            <Node />
+        <tbody>
+          <Node />
+          <Node />
         </tbody>
       </Table>
     );
@@ -55,15 +55,15 @@ export class NodeTable extends React.Component {
 export class Node extends React.Component {
   render() {
     return (
-          <tr>
-            <td>Node 1</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
+      <tr>
+        <td>Node 1</td>
+        <td>1</td>
+        <td>1</td>
+      </tr>
     );
   }
 }
-        
+
 export class DisableNodeTable extends React.Component {
   render() {
     return (
@@ -113,6 +113,49 @@ export class Log extends React.Component {
   render() {
     return <Jumbotron>placeholder text</Jumbotron>;
   }
+}
+
+export class AddNode extends React.Component {
+  theData = [
+    {
+      name: "node 1",
+      ip: "192.168.2.2",
+      state: "busy"
+    },
+
+    {
+      name: "node 2",
+      ip: "192.168.2.5",
+      state: "busy"
+    }
+  ].map((anObjectMapped, index) => {
+    return (
+      <p key={`${anObjectMapped.name}_{anObjectMapped.ip}`}>
+        {anObjectMapped.name} - {anObjectMapped.ip}
+      </p>
+    );
+  });
+
+  getInitialState() {
+    return {};
+  }
+
+  render() {
+    return (
+      <div>
+        <ul>{this.theData.map((item, i) => <li key={i}> {item}</li>)}</ul>
+      </div>
+    );
+  }
+
+  // handleClick(){
+
+  // }
+  // render() {
+  //   return (<button className="add-button" onChange={ this.handleClick }>
+  //     Add Node
+  //   </button>
+  // );}
 }
 
 export class TestGet extends React.Component {

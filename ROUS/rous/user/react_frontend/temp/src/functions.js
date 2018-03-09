@@ -6,3 +6,7 @@ export function getRequest() {
     .then(response => this.setstate({ username: response.data }));
 }
 
+export function getNodeAmount() {
+  fetch( "http://localhost:4242/listenerdata" )
+  
+}
