@@ -1,37 +1,56 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { render } from "react-dom";
-import axios from 'axios';
+import axios from "axios";
 import { Table, Row, Col } from "react-bootstrap";
 
-import { NodeTable, PageTitle, TopNavBar, TestGet, Log, DisableNodeTable, AddNode } from "./components";
+import {
+  NodeTable,
+  PageTitle,
+  TopNavBar,
+  TestGet,
+  Log,
+  DisableNodeTable,
+  AddNode,
+  Board
+} from "./components";
 
-const App = () => (
-  <Table>
-    <Row className="show-grid">
-      {TopNavBar}
-      <Col xs={1} md={2} />
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      
+    };
+  }
 
-      <Col xs={10} md={8}>
-        {PageTitle}
-      </Col>
-      <Col xs={1} md={2} />
-    </Row>
-    <Row className="main-content">
-      <Col xs={1} md={2} />
-        <Col xs={5} md={8}>
-          <Log />
-          <TestGet />
-          <DisableNodeTable />
-        </Col>
-        <Col xs={5} md={8}>
-        <NodeTable />
-        <AddNode />
-        
-        </Col>
-      <Col xs={1} md={2} />
-    </Row>
-  </Table>
-);
+  render() {
+
+    return (
+      <Table>
+        <Row className="show-grid">
+          {TopNavBar}
+          <Col xs={1} md={1} />
+
+          <Col xs={10} md={10}>
+            {PageTitle}
+          </Col>
+          <Col xs={1} md={1} />
+        </Row>
+        <Row className="main-content">
+          <Col xs={1} md={1} />
+          <Col xs={5} md={5}>
+            <Log />
+            <TestGet />
+            <DisableNodeTable />
+          </Col>
+          <Col xs={5} md={5}>
+            <NodeTable />
+          </Col>
+          <Col xs={1} md={1} />
+        </Row>
+      </Table>
+    );
+  }
+}
 
 render(<App />, document.getElementById("root"));

@@ -5,6 +5,8 @@ import fetch from "node-fetch";
 
 import {
   Table,
+  Row,
+  Col,
   Jumbotron,
   Button,
   Navbar,
@@ -13,7 +15,7 @@ import {
   NavDropdown,
   Well
 } from "react-bootstrap";
-import { getRequest } from "./functions";
+import { getRequest, loadNodeData } from "./functions";
 
 export const TopNavBar = (
   <Navbar inverse collapseOnSelect>
@@ -34,35 +36,70 @@ export const PageTitle = (
 );
 
 export class NodeTable extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      data: [
+        {
+          ip: "192.168.1.2",
+          name: "node " + 1,
+          state: "printing",
+          services: "printing, complex jobs, yellow_led"
+        },
+        {
+          ip: "192.168.1.3",
+          name: "node " + 2,
+          state: "waiting",
+          services: "printing, blue_led"
+        },
+        {
+          ip: "192.168.1.4",
+          name: "node " + 3,
+          state: "waiting",
+          services: "complex jobs, red_led"
+        }
+      ]
+    };
+  }
+  componentDidMount() {
+    loadNodeData();
+    this.timer = setInterval(() => loadNodeData(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
   render() {
+    let rows = this.state.data.map(node => {
+      return <Nodes key={node.ip} data={node} />;
+    });
+
     return (
       <Table striped bordered condensed hover>
         <thead>
           <tr>
-            <th> Username </th>
+            <th> Name </th>
             <th> IP </th>
             <th> State </th>
+            <th> Services </th>
           </tr>
         </thead>
-        <tbody>
-          <Node />
-          <Node />
-        </tbody>
+        <tbody> {rows} </tbody>{" "}
       </Table>
     );
   }
 }
-export class Node extends React.Component {
-  render() {
-    return (
-      <tr>
-        <td>Node 1</td>
-        <td>1</td>
-        <td>1</td>
-      </tr>
-    );
-  }
-}
+
+const Nodes = props => {
+  return (
+    <tr>
+      <td>{props.data.name}</td>
+      <td>{props.data.ip}</td>
+      <td>{props.data.state}</td>
+      <td>{props.data.services}</td>
+    </tr>
+  );
+};
 
 export class DisableNodeTable extends React.Component {
   render() {
@@ -77,7 +114,7 @@ export class DisableNodeTable extends React.Component {
           <tr>
             <td>Node 1</td>
             <td>
-              <Button bsSize="small" bsStyle="danger">
+              <Button bsSize="small" bsStyle="danger" >
                 Disable
               </Button>
             </td>
@@ -111,51 +148,10 @@ export class Log extends React.Component {
   // }
 
   render() {
-    return <Jumbotron>placeholder text</Jumbotron>;
+    return <Jumbotron><ul>
+    <li>placeholder text</li>
+    </ul></Jumbotron>;
   }
-}
-
-export class AddNode extends React.Component {
-  theData = [
-    {
-      name: "node 1",
-      ip: "192.168.2.2",
-      state: "busy"
-    },
-
-    {
-      name: "node 2",
-      ip: "192.168.2.5",
-      state: "busy"
-    }
-  ].map((anObjectMapped, index) => {
-    return (
-      <p key={`${anObjectMapped.name}_{anObjectMapped.ip}`}>
-        {anObjectMapped.name} - {anObjectMapped.ip}
-      </p>
-    );
-  });
-
-  getInitialState() {
-    return {};
-  }
-
-  render() {
-    return (
-      <div>
-        <ul>{this.theData.map((item, i) => <li key={i}> {item}</li>)}</ul>
-      </div>
-    );
-  }
-
-  // handleClick(){
-
-  // }
-  // render() {
-  //   return (<button className="add-button" onChange={ this.handleClick }>
-  //     Add Node
-  //   </button>
-  // );}
 }
 
 export class TestGet extends React.Component {
