@@ -107,41 +107,6 @@ def info_path(): pass
 def error_path(): pass
 
 
-# # takes in "tag, ..."
-# # returns string 
-# def extract_tag(message):
-#     try:
-#         tag = message.split(",")[0]
-#         return tag
-#     except:
-#         network.send_multicast_message(
-#             '"tag":"error","message":"tag missing","address":"'+self_ip+'"',ukey,self_ip)
-
-
-
-# # takes in a tuple of (msg, (h,p))
-# # returns string 
-# def extract_message(message): 
-#     try:
-#         msg = message[0].split(",")[1]
-#         return msg.strip()
-#     except:
-#         network.send_multicast_message(
-#             '"tag":"error","message":"tag missing","address":"'+self_ip+'"',ukey,self_ip)
-
-
-
-# # takes in a tuple of (msg, (h,p))
-# # returns list of strings 
-# def extract_parameters(message): 
-#     lst = message[0].split(',')
-#     params = []
-#     for p in lst:
-#         if not (p == extract_tag(message) or p == extract_message(message) ):
-#             params.append(p)
-#     return params
-
-
 
 #calls function in services module that returns list of
 #   services in services module. Then loop list and find if

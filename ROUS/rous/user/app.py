@@ -30,7 +30,7 @@ mutex = Lock()
 
 
 #
-@io.on('connected')
+@io.on('connect')
 def connected():
     print "%s connected" % (request.sid)
 
@@ -41,11 +41,11 @@ def disconnect():
 
 
 #
-@io.on('change_color')
-def change_color(color):
-	print "change_color"
-	print color
-	emit('hello')
+# @io.on('change_color')
+# def change_color(color):
+# 	print "change_color"
+# 	print color
+# 	emit('hello')
 
 
 #
@@ -87,7 +87,6 @@ def thread_listener(sock, address):
 				break
 			mutex.acquire()
 			try:
-				#print json.loads(msg)["tag"]
 				data.append(msg)
 			finally:
 				mutex.release()
@@ -104,24 +103,22 @@ def listener():
 def find_nodes():
 	network.send_multicast_message(
 		'{"tag":"whois","address":"'+self_ip+'"}',ukey,self_ip)
-	# sleep(1000)
 	mutex.acquire()
 	try:
 		del nodes[:]
 		if data:
-			# print data
 			for d in data:
 				d = json.loads(d)
 				if d['tag'] == "info" and d['message'] == "whois":
-						ip = d['address']
-						if nodes:
-							for n in nodes:
-								if (str(ip) != str(n)):
-									nodes.append(ip)
-						else:
-							nodes.append(ip)
-	# except:
-	# 	pass
+					ip = d['address']
+					if nodes:
+						for n in nodes:
+							if (str(ip) != n['address']):
+								nodes.append(json.dumps(d))
+					else:
+						nodes.append(json.dumps(d))
+	except:
+		pass
 	finally:
 		del data[:]
 		mutex.release()
@@ -139,6 +136,4 @@ def handle_ctrl_c(signal, frame):
 ###############################################
 listener()
 signal.signal(signal.SIGINT, partial(handle_ctrl_c))
-# io.run(app, host='0.0.0.0', port=4242, debug=True)
-# socketio.run(app)
 ###############################################
