@@ -6,6 +6,7 @@ import struct
 import random
 import threading
 import time
+import json
 import logging as log
 from functools import partial
 import rous.utils.utils as utils
@@ -18,10 +19,10 @@ import rous.utils.encryption as encryption
 #
 #    tag               format
 #
-#  service        = {"tag", "service", "params"}
-#  info, error    = {"tag", "message"}
-#  confirm        = {"tag", "id"}
-#  whois          = {"tag"}
+#  service        = {tag:"", service:"", params:[]}
+#  info, error    = {tag:"", message:"", address:""}
+#  confirm        = {tag:"", id:""}
+#  whois          = {tag:""}
 #
 #############################
 
@@ -45,7 +46,7 @@ def wait_for_message(sock):
 
         if message:
             msg = decrypt_message(message)
-            print msg
+            print json.loads(msg)['message']
            # if not check_trust(host, data):
             choose_path(msg, sock)
 
@@ -84,7 +85,8 @@ def choose_path(message, sock):
 def service_path(message, sock):
     if check_service_exists( extract_message(message) ):
         if bid_on_service(sock):
-            network.send_multicast_message("info,"+self_ip+"WON BID",ukey,self_ip)
+            network.send_multicast_message(
+                '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
             services.run_service(extract_message(message),
                                  extract_parameters(message),
                                  self_ip)
@@ -92,7 +94,8 @@ def service_path(message, sock):
 
 #
 def whois_path():
-    network.send_multicast_message("info, whois, "+self_ip,ukey,self_ip)
+    network.send_multicast_message(
+        '{"tag":"info","message":"whois","address":"'+self_ip+'"}',ukey,self_ip)
 
 
 # these are here incase I want to use them later.
@@ -100,37 +103,39 @@ def info_path(): pass
 def error_path(): pass
 
 
-# takes in "tag, ..."
-# returns string 
-def extract_tag(message):
-    try:
-        tag = message.split(",")[0]
-        return tag
-    except:
-        network.send_multicast_message("error, ERROR - tag missing",ukey,self_ip)
+# # takes in "tag, ..."
+# # returns string 
+# def extract_tag(message):
+#     try:
+#         tag = message.split(",")[0]
+#         return tag
+#     except:
+#         network.send_multicast_message(
+#             '"tag":"error","message":"tag missing","address":"'+self_ip+'"',ukey,self_ip)
 
 
 
-# takes in a tuple of (msg, (h,p))
-# returns string 
-def extract_message(message): 
-    try:
-        msg = message[0].split(",")[1]
-        return msg.strip()
-    except:
-        network.send_multicast_message("error, ERROR - message missing",ukey,self_ip)
+# # takes in a tuple of (msg, (h,p))
+# # returns string 
+# def extract_message(message): 
+#     try:
+#         msg = message[0].split(",")[1]
+#         return msg.strip()
+#     except:
+#         network.send_multicast_message(
+#             '"tag":"error","message":"tag missing","address":"'+self_ip+'"',ukey,self_ip)
 
 
 
-# takes in a tuple of (msg, (h,p))
-# returns list of strings 
-def extract_parameters(message): 
-    lst = message[0].split(',')
-    params = []
-    for p in lst:
-        if not (p == extract_tag(message) or p == extract_message(message) ):
-            params.append(p)
-    return params
+# # takes in a tuple of (msg, (h,p))
+# # returns list of strings 
+# def extract_parameters(message): 
+#     lst = message[0].split(',')
+#     params = []
+#     for p in lst:
+#         if not (p == extract_tag(message) or p == extract_message(message) ):
+#             params.append(p)
+#     return params
 
 
 
@@ -169,7 +174,8 @@ def bid_on_service(sock):
 
 # thread dies after it sends bid to multicast group
 def place_bid(my_bid):
-    network.send_multicast_message("info,"+self_ip+": PLACED BID",ukey,self_ip) 
+    network.send_multicast_message(
+        '{"tag":"info","message":"placed_bid","address":"'+self_ip+'"}',ukey,self_ip)
     t = threading.Thread(target=network.send_multicast_message, args=(my_bid,ukey,self_ip))
     t.start()
 
@@ -225,12 +231,15 @@ def handle_crtl_c(signal, frame):
 def main():
     # try:
         mcast_sock = network.start_multicast_receiver(self_ip)
-        network.send_multicast_message("info, "+self_ip+": STARTING mcast reciever",ukey,self_ip)
+        network.send_multicast_message(
+            '{"tag":"info","message":"starting mcast reciever","address":"'+self_ip+'"}',ukey,self_ip)
+
 
         #network.send_multicast_message("info, "+self_ip+": STARTING tcp server",ukey,self_ip)
         #tcp_sock = network.start_tcp_server(self_ip)
 
-        network.send_multicast_message("info, "+self_ip+": WAITING for messages",ukey,self_ip)
+        network.send_multicast_message(
+            '{"tag":"info","message":"waiting for message","address":"'+self_ip+'"}',ukey,self_ip)
         wait_for_message(mcast_sock)
     # except:
         # network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)

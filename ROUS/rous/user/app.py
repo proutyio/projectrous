@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_socketio import SocketIO, emit
-# from flask.ext.socketio import SocketIO, emit
 from flask import request
 from flask_cors import CORS, cross_origin
 from threading import Thread, Lock
+from functools import partial
 import sys
 import socket
 import json
@@ -29,14 +29,17 @@ mutex = Lock()
 
 
 
+#
 @io.on('connected')
 def connected():
     print "%s connected" % (request.sid)
 
 
+#
 @io.on('disconnect')
 def disconnect():
     print "%s disconnected" % (request.sid)
+
 
 #
 @io.on('change_color')
@@ -46,6 +49,7 @@ def change_color(color):
 	emit('hello')
 
 
+#
 @io.on('discover_nodes')
 def discover_nodes():
 	find_nodes()
@@ -55,7 +59,8 @@ def discover_nodes():
 #
 @app.route("/sendmessage")
 def send_message():
-	network.send_multicast_message("info, "+self_ip,ukey,self_ip)
+	network.send_multicast_message(
+		'{"tag":"info","message":" ","address":"'+self_ip+'"}',ukey,self_ip)
 	return "send message"
 
 
@@ -69,7 +74,7 @@ def remove_trust():
 @app.route("/findnodes")
 def discover():
 	find_nodes()
-	return json.dumps(nodes)
+	return json.loads(json.dumps(nodes))
 
 
 #
@@ -82,6 +87,7 @@ def thread_listener(sock, address):
 			msg = encryption.decrypt(message, ukey)
 			mutex.acquire()
 			try:
+				print json.loads(msg)["tag"]
 				data.append(msg)
 			finally:
 				mutex.release()
@@ -91,6 +97,7 @@ def listener():
 	sock = network.start_multicast_receiver(self_ip)
 	t = Thread(target=thread_listener, args=(sock, self_ip))
 	t.start()
+	return t
 
 
 #
@@ -119,17 +126,18 @@ def find_nodes():
 
 
 #
-def handle_crtl_c(signal, frame):
+def handle_ctrl_c(l, signal, frame):
     print "\nSIGNAL: ctrl c"
     network.send_multicast_message("stop",ukey,self_ip)
+    l.join()
     sys.exit(0)
 
 
 
 #	START
 ###############################################
-signal.signal(signal.SIGINT, handle_crtl_c)
+l = listener()
+signal.signal(signal.SIGINT, partial(handle_ctrl_c, l))
 # io.run(app, host='0.0.0.0', port=4242, debug=True)
-listener()
 # socketio.run(app)
 ###############################################
