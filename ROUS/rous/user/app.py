@@ -34,7 +34,6 @@ mutex = Lock()
 def connected():
     print "%s connected" % (request.sid)
 
-
 #
 @io.on('disconnect')
 def disconnect():
@@ -50,31 +49,32 @@ def change_color(color):
 
 
 #
-@io.on('discover_nodes')
+@io.on('whois')
 def discover_nodes():
 	find_nodes()
-	emit("discover_nodes", json.dumps(nodes))
+	emit("discover_nodes", nodes)
 
 
-#
-@app.route("/sendmessage")
-def send_message():
-	network.send_multicast_message(
-		'{"tag":"info","message":" ","address":"'+self_ip+'"}',ukey,self_ip)
-	return "send message"
+
+# #
+# @app.route("/sendmessage")
+# def send_message():
+# 	network.send_multicast_message(
+# 		'{"tag":"info","message":" ","address":"'+self_ip+'"}',ukey,self_ip)
+# 	return "send message"
 
 
-#
-@app.route("/removetrust")
-def remove_trust():
-    return "removetrust"
+# #
+# @app.route("/removetrust")
+# def remove_trust():
+#     return "removetrust"
 
 
-#
-@app.route("/findnodes")
-def discover():
-	find_nodes()
-	return json.loads(json.dumps(nodes))
+# #
+# @app.route("/findnodes")
+# def discover():
+# 	find_nodes()
+# 	return json.loads(json.dumps(nodes))
 
 
 #
@@ -82,12 +82,12 @@ def thread_listener(sock, address):
 	while True:
 		message, (host,port) = sock.recvfrom(1024)
 		if message:
-			if message == "stop": 
-				break
 			msg = encryption.decrypt(message, ukey)
+			if json.loads(msg)['tag'] == "stop": 
+				break
 			mutex.acquire()
 			try:
-				print json.loads(msg)["tag"]
+				#print json.loads(msg)["tag"]
 				data.append(msg)
 			finally:
 				mutex.release()
@@ -102,42 +102,43 @@ def listener():
 
 #
 def find_nodes():
-	network.send_multicast_message("whois",ukey,self_ip)
+	network.send_multicast_message(
+		'{"tag":"whois","address":"'+self_ip+'"}',ukey,self_ip)
+	# sleep(1000)
 	mutex.acquire()
 	try:
 		del nodes[:]
 		if data:
+			# print data
 			for d in data:
-				msg = d.split(',')
-				if msg[0] == "info":
-					if msg[1].strip() == "whois":
-						ip = msg[2].strip()
+				d = json.loads(d)
+				if d['tag'] == "info" and d['message'] == "whois":
+						ip = d['address']
 						if nodes:
 							for n in nodes:
 								if (str(ip) != str(n)):
 									nodes.append(ip)
 						else:
 							nodes.append(ip)
-	except:
-		pass
+	# except:
+	# 	pass
 	finally:
 		del data[:]
 		mutex.release()
 
 
 #
-def handle_ctrl_c(l, signal, frame):
+def handle_ctrl_c(signal, frame):
     print "\nSIGNAL: ctrl c"
-    network.send_multicast_message("stop",ukey,self_ip)
-    l.join()
+    network.send_multicast_message('{"tag":"stop"}',ukey,self_ip)
     sys.exit(0)
 
 
 
 #	START
 ###############################################
-l = listener()
-signal.signal(signal.SIGINT, partial(handle_ctrl_c, l))
+listener()
+signal.signal(signal.SIGINT, partial(handle_ctrl_c))
 # io.run(app, host='0.0.0.0', port=4242, debug=True)
 # socketio.run(app)
 ###############################################

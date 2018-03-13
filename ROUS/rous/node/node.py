@@ -46,10 +46,12 @@ def wait_for_message(sock):
 
         if message:
             msg = decrypt_message(message)
-            print json.loads(msg)['message']
-           # if not check_trust(host, data):
+            # if not check_trust(host, data):
+            # try:
+            print json.loads(msg)
             choose_path(msg, sock)
-
+            # except:
+            #     print "choosing path failed"
 
 
 #
@@ -73,10 +75,11 @@ def check_trust(host, data):
 
 # choose the path the message will take
 def choose_path(message, sock): 
-    if extract_tag(message) == "service": service_path(message, sock)
-    elif extract_tag(message) == "info":  info_path()
-    elif extract_tag(message) == "error": error_path()
-    elif message == "whois": whois_path()
+    m = json.loads(message)
+    if m['tag'] == "service": service_path(message, sock)
+    elif m['tag'] == "info":  info_path()
+    elif m['tag'] == "error": error_path()
+    elif m['tag'] == "whois": whois_path()
     else: return
 
 
@@ -94,6 +97,7 @@ def service_path(message, sock):
 
 #
 def whois_path():
+    # print network.all_services()
     network.send_multicast_message(
         '{"tag":"info","message":"whois","address":"'+self_ip+'"}',ukey,self_ip)
 
@@ -188,7 +192,7 @@ def thread_timer():
     while True:
         if(time.time() > timeout):
             stop = True
-            network.send_multicast_message("",ukey,self_ip)#dont delete, cycles bid loop
+            network.send_multicast_message('{"tag":"other"}',ukey,self_ip)#dont delete, cycles bid loop
             break
 
 #

@@ -4,17 +4,23 @@ import uuid
 
 
 def encrypt(message, key):
-	iv = Random.new().read(AES.block_size)
-	cipher = AES.new(read_key(key), AES.MODE_CFB, iv)
-	msg = iv + cipher.encrypt(message)
-	return msg.encode("hex")
+	try:
+		iv = Random.new().read(AES.block_size)
+		cipher = AES.new(read_key(key), AES.MODE_CFB, iv)
+		msg = iv + cipher.encrypt(message)
+		return msg.encode("hex")
+	except:
+		print "encrypt failed"
 
 
 def decrypt(message, key):
-	iv = Random.new().read(AES.block_size)
-	cipher = AES.new(read_key(key), AES.MODE_CFB, iv)
-	msg = cipher.decrypt(message.decode("hex"))
-	return msg[len(iv):]
+	try:
+		iv = Random.new().read(AES.block_size)
+		cipher = AES.new(read_key(key), AES.MODE_CFB, iv)
+		msg = cipher.decrypt(message.decode("hex"))
+		return msg[len(iv):]
+	except:
+		print "decrypt failed"
 
 
 def read_key(key):
