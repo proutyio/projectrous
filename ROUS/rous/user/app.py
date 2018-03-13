@@ -55,6 +55,11 @@ def discover_nodes():
 	emit("discover_nodes", nodes)
 
 
+#
+@io.on('send')
+def send_message(tag, message):
+	network.send_multicast_message(
+		'{"tag":"'+tag+'","message":"'+message+'","address":"'+self_ip+'"}',ukey,self_ip)
 
 # #
 # @app.route("/sendmessage")
@@ -107,19 +112,21 @@ def find_nodes():
 	try:
 		del nodes[:]
 		if data:
+			#print data
 			for d in data:
 				d = json.loads(d)
 				if d['tag'] == "info" and d['message'] == "whois":
-					ip = d['address']
-					if nodes:
-						for n in nodes:
-							if (str(ip) != n['address']):
-								nodes.append(json.dumps(d))
-					else:
+					if not nodes:
 						nodes.append(json.dumps(d))
+					else:
+						for n in nodes:
+							n = json.loads(n)
+							if d['address'] != n['address']:
+								nodes.append(json.dumps(d))
 	except:
 		pass
 	finally:
+		print nodes
 		del data[:]
 		mutex.release()
 
