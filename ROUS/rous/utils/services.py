@@ -9,7 +9,13 @@ import rous.utils.printer as printer
 
 
 def all_services():
-	return config.all_services()
+	jstr = '{'
+	svc = config.all_services()
+	print svc
+	for s in svc:
+		jstr+='"service":'+'"'+s+'",'
+	jstr = jstr[:-1]+'}'
+	return jstr
 
 
 def run_service(service, params, sender_address):

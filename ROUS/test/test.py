@@ -7,15 +7,25 @@ import socket
 import rous.utils.network as network
 import rous.utils.printer as printer
 import rous.utils.encryption as encryption
+import rous.utils.services as services
 
 
 
 
-def test_tcp():
-	newkey = encryption.newkey()
-	network.send_tcp_message("key, ukey,"+newkey)
 
-test_tcp()
+def servicestest():
+	services.all_services()
+servicestest()
+
+
+
+
+
+# def test_tcp():
+# 	newkey = encryption.newkey()
+# 	network.send_tcp_message("key, ukey,"+newkey)
+
+# test_tcp()
 
 
 

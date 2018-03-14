@@ -48,7 +48,8 @@ def wait_for_message(sock):
             msg = decrypt_message(message)
             # if not check_trust(host, data):
             # try:
-            print json.loads(msg)
+            # print json.dumps(services.all_services())
+            # print json.loads(msg)
             choose_path(msg, sock)
             # except:
             #     print "choosing path failed"
@@ -97,9 +98,10 @@ def service_path(message, sock):
 
 #
 def whois_path():
-    # print network.all_services()
-    network.send_multicast_message(
-        '{"tag":"info","message":"whois","address":"'+self_ip+'"}',ukey,self_ip)
+    servs = services.all_services()
+    print servs
+    # network.send_multicast_message(
+        # '{"tag":"info","message":"whois","address":"'+self_ip+'","services":"'+servs+'"}',ukey,self_ip)
 
 
 # these are here incase I want to use them later.

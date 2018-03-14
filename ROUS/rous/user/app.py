@@ -112,7 +112,6 @@ def find_nodes():
 	try:
 		del nodes[:]
 		if data:
-			#print data
 			for d in data:
 				d = json.loads(d)
 				if d['tag'] == "info" and d['message'] == "whois":
@@ -126,7 +125,6 @@ def find_nodes():
 	except:
 		pass
 	finally:
-		print nodes
 		del data[:]
 		mutex.release()
 
