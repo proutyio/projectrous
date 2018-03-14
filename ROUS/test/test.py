@@ -14,7 +14,9 @@ import rous.utils.services as services
 
 
 def servicestest():
-	services.all_services()
+	self_ip ='192.168.0.10'
+	servs = services.all_services()
+	print '{"tag":"info","message":"whois","address":"'+self_ip+'","services":'+servs+'}'
 servicestest()
 
 

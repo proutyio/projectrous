@@ -32,12 +32,14 @@ mutex = Lock()
 #
 @io.on('connect')
 def connected():
-    print "%s connected" % (request.sid)
+	emit("connection")
+	print "%s connected" % (request.sid)
 
 #
 @io.on('disconnect')
 def disconnect():
-    print "%s disconnected" % (request.sid)
+	emit("disconnect")
+	print "%s disconnected" % (request.sid)
 
 
 #
@@ -57,9 +59,11 @@ def discover_nodes():
 
 #
 @io.on('send')
-def send_message(tag, message):
-	network.send_multicast_message(
-		'{"tag":"'+tag+'","message":"'+message+'","address":"'+self_ip+'"}',ukey,self_ip)
+def send_message(message):
+	print message
+	network.send_multicast_message(message,ukey,self_ip)
+	# network.send_multicast_message(
+		# '{"tag":"'+tag+'","message":"'+message+'","address":"'+self_ip+'"}',ukey,self_ip)
 
 # #
 # @app.route("/sendmessage")
@@ -81,7 +85,6 @@ def send_message(tag, message):
 # 	find_nodes()
 # 	return json.loads(json.dumps(nodes))
 
-
 #
 def thread_listener(sock, address):
 	while True:
@@ -92,6 +95,7 @@ def thread_listener(sock, address):
 				break
 			mutex.acquire()
 			try:
+				print data
 				data.append(msg)
 			finally:
 				mutex.release()

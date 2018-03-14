@@ -8,13 +8,15 @@ import rous.utils.printer as printer
 
 
 
+#this is confusing looking, but I am just building a string
 def all_services():
-	jstr = '{'
+	jstr = '['
 	svc = config.all_services()
-	print svc
+	x=1
 	for s in svc:
-		jstr+='"service":'+'"'+s+'",'
-	jstr = jstr[:-1]+'}'
+		jstr+='{"service":'+'"'+s+'"},'
+		x+=1
+	jstr = jstr[:-1]+']'
 	return jstr
 
 

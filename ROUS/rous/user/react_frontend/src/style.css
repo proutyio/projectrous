@@ -1,0 +1,64 @@
+body, ul {
+	margin: 0;
+	padding: 0;
+	background-color: #FFFFFF;
+	/*font-family: "Times New Roman", Times, serif;*/
+	 font-size: 16px;
+
+}
+
+th,th,tr {
+	text-align: center;
+}
+
+p {
+	font-weight: bold;
+}
+
+svg {
+    height: 120px;
+}
+
+.navbar.navbar-default {
+    background-color: #99ccff;
+    border: 0;
+    margin:0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.navbar.navbar-default .navbar-collapse {
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#NavBarTop {
+	margin: 0;
+	padding: 0px;
+	background-color: #D73F09;
+}
+
+#PageTitle {
+	margin-top: 100px;
+}
+
+.TableMain {
+	margin-top: 20px;
+	margin-bottom: 50px;
+	/*background-color: #ffb380;*/
+}
+
+.FormSend {
+	/*background-color: #fff0e6;*/
+}
+
+#TopWell {
+	margin: 0;
+	padding: 0;
+	margin-top: -18px;
+	background-color: #000000;
+}
+
+
+
