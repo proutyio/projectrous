@@ -21,6 +21,7 @@ import rous.utils.encryption as encryption
 #
 #  service        = {tag:"", service:"", params:[]}
 #  info, error    = {tag:"", message:"", address:""}
+#  bid            = {tag:"", bid:"", address:""}
 #  confirm        = {tag:"", id:""}
 #  whois          = {tag:""}
 #
@@ -48,8 +49,7 @@ def wait_for_message(sock):
             msg = decrypt_message(message)
             # if not check_trust(host, data):
             # try:
-            # print json.dumps(services.all_services())
-            #print json.loads(msg)
+            print json.loads(msg)
             choose_path(msg, sock)
             # except:
             #     print "choosing path failed"
@@ -91,18 +91,15 @@ def service_path(msg, sock):
         if bid_on_service(sock):
             network.send_multicast_message(
                 '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
-            # services.run_service(extract_message(message),
-            #                      extract_parameters(message),
-            #                      self_ip)
+            services.run_service(msg['service'],self_ip)
 
 
 #
 def whois_path():
     servs = json.dumps(services.all_services())
-    # print servs
-    # print '{"tag":"info","message":"whois","address":"'+self_ip+'","services":'+servs+'}'
     network.send_multicast_message(
         '{"tag":"info","message":"whois","address":"'+self_ip+'","services":'+servs+'}',ukey,self_ip)
+
 
 
 # these are here incase I want to use them later.
@@ -151,7 +148,7 @@ def bid_on_service(sock):
 # thread dies after it sends bid to multicast group
 def place_bid(my_bid):
     network.send_multicast_message(
-        '{"tag":"info","message":"placed_bid","address":"'+self_ip+'"}',ukey,self_ip)
+        '{"tag":"bid","bid":"'+str(my_bid)+'","address":"'+self_ip+'"}',ukey,self_ip)
     t = threading.Thread(target=network.send_multicast_message, args=(my_bid,ukey,self_ip))
     t.start()
 
@@ -183,10 +180,12 @@ def wait_for_bids(sock, bids):
         if stop:
             stop = False
             break
-        bid, (host,port) = sock.recvfrom(1024)
+        msg, (host,port) = sock.recvfrom(1024)
+        msg = decrypt_message(msg)
+        print msg
         if not check_trust(host, ""):
-            if bid.isdigit():
-                bids.append(int(bid))
+            if msg.isdigit():
+                bids.append(int(msg))
 
 
 

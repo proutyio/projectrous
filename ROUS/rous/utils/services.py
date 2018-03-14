@@ -20,7 +20,7 @@ def all_services():
 	return jstr
 
 
-def run_service(service, params, sender_address):
+def run_service(service, sender_address):
 	if not config.call_service(service, sender_address):
 		print "failed"
 		log.info("%s Error - Failed to call serivce", sender_address)

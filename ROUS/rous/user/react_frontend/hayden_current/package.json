@@ -1,0 +1,23 @@
+{
+  "name": "AdminPage",
+  "version": "1.0.0",
+  "description": "ProjectROUS Admin Page",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "axios": "0.18.0",
+    "node-fetch": "2.1.1",
+    "react": "16.2.0",
+    "react-bootstrap": "0.32.1",
+    "react-dom": "16.2.0",
+    "react-scripts": "1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:4242/"
+}
