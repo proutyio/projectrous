@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from 'react-dom'
 import socketIOClient from "socket.io-client";
 import './style.css';
 import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
@@ -22,7 +23,8 @@ import {
   ListGroup,
   ListGroupItem,
   PageHeader,
-  Row
+  Row,
+  Radio
 } from "react-bootstrap";
 
 
@@ -50,8 +52,8 @@ export const PageTitle = (
 
 
 
-function graph_func(n = 30) {
-    return Math.floor(Math.random()*200);
+function graph_func(n = 40) {
+    return Math.floor(Math.random()*1);
 }
 
 class SparkGraph extends Component {
@@ -86,6 +88,7 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
+      trust:'',
       style:{color:"black"},
       styleA:{color:"black", borderStyle:"solid", 
               borderColor:"blue",borderWidth:"2px"},
@@ -95,7 +98,7 @@ export class TableMain extends Component {
   componentDidMount() {
     setInterval(() => {
       this.state.socket.emit("whois");
-    },1000);
+    },3000);
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
 
@@ -105,58 +108,105 @@ export class TableMain extends Component {
     clearInterval();
   }
 
-  send = () => {
-    this.state.socket.emit('whois');
-  };
+  sendTrust = (e) => {
+    e.preventDefault();
+    console.log(this.state.trust)
+  }
+
+  changeTrust = (e) => {
+    this.setState({trust: e.currentTarget.value});
+  }
 
   render() {
     return (
-      <Well className="TableMain">
-        <Table>
-          <thead>
-            <tr className="text-center">
-              <th>Node</th>
-              <th>Address</th>
-              <th>Services</th>
-              <th>Current Step</th>
-              <th>Graph</th>
-            </tr>
-          </thead>
-          <tbody>
-
-          {this.state.data.map((data,i) =>{
-            var d = JSON.parse(data);
-            return (
-              <tr key={i}>
-                <td style={{verticalAlign:"middle",
-                            fontSize:"20px",fontWeight:"bold"}}>{i+1}</td>
-                <td style={{verticalAlign:"middle",
-                            marginTop:"20px",
-                            color:"#D73F09",
-                            fontSize:"26px"}}>{d['address']}</td>
-                <td style={{verticalAlign:"middle"}}>                  
-               
-
-                  {JSON.parse(d['services']).map((data,i) => {
-                    return (
-                      <div id="service" key={i}>{data['service']}</div>
-                    );
-                  })}
-                
-                </td>
-                <td style={{verticalAlign:"middle"}}>
-                  <p style={this.state.styleA}>WAITING</p>
-                  <p style={this.state.style}>CHECKING</p>
-                  <p style={this.state.style}>BIDDING</p>
-                  <p style={this.state.style}>SERVICE</p>
-                </td>
-                <td style={{verticalAlign:"middle"}}><SparkGraph/></td>
+      <div>
+        <Well className="TableMain">
+          <Table>
+            <thead>
+              <tr className="text-center">
+                <th>Node</th>
+                <th>Address</th>
+                <th>Services</th>
+                <th>Current Step</th>
+                <th>Graph</th>
               </tr>
-            );
-          })}
-          </tbody>
-        </Table>
-      </Well>
+            </thead>
+            <tbody>
+
+              {this.state.data.map((data,i) =>{
+                var d = JSON.parse(data);
+                return (
+                  <tr key={i}>
+                    <td style={{verticalAlign:"middle",
+                                fontSize:"20px",fontWeight:"bold"}}>{i+1}</td>
+                    <td style={{verticalAlign:"middle",
+                                marginTop:"20px",
+                                color:"#D73F09",
+                                fontSize:"26px"}}>{d['address']}</td>
+                    <td style={{verticalAlign:"middle"}}>                  
+                   
+
+                      {JSON.parse(d['services']).map((data,i) => {
+                        return (
+                          <div id="service" key={i}>{data['service']}</div>
+                        );
+                      })}
+                    
+                    </td>
+                    <td style={{verticalAlign:"middle"}}>
+                      <p style={this.state.styleA}>WAITING</p>
+                      <p style={this.state.style}>CHECKING</p>
+                      <p style={this.state.style}>BIDDING</p>
+                      <p style={this.state.style}>SERVICE</p>
+                    </td>
+                    <td style={{verticalAlign:"middle"}}><SparkGraph/></td>
+                  </tr>
+                );
+              })}
+
+            </tbody>
+          </Table>
+        </Well>
+
+        
+        <Col xs={4} md={6}>
+          <FormSend/>
+        </Col>
+        
+
+        <Col xs={4} md={6}>
+          <Well className="FormTrust">
+            <Form horizontal onSubmit={this.sendTrust}>
+              
+              {this.state.data.map((data,i) =>{
+                var d = JSON.parse(data);
+                return (
+                  <FormGroup>    
+                    <div style={{textAlign:"center"}}>     
+                      <Radio name="radioGroup" 
+                             inline 
+                             value={d['address']}
+                             onChange={this.changeTrust}>
+                        {d['address']}
+                      </Radio>{' '}
+                    </div>
+                  </FormGroup>
+                );
+              })}
+              
+              <FormGroup>
+                <Col smOffset={5} sm={9}>
+                  <div style={{textAlign:"left", margin:"0 auto"}}> 
+                    <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+                            type="submit">remove trust</Button>
+                  </div>
+                </Col>
+              </FormGroup>
+            </Form> 
+          </Well>
+        </Col>
+      </div>
+
     );
   }
 }
@@ -164,7 +214,7 @@ export class TableMain extends Component {
 
 
 
-export class FormSend extends Component {
+class FormSend extends Component {
   constructor() {
     super();
     this.state = { 
@@ -217,6 +267,49 @@ export class FormSend extends Component {
 
 
 
+// // Need to rethink, works, but behavior is not good
+// export class ConsoleLog extends Component {
+//   constructor() {
+//     super();
+//     this.state = { 
+//       socket:socketIOClient("http://127.0.0.1:4242"),
+//       data: [],
+//     };
+//   }
+
+//   componentDidMount() {
+//     setInterval(() => {
+//       this.state.socket.emit("console");
+//     },2000);
+//     this.state.socket.on("update_console", (data)=> 
+//this.setState({ data: this.state.data.concat(data) }));
+//   }
+
+//   componentWillUnmount() {
+//     clearInterval();
+//   }
+
+//   render() {
+//     return (
+//       <Well id="ConsoleLog">
+//         <h4 style={{color:"white"}}>Console Log</h4>
+//         {this.state.data.map((data,i) =>{
+//             //var d = JSON.parse(data);
+//             {console.log(this.state.data)}
+//             return (
+//               <p>{data}</p>
+//             );
+//         })}
+        
+//       </Well>
+//     );
+//   }
+// }
+
+
+
+
+
 
 
 
@@ -246,7 +339,7 @@ export class FormSend extends Component {
 // }
 
 
-// export class DisplayData extends Component {
+// export class BasicDynamicData extends Component {
 //   constructor() {
 //     super();
 //     this.state = { 

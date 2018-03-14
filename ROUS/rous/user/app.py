@@ -65,6 +65,18 @@ def send_message(message):
 	# network.send_multicast_message(
 		# '{"tag":"'+tag+'","message":"'+message+'","address":"'+self_ip+'"}',ukey,self_ip)
 
+
+#
+@io.on('console')
+def update_console():
+	mutex.acquire()
+	try:
+		emit("update_console", data)
+	finally:
+		mutex.release()
+
+
+
 # #
 # @app.route("/sendmessage")
 # def send_message():
@@ -91,8 +103,8 @@ def thread_listener(sock, address):
 		message, (host,port) = sock.recvfrom(1024)
 		if message:
 			msg = encryption.decrypt(message, ukey)
-			if json.loads(msg)['tag'] == "stop": 
-				break
+			# if json.loads(msg)['tag'] == "stop": 
+			# 	break
 			mutex.acquire()
 			try:
 				print data

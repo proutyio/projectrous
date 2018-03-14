@@ -48,12 +48,11 @@ def wait_for_message(sock):
         if message:
             msg = decrypt_message(message)
             # if not check_trust(host, data):
-            # try:
-            print json.loads(msg)
-            choose_path(msg, sock)
-            # except:
-            #     print "choosing path failed"
-
+            try:
+                print json.loads(msg)
+                choose_path(msg, sock)
+            except:
+                print "bad message"
 
 #
 def decrypt_message(message):
@@ -182,7 +181,7 @@ def wait_for_bids(sock, bids):
             break
         msg, (host,port) = sock.recvfrom(1024)
         msg = decrypt_message(msg)
-        print msg
+        # print msg
         if not check_trust(host, ""):
             if msg.isdigit():
                 bids.append(int(msg))

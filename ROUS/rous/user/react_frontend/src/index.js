@@ -6,7 +6,7 @@ import {
   NavBarTop,
   PageTitle,
   TableMain,
-  FormSend
+  FormTrust,
 } from "./components";
 
 
@@ -23,12 +23,7 @@ const App = () => (
       
       <TableMain />
 
-      <Col xs={4} md={6}>
-        <FormSend/>
-      </Col>
-      <Col xs={4} md={6}>
-        <FormSend/>
-      </Col>
+      
 
 
     </Col>
