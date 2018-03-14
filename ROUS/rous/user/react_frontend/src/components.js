@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import 'whatwg-fetch';
 import socketIOClient from "socket.io-client";
 import './style.css';
 import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
@@ -186,7 +185,7 @@ export class FormSend extends Component {
   };
 
   render() {
-    var str = '{"tag":"","service":""}';
+    var str = '{"tag":"service","service":"green_on"}';
     return (
       <Well className="FormSend">
         <Form horizontal onSubmit={this.send}>

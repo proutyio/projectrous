@@ -15,7 +15,6 @@ const App = () => (
     {NavBarTop}
     <Well id="TopWell"></Well>
 
-
     <Col xs={1} md={2}>
     </Col>
     <Col xs={10} md={8}>

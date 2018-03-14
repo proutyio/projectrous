@@ -49,7 +49,7 @@ def wait_for_message(sock):
             # if not check_trust(host, data):
             # try:
             # print json.dumps(services.all_services())
-            print json.loads(msg)
+            #print json.loads(msg)
             choose_path(msg, sock)
             # except:
             #     print "choosing path failed"
@@ -77,7 +77,7 @@ def check_trust(host, data):
 # choose the path the message will take
 def choose_path(message, sock): 
     m = json.loads(message)
-    if m['tag'] == "service": service_path(message, sock)
+    if m['tag'] == "service": service_path(m, sock)
     elif m['tag'] == "info":  info_path()
     elif m['tag'] == "error": error_path()
     elif m['tag'] == "whois": whois_path()
@@ -86,14 +86,14 @@ def choose_path(message, sock):
 
 
 #
-def service_path(message, sock):
-    if check_service_exists( extract_message(message) ):
+def service_path(msg, sock):
+    if check_service_exists(msg):
         if bid_on_service(sock):
             network.send_multicast_message(
                 '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
-            services.run_service(extract_message(message),
-                                 extract_parameters(message),
-                                 self_ip)
+            # services.run_service(extract_message(message),
+            #                      extract_parameters(message),
+            #                      self_ip)
 
 
 #
@@ -115,8 +115,12 @@ def error_path(): pass
 #   services in services module. Then loop list and find if
 #   input string is in list.
 def check_service_exists(msg):
-    for s in services.all_services():
-        if(msg == s): 
+    svc = json.loads(json.dumps(msg))['service']
+    all_svc = services.all_services()
+    all_svc = all_svc[1:-1]
+    all_svc = all_svc.split(',')
+    for s in all_svc:
+        if(svc == json.loads(s)['service']): 
             return True
     return False
 
