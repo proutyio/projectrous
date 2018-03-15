@@ -153,7 +153,7 @@ def find_nodes():
 	except:
 		pass
 	finally:
-		print nodes
+		# print nodes
 		del data[:]
 		mutex.release()
 

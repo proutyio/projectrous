@@ -203,7 +203,7 @@ def handle_crtl_c(signal, frame):
 
 #
 def main():
-    # try:
+    try:
         mcast_sock = network.start_multicast_receiver(self_ip)
         network.send_multicast_message(
             '{"tag":"info","message":"starting mcast reciever","address":"'+self_ip+'"}',ukey,self_ip)
@@ -215,7 +215,8 @@ def main():
         network.send_multicast_message(
             '{"tag":"info","message":"waiting for message","address":"'+self_ip+'"}',ukey,self_ip)
         wait_for_message(mcast_sock)
-    # except:
+    except:
+        pass
         # network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
 
 
