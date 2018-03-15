@@ -86,7 +86,6 @@ def thread_tcp_server():
 #
 def update_key(data, host):
 	try:
-		print data
 		msg = data.split(",")
 		if msg[0] == "key":
 			if msg[1].strip() == "ukey": 

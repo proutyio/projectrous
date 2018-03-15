@@ -120,6 +120,7 @@ export class TableMain extends Component {
   }
 
   render() {
+    var lst = [];
     return (
       <div>
         <Well className="TableMain">
@@ -136,7 +137,22 @@ export class TableMain extends Component {
             <tbody>
 
               {this.state.data.map((data,i) =>{
+                // var lst = [];
                 var d = JSON.parse(data);
+                if (lst.length > 0){
+                  for(i=0;i<lst.length;i++){
+                    // console.log(lst[i]['address']);
+                    // console.log(d['address']);
+                    if( (lst[i]['address']).toString() === (d['address']).toString() ){
+                      // lst.push(d);
+                    } 
+                    else
+                      lst.push(d);
+                  }
+                }else{
+                  lst.push(d);
+                }
+                // console.log(lst[0]);
                 return (
                   <tr key={i}>
                     <td style={{verticalAlign:"middle",
@@ -178,6 +194,7 @@ export class TableMain extends Component {
 
         <Col xs={4} md={6}>
           <Well className="FormTrust">
+            <h3 className="text-center">Manage Node Trust</h3>
             <Form horizontal onSubmit={this.removeTrust}>
               <FormGroup>
               <div style={{textAlign:"center"}}> 
@@ -189,6 +206,8 @@ export class TableMain extends Component {
               </div>
               {this.state.data.map((data,i) =>{
                 var d = JSON.parse(data);
+                var lst = [];
+                var x = 0;
                 return (
                   <div style={{textAlign:"center"}}>     
                     <Radio name="radioGroup" 

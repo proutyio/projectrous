@@ -84,12 +84,10 @@ def remove_trust(block_ip):
 	find_nodes()
 	newkey = str(encryption.newkey())
 	removed.append(block_ip)
-	if block_ip == str(0): #restore
-		print "remove"
+	if block_ip == str(0): #restore keys to all
 		network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		try:
 			for r in removed:
-				print r
 				if r != str(0):
 					network.send_tcp_message(r,"key,ukey,"+newkey)
 		except:
@@ -98,8 +96,7 @@ def remove_trust(block_ip):
 			for n in nodes:
 				node_ip = json.loads(n)['address']
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
-	elif nodes:
-		print "nodes"
+	elif nodes: #remove key for selected node
 		if block_ip != self_ip:
 			network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		for n in nodes:
@@ -142,16 +139,21 @@ def find_nodes():
 			for d in data:
 				d = json.loads(d)
 				if d['tag'] == "info" and d['message'] == "whois":
-					if not nodes:
-						nodes.append(json.dumps(d))
-					else:
+					if nodes:
+						check = False
 						for n in nodes:
 							n = json.loads(n)
-							if d['address'] != n['address']:
-								nodes.append(json.dumps(d))
+							if str(d['address']) == str(n['address']):
+								check = True
+								return
+						if not check:
+							nodes.append(json.dumps(d))
+					else:
+						nodes.append(json.dumps(d))
 	except:
 		pass
 	finally:
+		print nodes
 		del data[:]
 		mutex.release()
 
