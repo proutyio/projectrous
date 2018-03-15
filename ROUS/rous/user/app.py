@@ -25,6 +25,7 @@ ukey = "../utils/keys/ukey.txt"
 
 data = []
 nodes = []
+removed = []
 mutex = Lock()
 
 
@@ -76,14 +77,27 @@ def update_console():
 		mutex.release()
 
 
-#
+# when restoring I want to issue new keys to removed list + found nodes
 @io.on('trust')
-def remove_trust(a):
+def remove_trust(block_ip):
 	find_nodes()
-	for n in nodes:
-		b = json.loads(n)['address']
-		if a != b:
-			print "remove trust"+str(b)
+	newkey = str(encryption.newkey())
+	removed.append(block_ip)
+	if block_ip == 0: #restore
+		if removed:
+			for r in removed:
+				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+				network.update_key(self_ip,"key,ukey,"+newkey)
+		if nodes:
+			for n in nodes:
+				node_ip = json.loads(n)['address']
+				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+	elif nodes:
+		for n in nodes:
+			node_ip = json.loads(n)['address']
+			if block_ip != node_ip:
+				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+				network.update_key(self_ip,"key,ukey,"+newkey)
 
 
 #
@@ -92,11 +106,11 @@ def thread_listener(sock, address):
 		message, (host,port) = sock.recvfrom(1024)
 		if message:
 			msg = encryption.decrypt(message, ukey)
-			# if json.loads(msg)['tag'] == "stop": 
-			# 	break
+			try:
+				if json.loads(msg)['tag'] == "stop": break
+			except: pass
 			mutex.acquire()
 			try:
-				# print data
 				data.append(msg)
 			finally:
 				mutex.release()

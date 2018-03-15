@@ -78,14 +78,14 @@ def thread_tcp_server():
 	    	data = conn.recv(1024)
 	    	if(data == "stop"): 
 	    		break
-	    	check_update_key(data, host)
+	    	update_key(data, host)
 	    finally:
 	    	conn.close()
 
 	
 #
-def check_update_key(data, host):
-	try:
+def update_key(data, host):
+	# try:
 		msg = data.split(",")
 		if msg[0] == "key":
 			if msg[1].strip() == "ukey": 
@@ -93,8 +93,8 @@ def check_update_key(data, host):
 				newkey = msg[2].strip()
 				if len(newkey) == 32:
 					utils.write_new_key(key, newkey, host)
-	except:
-		pass
+	# except:
+	# 	pass
 
 
 
@@ -108,9 +108,8 @@ def start_tcp_server(address):
 
 # send message to myself, I use this to stop the tcp server thread
 #	with a "stop" message 
-def send_tcp_message(message):
+def send_tcp_message(host,message):
 	# try:
-	host = find_my_ip()
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	server_address = (host, tcp_port)
 	sock.connect(server_address)

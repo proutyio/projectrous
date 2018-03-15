@@ -49,7 +49,7 @@ def wait_for_message(sock):
             msg = decrypt_message(message)
             # if not check_trust(host, data):
             try:
-                print json.loads(msg)
+                # print json.loads(msg)
                 choose_path(msg, sock)
             except:
                 print "bad message"
@@ -191,7 +191,7 @@ def wait_for_bids(sock, bids):
 # send out "stop" message to stop tcp message
 #   when ctrl z signal comes in
 def stop_tcp_server():
-    network.send_tcp_message("stop")
+    network.send_tcp_message(self_ip,"stop")
 
 
 #
@@ -208,9 +208,9 @@ def main():
         network.send_multicast_message(
             '{"tag":"info","message":"starting mcast reciever","address":"'+self_ip+'"}',ukey,self_ip)
 
-
-        #network.send_multicast_message("info, "+self_ip+": STARTING tcp server",ukey,self_ip)
-        #tcp_sock = network.start_tcp_server(self_ip)
+        network.send_multicast_message(
+            '{"tag":"info","message":"starting tcp server","address":"'+self_ip+'"}',ukey,self_ip)
+        tcp_sock = network.start_tcp_server(self_ip)
 
         network.send_multicast_message(
             '{"tag":"info","message":"waiting for message","address":"'+self_ip+'"}',ukey,self_ip)

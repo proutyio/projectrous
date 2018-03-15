@@ -179,22 +179,28 @@ export class TableMain extends Component {
         <Col xs={4} md={6}>
           <Well className="FormTrust">
             <Form horizontal onSubmit={this.removeTrust}>
-              
+              <FormGroup>
+              <div style={{textAlign:"center"}}> 
+                  <Radio name="radioGroup"
+                         value="0"
+                         onChange={this.changeTrust}>
+                    Reset
+                  </Radio>{' '}
+              </div>
               {this.state.data.map((data,i) =>{
                 var d = JSON.parse(data);
                 return (
-                  <FormGroup>    
-                    <div style={{textAlign:"center"}}>     
-                      <Radio name="radioGroup" 
-                             inline 
-                             value={d['address']}
-                             onChange={this.changeTrust}>
-                        {d['address']}
-                      </Radio>{' '}
-                    </div>
-                  </FormGroup>
+                  <div style={{textAlign:"center"}}>     
+                    <Radio name="radioGroup" 
+                           inline 
+                           value={d['address']}
+                           onChange={this.changeTrust}>
+                      {d['address']}
+                    </Radio>{' '}
+                  </div>
                 );
               })}
+              </FormGroup>
               
               <FormGroup>
                 <Col smOffset={5} sm={9}>
