@@ -108,9 +108,11 @@ export class TableMain extends Component {
     clearInterval();
   }
 
-  sendTrust = (e) => {
+  removeTrust = (e) => {
     e.preventDefault();
-    console.log(this.state.trust)
+    console.log(this.state.trust);
+    var t = this.state.trust;
+    this.state.socket.emit("trust", t);
   }
 
   changeTrust = (e) => {
@@ -176,7 +178,7 @@ export class TableMain extends Component {
 
         <Col xs={4} md={6}>
           <Well className="FormTrust">
-            <Form horizontal onSubmit={this.sendTrust}>
+            <Form horizontal onSubmit={this.removeTrust}>
               
               {this.state.data.map((data,i) =>{
                 var d = JSON.parse(data);

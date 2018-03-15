@@ -76,26 +76,15 @@ def update_console():
 		mutex.release()
 
 
+#
+@io.on('trust')
+def remove_trust(a):
+	find_nodes()
+	for n in nodes:
+		b = json.loads(n)['address']
+		if a != b:
+			print "remove trust"+str(b)
 
-# #
-# @app.route("/sendmessage")
-# def send_message():
-# 	network.send_multicast_message(
-# 		'{"tag":"info","message":" ","address":"'+self_ip+'"}',ukey,self_ip)
-# 	return "send message"
-
-
-# #
-# @app.route("/removetrust")
-# def remove_trust():
-#     return "removetrust"
-
-
-# #
-# @app.route("/findnodes")
-# def discover():
-# 	find_nodes()
-# 	return json.loads(json.dumps(nodes))
 
 #
 def thread_listener(sock, address):
@@ -107,7 +96,7 @@ def thread_listener(sock, address):
 			# 	break
 			mutex.acquire()
 			try:
-				print data
+				# print data
 				data.append(msg)
 			finally:
 				mutex.release()
