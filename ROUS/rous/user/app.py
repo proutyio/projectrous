@@ -78,26 +78,34 @@ def update_console():
 
 
 # when restoring I want to issue new keys to removed list + found nodes
+# lot of error checking, looks nasty, sorry
 @io.on('trust')
 def remove_trust(block_ip):
 	find_nodes()
 	newkey = str(encryption.newkey())
 	removed.append(block_ip)
-	if block_ip == 0: #restore
-		if removed:
+	if block_ip == str(0): #restore
+		print "remove"
+		network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+		try:
 			for r in removed:
-				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
-				network.update_key(self_ip,"key,ukey,"+newkey)
+				print r
+				if r != str(0):
+					network.send_tcp_message(r,"key,ukey,"+newkey)
+		except:
+			pass
 		if nodes:
 			for n in nodes:
 				node_ip = json.loads(n)['address']
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
 	elif nodes:
+		print "nodes"
+		if block_ip != self_ip:
+			network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		for n in nodes:
 			node_ip = json.loads(n)['address']
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
-				network.update_key(self_ip,"key,ukey,"+newkey)
 
 
 #
@@ -152,6 +160,7 @@ def find_nodes():
 def handle_ctrl_c(signal, frame):
     print "\nSIGNAL: ctrl c"
     network.send_multicast_message('{"tag":"stop"}',ukey,self_ip)
+    network.send_tcp_message(self_ip,"stop")
     sys.exit(0)
 
 
@@ -159,5 +168,6 @@ def handle_ctrl_c(signal, frame):
 #	START
 ###############################################
 listener()
+network.start_tcp_server(self_ip)
 signal.signal(signal.SIGINT, partial(handle_ctrl_c))
 ###############################################

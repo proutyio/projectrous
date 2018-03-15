@@ -85,7 +85,8 @@ def thread_tcp_server():
 	
 #
 def update_key(data, host):
-	# try:
+	try:
+		print data
 		msg = data.split(",")
 		if msg[0] == "key":
 			if msg[1].strip() == "ukey": 
@@ -93,8 +94,8 @@ def update_key(data, host):
 				newkey = msg[2].strip()
 				if len(newkey) == 32:
 					utils.write_new_key(key, newkey, host)
-	# except:
-	# 	pass
+	except:
+		pass
 
 
 

@@ -11,7 +11,7 @@ log_file = "rous.log"
 whitelist = "rous/utils/whitelist.txt"
 
 
-def ukey(): return "rous/utils/keys/ukey.txt"
+def ukey(): return "../utils/keys/ukey.txt"
 def akey(): return "rous/utils/keys/akey.txt"
 
 #
