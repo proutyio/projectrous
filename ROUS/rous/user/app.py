@@ -44,14 +44,6 @@ def disconnect():
 
 
 #
-# @io.on('change_color')
-# def change_color(color):
-# 	print "change_color"
-# 	print color
-# 	emit('hello')
-
-
-#
 @io.on('whois')
 def discover_nodes():
 	find_nodes()
@@ -97,9 +89,9 @@ def remove_trust(block_ip):
 				node_ip = json.loads(n)['address']
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
 	elif nodes: #remove key for selected node
-		if block_ip != self_ip:
+		if block_ip != self_ip: #issues new key to myself
 			network.send_tcp_message(self_ip,"key,ukey,"+newkey)
-		for n in nodes:
+		for n in nodes: #issue new keys to all nodes but untrusted
 			node_ip = json.loads(n)['address']
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)

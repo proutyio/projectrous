@@ -15,7 +15,7 @@ whitelist = "rous/utils/whitelist.txt"
 ## user need path: ../utils/keys/ukey.txt
 def ukey(): return "../utils/keys/ukey.txt"
 def akey(): return "rous/utils/keys/akey.txt"
-#############################################
+#############################################       MOVE THIS to 'settings.ini'
 
 #
 def setup_logger():

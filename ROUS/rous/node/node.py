@@ -39,6 +39,8 @@ import rous.utils.encryption as encryption
 self_ip = network.find_my_ip()
 ukey = utils.ukey()
 akey = utils.akey()
+bids = []
+my_bid = []
 
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
@@ -47,7 +49,7 @@ def wait_for_message(sock):
 
         if message:
             msg = decrypt_message(message)
-            # if not check_trust(host, data):
+            # if check_trust(host, data):
             try:
                 # print json.loads(msg)
                 choose_path(msg, sock)
@@ -80,6 +82,7 @@ def choose_path(message, sock):
     elif m['tag'] == "info":  info_path()
     elif m['tag'] == "error": error_path()
     elif m['tag'] == "whois": whois_path()
+    elif m['tag'] == "bid": bid_path(m)
     else: return
 
 
@@ -87,18 +90,32 @@ def choose_path(message, sock):
 #
 def service_path(msg, sock):
     if check_service_exists(msg):
-        if bid_on_service(sock):
-            network.send_multicast_message(
-                '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
-            services.run_service(msg['service'],self_ip)
+        # del my_bid[:]
+        del bids[:]
+        place_bid()
+        timer()
+        return
+        # if bid_on_service(sock):
+        #     network.send_multicast_message(
+        #         '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
+        #     services.run_service(msg['service'],self_ip)
 
 
 #
 def whois_path():
     servs = json.dumps(services.all_services())
     network.send_multicast_message(
-        '{"tag":"info","message":"whois","address":"'+self_ip+'","services":'+servs+'}',ukey,self_ip)
+        '{"tag":"info","message":"whois","address":"'
+        +self_ip+'","services":'+servs+'}',ukey,self_ip)
 
+
+
+#
+def bid_path(msg):
+    if msg['tag'] == "bid":
+        if msg['bid'].isdigit():
+            bids.append(msg['bid'])
+            return
 
 
 # these are here incase I want to use them later.
@@ -122,30 +139,33 @@ def check_service_exists(msg):
 
 
 #
-def bid_on_service(sock):
-    bids = []
-    my_bid = random.randint(1,1000)
+# def bid_on_service(sock):
+#     bids = []
+#     my_bid = random.randint(1,1000)
 
-    place_bid(my_bid)
-    wait_for_bids(sock, bids)
+#     place_bid(my_bid)
+#     wait_for_bids(sock, bids)
 
-    if bids: #for  testing
-        print "My Bid: "+str(my_bid)
-        print "Bids: "+str(bids)
+#     if bids: #for  testing
+#         print "My Bid: "+str(my_bid)
+#         print "Bids: "+str(bids)
    
-    if bids and (my_bid >= max(bids)):
-        log.info("%s - won bid", self_ip)
-        print "\tWON"
-        return True
-    else:
-        log.info("%s - lost bid or bid empty", self_ip)
-        print "\tLOST" 
-        return False
+#     if bids and (my_bid >= max(bids)):
+#         log.info("%s - won bid", self_ip)
+#         print "\tWON"
+#         return True
+#     else:
+#         log.info("%s - lost bid or bid empty", self_ip)
+#         print "\tLOST" 
+#         return False
 
 
 
 # thread dies after it sends bid to multicast group
-def place_bid(my_bid):
+def place_bid():
+    my_bid = random.randint(1,1000)
+    print my_bid
+    # my_bid.apppend(new_bid)
     network.send_multicast_message(
         '{"tag":"bid","bid":"'+str(my_bid)+'","address":"'+self_ip+'"}',ukey,self_ip)
     t = threading.Thread(target=network.send_multicast_message, args=(my_bid,ukey,self_ip))
@@ -154,19 +174,28 @@ def place_bid(my_bid):
 
 #
 def thread_timer():
-    TTL = .4
+    TTL = 5
     timeout = time.time()+TTL
     global stop
     while True:
         if(time.time() > timeout):
             stop = True
-            network.send_multicast_message('{"tag":"other"}',ukey,self_ip)#dont delete, cycles bid loop
+            network.send_multicast_message(
+                '{"tag":"timer"}',ukey,self_ip)#dont delete, cycles bid loop
+            finish_bidding()
             break
 
 #
 def timer():
     t = threading.Thread(target=thread_timer)
     t.start()
+
+
+
+#
+def finish_bidding():
+    # print "my_bid"+my_bid[0]
+    print bids
 
 
 
@@ -179,12 +208,15 @@ def wait_for_bids(sock, bids):
         if stop:
             stop = False
             break
-        msg, (host,port) = sock.recvfrom(1024)
-        msg = decrypt_message(msg)
+        # msg, (host,port) = sock.recvfrom(1024)
+        # msg = decrypt_message(msg)
+        # print
         # print msg
-        if not check_trust(host, ""):
-            if msg.isdigit():
-                bids.append(int(msg))
+        # print
+        # # if check_trust(host, ""):       #FIX HERE
+        # if msg.isdigit():
+        #     bids.append(int(msg))
+        #     print str(bids)+"bids"
 
 
 
@@ -206,14 +238,17 @@ def main():
     try:
         mcast_sock = network.start_multicast_receiver(self_ip)
         network.send_multicast_message(
-            '{"tag":"info","message":"starting mcast reciever","address":"'+self_ip+'"}',ukey,self_ip)
+            '{"tag":"info","message":"starting mcast reciever","address":"'
+            +self_ip+'"}',ukey,self_ip)
 
         network.send_multicast_message(
-            '{"tag":"info","message":"starting tcp server","address":"'+self_ip+'"}',ukey,self_ip)
+            '{"tag":"info","message":"starting tcp server","address":"'
+            +self_ip+'"}',ukey,self_ip)
         tcp_sock = network.start_tcp_server(self_ip)
 
         network.send_multicast_message(
-            '{"tag":"info","message":"waiting for message","address":"'+self_ip+'"}',ukey,self_ip)
+            '{"tag":"info","message":"waiting for message","address":"'
+            +self_ip+'"}',ukey,self_ip)
         wait_for_message(mcast_sock)
     except:
         pass
