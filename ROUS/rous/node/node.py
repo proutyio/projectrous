@@ -7,7 +7,7 @@ import random
 import threading
 import time
 import json
-import logging as log
+# import logging as log
 from functools import partial
 import rous.utils.utils as utils
 import rous.utils.services as services
@@ -91,13 +91,9 @@ def service_path(msg, sock):
     if check_service_exists(msg):
         del bids[:]
         my_bid = random.randint(1,1000)
-        place_bid(my_bid)
         timer(my_bid)
-        return
-        # if bid_on_service(sock):
-        #     network.send_multicast_message(
-        #         '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
-        #     services.run_service(msg['service'],self_ip)
+        place_bid(my_bid)
+        return    
 
 
 #
@@ -170,7 +166,7 @@ def place_bid(my_bid):
 
 #
 def thread_timer(my_bid):
-    TTL = 3
+    TTL = 1
     timeout = time.time()+TTL
     global stop
     while True:
@@ -192,21 +188,31 @@ def timer(my_bid):
 def finish_bidding(my_bid):
     try:
         print "my_bid"+str(my_bid)
+        print json.dumps(bids)
+        
+        if bids and (my_bid >= max(bids)):
+            print "\tWON"
+            network.send_multicast_message(
+                '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
+            services.run_service(msg['service'],self_ip)
+        else:
+            print "\tLOST" 
     except:
-        pass
-    print bids
+        print "finish_bidding failed"
+    finally:
+        del bids[:]
 
 
 
 # bid recieved as (bid, (host, port))
-def wait_for_bids(sock, bids):
-    global stop
-    stop = False    
-    timer()
-    while True:
-        if stop:
-            stop = False
-            break
+# def wait_for_bids(sock, bids):
+#     global stop
+#     stop = False    
+#     timer()
+#     while True:
+#         if stop:
+#             stop = False
+#             break
         # msg, (host,port) = sock.recvfrom(1024)
         # msg = decrypt_message(msg)
         # print
