@@ -40,7 +40,6 @@ self_ip = network.find_my_ip()
 ukey = utils.ukey()
 akey = utils.akey()
 bids = []
-my_bid = []
 
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
@@ -90,10 +89,10 @@ def choose_path(message, sock):
 #
 def service_path(msg, sock):
     if check_service_exists(msg):
-        # del my_bid[:]
         del bids[:]
-        place_bid()
-        timer()
+        my_bid = random.randint(1,1000)
+        place_bid(my_bid)
+        timer(my_bid)
         return
         # if bid_on_service(sock):
         #     network.send_multicast_message(
@@ -162,10 +161,7 @@ def check_service_exists(msg):
 
 
 # thread dies after it sends bid to multicast group
-def place_bid():
-    my_bid = random.randint(1,1000)
-    print my_bid
-    # my_bid.apppend(new_bid)
+def place_bid(my_bid):
     network.send_multicast_message(
         '{"tag":"bid","bid":"'+str(my_bid)+'","address":"'+self_ip+'"}',ukey,self_ip)
     t = threading.Thread(target=network.send_multicast_message, args=(my_bid,ukey,self_ip))
@@ -173,8 +169,8 @@ def place_bid():
 
 
 #
-def thread_timer():
-    TTL = 5
+def thread_timer(my_bid):
+    TTL = 3
     timeout = time.time()+TTL
     global stop
     while True:
@@ -182,19 +178,22 @@ def thread_timer():
             stop = True
             network.send_multicast_message(
                 '{"tag":"timer"}',ukey,self_ip)#dont delete, cycles bid loop
-            finish_bidding()
+            finish_bidding(my_bid)
             break
 
 #
-def timer():
-    t = threading.Thread(target=thread_timer)
+def timer(my_bid):
+    t = threading.Thread(target=thread_timer, args=[my_bid])
     t.start()
 
 
 
 #
-def finish_bidding():
-    # print "my_bid"+my_bid[0]
+def finish_bidding(my_bid):
+    try:
+        print "my_bid"+str(my_bid)
+    except:
+        pass
     print bids
 
 
