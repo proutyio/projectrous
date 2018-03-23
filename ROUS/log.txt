@@ -1,0 +1,765 @@
+commit 1e3868ce424478fe187ad06b4115ecd717c1b81b
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 21 14:27:19 2018 -0700
+
+    disabled background logging for now.
+
+commit 9f7aa88b9ee7c3a300b0e543c67e1f9b2ac4f473
+Author: kyle <kyle@prouty.io>
+Date:   Tue Mar 20 22:53:06 2018 -0700
+
+    bidding working again, made the logic more robust. Still cant track down the issue with the rpizeros getting all the bids while the rpi2 and rpi3 are not getting some of the bids. There is no reason for this since all nodes are running same code and I ran the rpi2 and rpi3 on ethernet so its not a latency issue. So I have not thought of a logical reason for this.
+
+commit 5d7c3239ef407d125a231b4e057aa52d3388fabc
+Author: kyle <kyle@prouty.io>
+Date:   Tue Mar 20 14:57:31 2018 -0700
+
+    fixing bidding, new logic is working good. hayden and I noticed that the rpi2 and rpi3 response slower then the rpizeros for some reason.
+
+commit 39cb85742051a963cf52da74720f9294057110a2
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 15 01:44:46 2018 -0700
+
+    commit after demo. dynamic frontend stable, removing nodes from trust group and issueing new keys is stable. need to fix bug in bidding.
+
+commit c98f9ad48ae4d5b99796842f06f29a7554698f60
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 15 00:11:43 2018 -0700
+
+    fixed find_nodes algorithm so that it filters nodes correctly. found bug with more then 2 nodes. currently working with 5 nodes.
+
+commit fad323e915b92dd136d24a8f02a8bdf4a375fc8c
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 20:10:32 2018 -0700
+
+    removing trust via UI fully implemented. Can revoke trust of a node and see it removed from list. Can then reset and restore nodes that revoked trust of. need to implement admin key for new nodes on network to obtain current user key. All in all working well and stable
+
+commit 337fd7395a3599044196b80fb2d9f08f314399a8
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 19:00:25 2018 -0700
+
+    removing trust from UI working. nodes are issued new keys and untrusted node now shows, bad message. Still fixing reseting trust.
+
+commit 58dccfd2f9ca8f903e505b7623dd5d912bbbd0ea
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 17:41:48 2018 -0700
+
+    remove trust list building correctly, sending correct ip to backend, backend checking ip against list of known node ips, send new key to all nodes but ip that was distrusted. need to test that new keys are being issued correclty still.
+
+commit f79f234e3f7daf5571e5ebfca5d28d953a5f3d92
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 16:52:57 2018 -0700
+
+    moved dynamic components all to one class, solves issues of re-rendering. radio buttons working and updating to remove trust. finishing backend code to get it working
+
+commit f41e805e1bb0d51ba0f44c93070b23bca009256d
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 14:05:36 2018 -0700
+
+    fixed bidding to work with json. bidding is working again and now I can do working demo with LEDs. last thing to finish is frontend component to remove trust then full beta is finished
+
+commit 9c434b49edb3c1f01ae3c91e9cc22fa8288f6a22
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 13:45:21 2018 -0700
+
+    fixed service checking to work with json. refactor. frontend updating and sending seems stable now.
+
+commit 8e901fa231d054147a209d1243dcd3719cb569a7
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 14 11:04:57 2018 -0700
+
+    lots of UI work. React frontend now has dynamic table to display nodes. This table updates information every sec using socketio for realtime data. Bootstrap dynamic components. Send message into nodes works. No more ajax server side, all connections happen via socketio using web sockets. setState needs to happen outside of render, async. Finishing remove trust component.
+
+commit eb1e274189515547b80849b5db2b0ba04c693f1f
+Author: kyle <kyle@prouty.io>
+Date:   Tue Mar 13 19:30:33 2018 -0700
+
+    fixed services.all_services() function so that it returns a json string
+
+commit d66b8d457a7f853ae444e80ec219c29ad88e2295
+Author: kyle <kyle@prouty.io>
+Date:   Mon Mar 12 23:48:13 2018 -0700
+
+    fixed find nodes so that it is parsing json correctly and correctly getting the IPs of all nodes when a whois message is broadcasted
+
+commit 30fb1f2603db62fc36ed9ef5b5599d0eebff62b1
+Author: kyle <kyle@prouty.io>
+Date:   Mon Mar 12 22:12:13 2018 -0700
+
+    node and flask server code stable for realtime frontend updating. react can now set interval every second to grab list of messages that the mulitcast listener is capturing on the server. Fully coverted everything to sending and receiving json. fixed findnodes function to work with json. refactored and removed now unused helper functions
+
+commit 4c74f72b04d40628b4d11a160216c9d234d31202
+Author: kyle <kyle@prouty.io>
+Date:   Mon Mar 12 21:59:15 2018 -0700
+
+    sending find nodes command to server working, server sends whois message into nodes network, nodes respond with info message containing their ip and a message. then server parses a list of json objects and from  those pulls out all the IPs of the nodes found and puts them into a list that is then returned to the frontend, all in realtime
+
+commit 31ce8fc0e8afe99e0eaf94d0a758d777b7f56929
+Author: kyle <kyle@prouty.io>
+Date:   Mon Mar 12 21:05:29 2018 -0700
+
+    fixed message format so that they can be parse into json properly. this cleans up some code and makes it easy for the frontend to deal with the data
+
+commit c4c34664bc8afdcd654a6061da212dd76019339d
+Author: kyle <kyle@prouty.io>
+Date:   Mon Mar 12 19:45:13 2018 -0700
+
+    moved from AJAX to socketio web sockets. React frontend can now get realtime data from the nodes. It is working right now that React emits a message every second and the server responses with the mcast listener data that is it collecting from nodes. that data instantly moves from flask server to react frontend via socketio web sockets. React is updating in real time and interacting with server that interacts with nodes.
+
+commit 75b7f5cfe794e33eb3e0607233c87f726dbe80f0
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Sun Mar 11 03:25:16 2018 -0700
+
+    added dynamic nodes, just need to test with working fetch
+
+commit df504b7700919a0d8ab0f2f8db54edde2a5a8950
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Fri Mar 9 14:44:36 2018 -0800
+
+    UI work
+
+commit d8dd8530572c29f06bae2d78d84fabf856784453
+Merge: ac491ce 747ef97
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Thu Mar 8 17:03:02 2018 -0800
+
+    Merge branch 'master' of github.com:proutyio/projectrous
+
+commit ac491ce6432a8a800167298c2be7e62983711101
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Thu Mar 8 17:02:37 2018 -0800
+
+    added stuff from codesandbox file
+
+commit 747ef97d64b72b60f0ff0a955b60b2a970aad514
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 8 14:58:50 2018 -0800
+
+    refactored nodejs files that were rewritten in python flask
+
+commit a4c911e77cba482cd76f879ef3e4d27523769ae4
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 8 14:57:08 2018 -0800
+
+    all nodejs logic is now reimplemented in python flask. routes working with React: /findnodes /listenerdata /sendmessage. Using threading for listener so mutex is now required
+
+commit 771fea0a254ebcebd0c24ac226f7804ac92297c3
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 8 13:18:39 2018 -0800
+
+    flask mcast listener working. can make requests to server and render data from listener on frontend
+
+commit c9d13a99fb69f6ee87ca5d268f86a5f8df42430f
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 8 00:12:33 2018 -0800
+
+    rewriting backend server in python flask, nodejs was causing stupid issues and we determined flask could accomplish what we needed nodejs for.
+
+commit bc380fee9e685b8e2fd5446f359d6b80ade8ea09
+Merge: fd2b2ff 6252293
+Author: kyle <kyle@prouty.io>
+Date:   Wed Mar 7 09:27:22 2018 -0800
+
+    Merge branch 'master' of https://github.com/RodentsOfUnusualSize/RodentsOfUnusualSize
+
+commit fd2b2ff3fe5bac4923bd273288b197c21005503a
+Author: kyle <kyle@prouty.io>
+Date:   Tue Mar 6 22:14:41 2018 -0800
+
+    passing encrypted messages from frontend to backend server to network of social nodes working. 3 pis setup and working with printers in this setup. playing with react. refactor nodejs code. bug fixes in python code.
+
+commit c0f5bb6ebe63105f096d0d817f7df5347bae2c6b
+Author: kyle <kyle@prouty.io>
+Date:   Tue Mar 6 18:03:44 2018 -0800
+
+    refactoring nodejs code and other small changes
+
+commit 6252293b487ab56ba74ce7af8bea2ad2c015e1f6
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Tue Mar 6 15:37:25 2018 -0800
+
+    added states to admin_objects and added mounting components.
+
+commit 55a563ac5ea665f87808dc7a01f99e51d625db6a
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Mon Mar 5 15:41:40 2018 -0800
+
+    re-added user interface
+
+commit da794eadd3ced8f5721f9c07217b6f96a24fb17b
+Author: kyle <kyle@prouty.io>
+Date:   Sat Mar 3 23:25:25 2018 -0800
+
+    nodejs server can now encrypt and decrypt messages using the same python functons that nodes use. Figured out logic to run python scripts from nodejs server. Encryption logic is fully implemented now
+
+commit dfa30cc679c7ed66a490807188bd5a0a786ccbd7
+Author: kyle <kyle@prouty.io>
+Date:   Sat Mar 3 19:48:23 2018 -0800
+
+    logic to ask all nodes to respond with their ip so I can build a list of nodes that are on the network. then when I go to untrust a node, I know what nodes are on the network so I can issue new keys
+
+commit 644174081ce0f2c412a7a31462ca7be4689ff90a
+Author: kyle <kyle@prouty.io>
+Date:   Sat Mar 3 17:32:38 2018 -0800
+
+    issuing new keys from http server to nodes working. nodejs server can now send tcp message from admin interface to issue new keys. Can take IP of node to untrust. Generating random keys when issuing new keys.
+
+commit c1ab6a8d99a1efde4d0ac2c966fa0a1889e69ab1
+Author: kyle <kyle@prouty.io>
+Date:   Sat Mar 3 14:48:14 2018 -0800
+
+    can successfully update keys and remove trust of a node. working on nodejs server side functionality to send out new keys to specific IPs, which will demostrate changing trust by admin
+
+commit 888df04f8cba7a83f76b106c40d6ad2b618f57f7
+Author: kyle <kyle@prouty.io>
+Date:   Sat Mar 3 13:37:17 2018 -0800
+
+    encryption and decryption is integrated and working, tcp server running in background and threaded, signal to kill thread on ctrl z, can use tcp server to update keys to change trust of a node by not issuing that node a new key. Finishing complex services
+
+commit b27015d61e3ef0f894577d7f6a5c78a4e10a4aea
+Author: kyle <kyle@prouty.io>
+Date:   Fri Mar 2 23:47:54 2018 -0800
+
+    working on finishing encryption. almost done. tcp connections to transfer new keys working.
+
+commit f5f3ff4dbb2f0d91f0397a7f5c4f4eae5860612a
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Thu Mar 1 23:44:49 2018 -0800
+
+    added node_modules to .gitignore. I thought it was there, but I guess it wasn't?
+
+commit 65e4df48f4921f6adfebd8d1ce30bb5159e1333f
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Thu Mar 1 23:41:35 2018 -0800
+
+    added */node_modules to .gitignore. For some reason that came back. Thought it was already ignored.
+
+commit a5c32c50d9e35dd4d990e93fafba58064365c019
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Thu Mar 1 23:37:24 2018 -0800
+
+    Fixed some admin screen. Formatted a good amount of admin page. Still need to connect to back end, make gui nodes dynamic.
+
+commit 1eeb9f5a08f3ad1dd7f6d1b48393897fcc301460
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 1 17:34:26 2018 -0800
+
+    fixed extra files
+
+commit 5af30d71854d218046b774bc84977c5f5e6a853b
+Merge: 661cf07 c5ed5ae
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 1 17:30:26 2018 -0800
+
+    Merge branch 'master' of https://github.com/RodentsOfUnusualSize/RodentsOfUnusualSize
+
+commit 661cf07f1910c4351b35d180f1dc12da396cda40
+Author: kyle <kyle@prouty.io>
+Date:   Thu Mar 1 17:29:25 2018 -0800
+
+    added in tag filtering system so now a message will take different paths depending on the tag. Finishing complex services and working on finishing admin delegating trust
+
+commit c5ed5ae6c7a0461a2a76441f8b39a8da5ddeab89
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Thu Mar 1 00:04:14 2018 -0800
+
+    refactor. Added all basic components to User, still need to format and conenct ends to server. Added some Components to Admin, still need to format and connect ends to server.
+
+commit 7e421944c0bcaf89ef43f9baed4b7d78b48687e5
+Author: kyle <kyle@prouty.io>
+Date:   Tue Feb 27 00:48:26 2018 -0800
+
+    user can post message to server that is then sent as an mcast message into nodes, nodes bid and RPi can print to printer. Admin node can make a get request and get the message that the listener is storing. Tested working on RPi with printing to printer.
+
+commit 6163530228ad1aca23be8a07df85ec1959d596b2
+Author: kyle <kyle@prouty.io>
+Date:   Mon Feb 26 20:10:28 2018 -0800
+
+    user at localhost:4242/user can now send mcast message for the nodes to bid on, not robust but proves functionality
+
+commit d277eef1562fd4d218ca0e31b3e1a191df88d21e
+Author: kyle <kyle@prouty.io>
+Date:   Mon Feb 26 17:53:29 2018 -0800
+
+    added print service, it is working. can run node, send in print_file message, and it will bid, then if it wins it will print the test file. Node code is messy, I need to clean it back up. finishing nodejs backend to take json string and send it to nodes on mcast address. Also finishing get request to grab message list
+
+commit e154f46b4ee058b35dfa30adb63cb16daea08ce7
+Author: kyle <kyle@prouty.io>
+Date:   Mon Feb 26 15:19:52 2018 -0800
+
+    built basic user and admin page with just html and bootstrap, hosted as static server side pages. user page can post a message to server. admin page can get data from server. user at localhost:4242/user and admin localhost:4242/admin
+
+commit 7404488955d6ed7688dc004f5c50dbdcb453de4a
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 23 23:38:17 2018 -0800
+
+    added multicast listener to nodejs backend http server. run make user then make test. make test sends multicast messages.  make user starts a multicast listener and is listening for mcast messages.
+
+commit 0a32fa0750a77ea8b1dc1dd711095e1e7a36f904
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 23 22:43:12 2018 -0800
+
+    improved the configuration and services. Got Backend Nodejs working with Frontend React. go to ROUS directory and use make user to run the nodejs server and react front end app on localhost3000
+
+commit c337bdafcbfd118bc6114fa883b214c6f08df437
+Author: kyle <kyle@prouty.io>
+Date:   Thu Feb 22 23:12:55 2018 -0800
+
+    stashed other changes, made a smarter configuration setup that allows the software to be more modifiable
+
+commit 06c228efdc6b2c8667fadbe7257e82e9fb23869d
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Wed Feb 21 08:45:27 2018 -0800
+
+    starting buttons.
+
+commit 9160b5d1cd7d5342ff76da4b29df8f7430fb6209
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Tue Feb 20 23:01:20 2018 -0800
+
+    Added a print file input button. Saving before messing with columns/dynamic spacing.
+
+commit c9509995baf54773e3669c888c9bc9a6907f9ff3
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Tue Feb 20 15:50:46 2018 -0800
+
+    refactor and start of fileinput
+
+commit 838aab6ff6837ecd9ea8d90d529281a356c2d6d5
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Mon Feb 19 22:20:48 2018 -0800
+
+    added User GUI colors dropdown and some minor UI fixes.
+
+commit 188345f9994a7558578f507fcac411a3ad85945b
+Merge: 2677b74 a76a150
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 16 23:44:03 2018 -0800
+
+    Merge branch 'master' of https://github.com/RodentsOfUnusualSize/RodentsOfUnusualSize
+
+commit 2677b74b4bbf9945a615fa896eaaae8bc24bcb32
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 16 23:43:36 2018 -0800
+
+    mid-term progress report
+
+commit a76a150ba0d2bce427f56f5745107354a585438b
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Feb 16 11:06:49 2018 -0800
+
+    Update .gitignore
+
+commit d1825cb100b2d81b625b9ba5c450f87fe52dd8b8
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 16 09:18:33 2018 -0800
+
+    removed unneeded files. added nodes_modules to gitignore
+
+commit 4ec003e6d43c6f0ae26c5e41ed02ef1115b20918
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 16 09:15:26 2018 -0800
+
+    removed unneeded files. added nodes_modules to gitignore
+
+commit 8924700116ab0f04cb1ea4b3cca2885f9d5de54a
+Author: hayden <anderrob@oregonstate.edu>
+Date:   Wed Feb 14 08:30:15 2018 -0800
+
+    added react-app for gui. To run, go to gui and type "npm start". Working on buttons sending get request successfully.
+
+commit 1d58bebc0361f433909520ac3d0b491c247835f1
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Wed Feb 7 10:11:40 2018 -0800
+
+    adding node.js to dependencies install and simple web for it to turn on and off LED's
+
+commit 2b75a30173526e4b7062a7e2b9f1727556603b50
+Author: kyle <kyle@prouty.io>
+Date:   Sat Feb 3 00:05:01 2018 -0800
+
+    bidding stable now. need to clean up code now, look for edge cases
+
+commit f3f24811ddacf8277878e1420f05a338e3badfa0
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 2 23:18:31 2018 -0800
+
+    still tweaking bidding. problem is with recvfrom since data size is unknown and recvfrom always blocks. I think I have it fixed and stable but I am still looking for bugs
+
+commit 6f904d3dfb40a24edc40a3298abf394079df4f45
+Merge: 532662c f469b33
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 2 22:27:33 2018 -0800
+
+    Merge branch 'master' of https://github.com/RodentsOfUnusualSize/RodentsOfUnusualSize
+
+commit 532662c0123c809c97f6ecd46bed3b49bf2a7621
+Author: kyle <kyle@prouty.io>
+Date:   Fri Feb 2 22:26:44 2018 -0800
+
+    fixed bidding, it is working correctly now. Still testing and looking for bugs. Started on adding more functionality
+
+commit f469b33e25a6ea7b7565cb24eea62159ade31ecc
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Wed Jan 31 13:55:31 2018 -0800
+
+    added bash dependencies script. Need to run from sudo bash atm
+
+commit ffe454c7f72f85be6ba17577d2c1e303b636ace8
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Sat Jan 27 21:03:53 2018 -0800
+
+    start of gui
+
+commit 67404f465cd9604691b22083792915cc869d4bc8
+Author: kyle <kyle@prouty.io>
+Date:   Fri Jan 26 23:25:33 2018 -0800
+
+    fixed bidding, working on fixing led thread stuff, its not working how it should
+
+commit 7f3ec96243b15ff8dac781212752a0ba054eee8e
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 25 23:17:58 2018 -0800
+
+    bidding working but having issues with LEDs and threads. On the right path but demo didnt happen.
+
+commit c0940a0b1c4a5246bb5b4c97b755e6877cef77d6
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 25 17:40:53 2018 -0800
+
+    multicast message sending working well. Initial bidding working, still testing.
+
+commit 95f927f0508f5fcfe98bb68df1cdf2aeadd4625a
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 25 16:37:24 2018 -0800
+
+    refactored network communication to use multicast instead of unicast.
+
+commit 02091b25a635b6968bc82e63f0106b4f63118670
+Author: kyle <kyle@prouty.io>
+Date:   Wed Jan 24 14:19:30 2018 -0800
+
+    refactored code and added network module in utils, fixed a few bugs, working on bidding and file transfer
+
+commit aea31a4085afcd6fa2a0674e6d6b42174a751d16
+Author: kyle <kyle@prouty.io>
+Date:   Wed Jan 24 14:16:46 2018 -0800
+
+    refactored code and added network module in utils, fixed a few bugs, working on bidding and file transfer
+
+commit c6ef18939dbabf39d5b1587030f1e8da9383ebbe
+Author: kyle <kyle@prouty.io>
+Date:   Mon Jan 22 16:48:49 2018 -0800
+
+    working on user interface. auto generating host list. also setting up more leds, adding them to services. next is to finish the bidding
+
+commit cccc6c46e265461b8d53c5848bd092edafb520b7
+Author: kyle <kyle@prouty.io>
+Date:   Sun Jan 21 01:53:49 2018 -0800
+
+    threads working corretly to manage LEDs. User can turn LEDs on and off of nodes. working on bidding next
+
+commit 2fd280be1fd3eb999af9876371a4069159e7d06d
+Author: kyle <kyle@prouty.io>
+Date:   Sun Jan 21 00:39:03 2018 -0800
+
+    fixed LED issue by making the LED logic run in threads. Cleaning up this code now
+
+commit 9aeaddb9cb4715282fe0f81e9beece72a251266a
+Author: kyle <kyle@prouty.io>
+Date:   Sat Jan 20 21:08:11 2018 -0800
+
+    implemented more services logic to turn on and off leds on Rpi, kinda broken still. Working on implmenting more user stuff. Working on outputing logs to admin.
+
+commit 324d682d2b83d3aeb3bbdffa538952f28dc92a8e
+Author: kyle <kyle@prouty.io>
+Date:   Fri Jan 19 15:13:35 2018 -0800
+
+    got auto-finding local IP working, finishing auto-whitelist of nodes
+
+commit f9bceb458f1aeae101f931d1091ad22caef97796
+Author: kyle <kyle@prouty.io>
+Date:   Fri Jan 19 10:54:34 2018 -0800
+
+    cleaned up node discovery code, split it up into more functions
+
+commit b487639616eb07acc551ce8aa163e705c7da4645
+Author: kyle <kyle@prouty.io>
+Date:   Fri Jan 19 01:49:54 2018 -0800
+
+    node discover working, parsing IPs working, updating whitelist working. Have basic logic now for any new node discovery
+
+commit 257f855c8944e1d1cecb8e6b5de8ec767931a67b
+Author: kyle <kyle@prouty.io>
+Date:   Fri Jan 19 01:15:20 2018 -0800
+
+    got node discover function working in utils, working on auto whitelist
+
+commit bbae74e383ca5ff70cf024f8a891b58bdda20dc3
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 18 22:06:34 2018 -0800
+
+    small refactor and rename
+
+commit eb2fd02feca5269475254daec0a5bf89e803a926
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 18 20:11:56 2018 -0800
+
+    fixed annoying thing were you couldn't ctrl-c to shut server down
+
+commit dfe2890f34b27ab3917b4b320f6390b3f231b8de
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 18 17:04:22 2018 -0800
+
+    Working on services, working on user, basic functionality basically done
+
+commit 37e17961d1280db0d44c7c7f705671abd80acbe0
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 18 14:53:22 2018 -0800
+
+    Getting services logic in place, basic logic working. Added test stuff
+
+commit 2469689e1f418a4376bef62b0953bc5bb99be53a
+Author: kyle <kyle@prouty.io>
+Date:   Thu Jan 18 14:03:38 2018 -0800
+
+    Redoing setup basically done. Working on services module and auto generating the whitelist. Need to add back in the user code that was lost
+
+commit 054d2256fa1122d44cf880d2e401da583c4d536a
+Author: kyle <kyle@prouty.io>
+Date:   Wed Jan 17 20:52:58 2018 -0800
+
+    small refactor. added gitignore
+
+commit ff00b2caec7be029d86bcb850445679917a91042
+Author: kyle <kyle@prouty.io>
+Date:   Wed Jan 17 20:39:45 2018 -0800
+
+    getting the code that I lost remade. Going well. Got project structure mostly set back up. Redoing features
+
+commit 720714b40da32adb1e59ccc9e09fa7526f2ac6a5
+Author: kyle <kyle@prouty.io>
+Date:   Wed Jan 17 16:05:56 2018 -0800
+
+    Setting up code structure. Rewritting lost code that was lost due to hard drive failure. Initial node server is working. Working on Services functions
+
+commit b5b2f4b7549e92585e084753f2e86cb06dfd33df
+Author: proutyio <kyle@prouty.io>
+Date:   Tue Jan 9 18:07:44 2018 -0800
+
+    Update README.md
+
+commit 5cfbbbb63f64e39a80fe25fdbee7969b6d88f4c5
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Mon Jan 1 19:56:52 2018 -0800
+
+    fixed print_file and added testing for it.
+
+commit 1ed6bb400bdc262e2719c90a9c5e06edab550d02
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Thu Dec 28 15:27:17 2017 -0800
+
+    Added a short program which takes in a text file as an argument and sends it to a printer connected.
+
+commit b01c75a047d788148cdcfb1fbcfaa0258d045373
+Author: proutyio <kyle@prouty.io>
+Date:   Mon Dec 4 13:19:38 2017 -0800
+
+    Progress Report
+
+commit 280e2deb2006f3818414bd590dd181b6ca0091be
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Dec 1 23:52:38 2017 -0800
+
+    refactor
+
+commit 27fb0c9f287d7deb8a6c2afdc8e7c0cdcbd724ff
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Dec 1 23:36:48 2017 -0800
+
+    Design Document
+
+commit ac4e8d82e1c7320460fbb48672b67c267e78a21e
+Merge: d008527 7b8bf33
+Author: proutyio <kyle@prouty.io>
+Date:   Wed Nov 8 12:18:08 2017 -0800
+
+    Merge branch 'master' of https://github.com/CollaborativeThreatMitigation/CollaborativeThreatMitigation
+
+commit d008527638df96f19cd6c2bc42b33b00ffc4311a
+Merge: a3c4b3c 39dc64a
+Author: proutyio <kyle@prouty.io>
+Date:   Wed Nov 8 12:17:33 2017 -0800
+
+    Merge branch 'kyle_experiments'
+
+commit 39dc64a73a36e26e5a90fbf7b2f05e406ffc9797
+Author: proutyio <kyle@prouty.io>
+Date:   Wed Nov 8 12:08:35 2017 -0800
+
+    refactor folder layout-this helps fix issues, fixed issue with requirements doc not building into a pdf on flip server
+
+commit 7137117d2323f2cbe062fc3fc178d97e990ebb6a
+Author: proutyio <kyle@prouty.io>
+Date:   Sat Nov 4 13:48:05 2017 -0700
+
+    refactor folders
+
+commit 7b8bf3313d9c95b839fcb9bde89292266c3937e5
+Merge: a3c4b3c 9c35cda
+Author: RodentsOfUnusualSize <32618650+RodentsOfUnusualSize@users.noreply.github.com>
+Date:   Sat Nov 4 13:18:14 2017 -0700
+
+    Merge pull request #1 from RodentsOfUnusualSize/proutyio-patch-1
+    
+    Update readme.md
+
+commit 9c35cda5f04b66fb8eb2acfb2a517c3677d9a515
+Author: proutyio <kyle@prouty.io>
+Date:   Sat Nov 4 13:15:56 2017 -0700
+
+    Update readme.md
+
+commit a3c4b3c9a72a38d3534a288a423388c6b87c27e0
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Nov 3 22:12:45 2017 -0700
+
+    Requirements document, add last rough draft, add final to main Project Documents folder
+
+commit c335b9376bf0fa4f76b59012747a01b1b14ba28d
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Nov 3 17:58:03 2017 -0700
+
+    update readme, pushing
+
+commit 135085b9ed2e753a71bd052bb1d8812802352081
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Nov 3 17:34:01 2017 -0700
+
+    basic client and server stable. Makefile that compiles both. make run sends server to backgound. Need to edit PORT before running
+
+commit a9c8a81f1ff3144534a5d6a397fa951efda8b967
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Nov 3 16:13:15 2017 -0700
+
+    refactor folder layout, starting server code
+
+commit 9ce903407b1008239f647b58eddb3d6bb507ed86
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Nov 3 16:08:23 2017 -0700
+
+    client code barebones, compiles without error, exception handling working
+
+commit 7d16f84ee4499a51bb7eec0baefb9773102dae62
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Nov 3 15:05:55 2017 -0700
+
+    file creation, boost library linked correctly, compiles and outputs to console
+
+commit 930cb28c652e1343b76b5fea306c19af11688eea
+Author: proutyio <kyle@prouty.io>
+Date:   Thu Nov 2 17:06:03 2017 -0700
+
+    version 4 of requirements document rough draft
+
+commit 9693efc92c26d5444e19003b9aefa8e6e0dc9595
+Author: Hayden Anderson <anderrob@oregonstate.edu>
+Date:   Wed Nov 1 22:07:44 2017 -0700
+
+    Requirements doc update
+    
+    Updated the requirements document to current version. Changing a couple pictures, adding an abstract, and some formatting changes.
+
+commit c2d252075df8e20694218fe35198164fa21847ad
+Author: RodentsOfUnusualSize <32618650+RodentsOfUnusualSize@users.noreply.github.com>
+Date:   Tue Oct 31 19:55:52 2017 -0700
+
+    Update README.md
+
+commit 5fbff6ae5b167951342012783b3d61b1e454fbd3
+Author: RodentsOfUnusualSize <32618650+RodentsOfUnusualSize@users.noreply.github.com>
+Date:   Tue Oct 31 19:51:36 2017 -0700
+
+    Update README.md
+
+commit e730f4db28ddb2a53e08037715fe82f74c863145
+Author: RodentsOfUnusualSize <32618650+RodentsOfUnusualSize@users.noreply.github.com>
+Date:   Tue Oct 31 19:49:10 2017 -0700
+
+    Update README.md
+
+commit cd3953336d173fa6a1ce1a337a91242f435aca8c
+Author: proutyio <kyle@prouty.io>
+Date:   Mon Oct 30 01:02:26 2017 -0700
+
+    Requirements_v2, refactor rough draft PS folder layout
+
+commit 2674f6fb649a5054606595d4f17e02d3038df3e5
+Author: proutyio <kyle@prouty.io>
+Date:   Fri Oct 27 23:47:57 2017 -0700
+
+    first draft of SRS Requirements document. Needs more work.
+
+commit 6fdd4ddb884b14c2597c2d3a11a5691eaa5a8acd
+Merge: 7f5d021 8338b68
+Author: proutyio <kyle@prouty.io>
+Date:   Thu Oct 19 21:49:44 2017 -0700
+
+    Merge branch 'master' of https://github.com/CollaborativeThreatMitigation/CollaborativeThreatMitigation
+
+commit 7f5d021d5de2a86b4fbcaed92653373cb6c7b50a
+Author: proutyio <kyle@prouty.io>
+Date:   Thu Oct 19 21:49:22 2017 -0700
+
+    group problem statement upload, submitted to client and submitted to professor via OneNote
+
+commit 8338b68b16c75bce589145d66be94b434f2f5ae5
+Author: anderrob <anderrob@oregonstate.edu>
+Date:   Wed Oct 18 21:43:31 2017 -0700
+
+    Add files via upload
+    
+    Added my (R. Hayden Anderson) personal problem statement (rough draft).
+
+commit d9df1dafee81c502a65febfd73b74622f14c47f8
+Author: proutyio <kyle@prouty.io>
+Date:   Tue Oct 17 14:21:19 2017 -0700
+
+    refactored folder layout. refactored my file names. Added version 2 of rough draft problem statement
+
+commit 11781845aa1e72bfb116c3e6862beb42577a7977
+Merge: 6130c59 c6a2023
+Author: proutyio <kyle@prouty.io>
+Date:   Tue Oct 10 16:57:43 2017 -0700
+
+    Merge branch 'master' of https://github.com/CollaborativeThreatMitigation/CollaborativeThreatMitigation
+
+commit 6130c59617507b352ffbb1bcde046275c6d02f4c
+Author: proutyio <kyle@prouty.io>
+Date:   Tue Oct 10 16:57:12 2017 -0700
+
+    rename folder
+
+commit c6a202397a70c0e994d87d177d16d47f316551da
+Author: proutyio <kyle@prouty.io>
+Date:   Tue Oct 10 16:27:47 2017 -0700
+
+    Update README.md
+
+commit 429dcb4a17b83489b8599806db1655ef2a6f35ce
+Author: CollaborativeThreatMitigation <32618650+CollaborativeThreatMitigation@users.noreply.github.com>
+Date:   Tue Oct 10 16:20:45 2017 -0700
+
+    Update README.md
+
+commit 1a42d746a2fcff28ff08b014bd648927ca0ae6c7
+Author: CollaborativeThreatMitigation <32618650+CollaborativeThreatMitigation@users.noreply.github.com>
+Date:   Tue Oct 10 16:06:44 2017 -0700
+
+    Update README.md
+
+commit 78f711ded240401fc8e773766065984834f75224
+Author: proutyio <kyle@prouty.io>
+Date:   Tue Oct 10 15:49:12 2017 -0700
+
+    setup + adding problem statement

@@ -91,7 +91,7 @@ def service_path(msg, sock):
     if check_service_exists(msg):
         del bids[:]
         my_bid = random.randint(1,1000)
-        timer(my_bid)
+        timer(my_bid, msg)
         place_bid(my_bid)
         return    
 
@@ -109,7 +109,7 @@ def whois_path():
 def bid_path(msg):
     if msg['tag'] == "bid":
         if msg['bid'].isdigit():
-            bids.append(msg['bid'])
+            bids.append(str(msg['bid']))
             return
 
 
@@ -133,27 +133,6 @@ def check_service_exists(msg):
     return False
 
 
-#
-# def bid_on_service(sock):
-#     bids = []
-#     my_bid = random.randint(1,1000)
-
-#     place_bid(my_bid)
-#     wait_for_bids(sock, bids)
-
-#     if bids: #for  testing
-#         print "My Bid: "+str(my_bid)
-#         print "Bids: "+str(bids)
-   
-#     if bids and (my_bid >= max(bids)):
-#         log.info("%s - won bid", self_ip)
-#         print "\tWON"
-#         return True
-#     else:
-#         log.info("%s - lost bid or bid empty", self_ip)
-#         print "\tLOST" 
-#         return False
-
 
 
 # thread dies after it sends bid to multicast group
@@ -164,8 +143,9 @@ def place_bid(my_bid):
     t.start()
 
 
+
 #
-def thread_timer(my_bid):
+def thread_timer(my_bid,msg):
     TTL = 1
     timeout = time.time()+TTL
     global stop
@@ -174,23 +154,24 @@ def thread_timer(my_bid):
             stop = True
             network.send_multicast_message(
                 '{"tag":"timer"}',ukey,self_ip)#dont delete, cycles bid loop
-            finish_bidding(my_bid)
+            finish_bidding(my_bid,msg)
             break
 
 #
-def timer(my_bid):
-    t = threading.Thread(target=thread_timer, args=[my_bid])
+def timer(my_bid, msg):
+    t = threading.Thread(target=thread_timer, args=[my_bid,msg])
     t.start()
 
 
 
 #
-def finish_bidding(my_bid):
+def finish_bidding(my_bid,msg):
     try:
-        print "my_bid"+str(my_bid)
-        print json.dumps(bids)
+        print bids
+        print "my bid: "+str(my_bid)
+        print "max: "+max(bids)
         
-        if bids and (my_bid >= max(bids)):
+        if bids and (str(my_bid) >= max(bids)):
             print "\tWON"
             network.send_multicast_message(
                 '{"tag":"info","message":"won bid","address":"'+self_ip+'"}',ukey,self_ip)
@@ -198,30 +179,11 @@ def finish_bidding(my_bid):
         else:
             print "\tLOST" 
     except:
-        print "finish_bidding failed"
+        pass
+        # print "finish_bidding failed"
     finally:
         del bids[:]
 
-
-
-# bid recieved as (bid, (host, port))
-# def wait_for_bids(sock, bids):
-#     global stop
-#     stop = False    
-#     timer()
-#     while True:
-#         if stop:
-#             stop = False
-#             break
-        # msg, (host,port) = sock.recvfrom(1024)
-        # msg = decrypt_message(msg)
-        # print
-        # print msg
-        # print
-        # # if check_trust(host, ""):       #FIX HERE
-        # if msg.isdigit():
-        #     bids.append(int(msg))
-        #     print str(bids)+"bids"
 
 
 

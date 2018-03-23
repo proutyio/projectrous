@@ -5,9 +5,9 @@ import signal
 import commands
 import socket
 import re
-import logging as log
+# import logging as log
 
-log_file = "rous.log"
+# log_file = "rous.log"
 whitelist = "rous/utils/whitelist.txt"
 
 ## ATTENTION: ##
@@ -24,7 +24,7 @@ def setup_logger():
         datefmt='%m/%d/%Y %I:%M:%S %p',
         stream=sys.stdout,
         level=log.INFO)
-setup_logger()
+# setup_logger()
 
 
 #
@@ -35,7 +35,8 @@ def read_from_whitelist(address):
         f.close()
         return lst
     except:
-        log.error("%s - FAILED to read whitelist",address)
+        pass
+        # log.error("%s - FAILED to read whitelist",address)
 
 
 #
@@ -49,7 +50,8 @@ def write_to_whitelist(lst, address):
                 f.write("\n")
         f.close()
     except:
-        log.error("%s - FAILED to write to whitelist",address)
+        pass
+        # log.error("%s - FAILED to write to whitelist",address)
 
 
 #
@@ -70,7 +72,8 @@ def erase_text_file(text_file, address):
         f.truncate()
         f.close()
     except:
-        log.error("%s - FAILED to erase text file",address)
+        pass
+        # log.error("%s - FAILED to erase text file",address)
 
 
 #

@@ -6,7 +6,7 @@ import socket
 import struct
 import re
 import threading
-import logging as log
+# import logging as log
 import rous.utils.utils as utils
 import rous.utils.encryption as encryption
 
@@ -28,7 +28,8 @@ def find_my_ip():
 		utils.write_to_whitelist([ip],ip)#ignore message from myself
 		return ip
 	except:
-		log.error("FAILED to find my IP address")
+		pass
+		# log.error("FAILED to find my IP address")
 
 
 
@@ -41,7 +42,7 @@ def start_multicast_receiver(address):
                     socket.IP_ADD_MEMBERSHIP, 
                     struct.pack('4sL', socket.inet_aton(mcast_host), socket.INADDR_ANY)
                     )
-	log.info("%s - STARTED multicast receiver", address)
+	# log.info("%s - STARTED multicast receiver", address)
 	return sock
 
 
