@@ -50,7 +50,12 @@ def wait_for_message(sock):
             msg = decrypt_message(message)
             # if check_trust(host, data):
             try:
-                # print json.loads(msg)
+                try:
+                    print json.loads(msg)
+                except:
+                    print
+                    print "no good"
+                    print msg
                 choose_path(msg, sock)
             except:
                 print "bad message"
