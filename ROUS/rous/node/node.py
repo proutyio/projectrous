@@ -40,6 +40,7 @@ self_ip = network.find_my_ip()
 ukey = utils.ukey()
 akey = utils.akey()
 bids = []
+pause_interval = 0
 
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
@@ -47,6 +48,7 @@ def wait_for_message(sock):
         message, (host,port) = sock.recvfrom(1024)
 
         if message:
+            slow_down()
             msg = decrypt_message(message)
             # if check_trust(host, data):
             try:
@@ -56,6 +58,7 @@ def wait_for_message(sock):
                     print
                     print "no good"
                     print msg
+                slow_down()
                 choose_path(msg, sock)
             except:
                 print "bad message"
@@ -112,6 +115,7 @@ def whois_path():
 
 #
 def bid_path(msg):
+    slow_down()
     if msg['tag'] == "bid":
         if msg['bid'].isdigit():
             bids.append(str(msg['bid']))
@@ -128,6 +132,7 @@ def error_path(): pass
 #   services in services module. Then loop list and find if
 #   input string is in list.
 def check_service_exists(msg):
+    slow_down()
     svc = json.loads(json.dumps(msg))['service']
     all_svc = services.all_services()
     all_svc = all_svc[1:-1]
@@ -190,6 +195,13 @@ def finish_bidding(my_bid,msg):
         del bids[:]
 
 
+#
+def slow_down():
+    sleep(pause_interval)
+
+#
+def set_pause_interval(x):
+    pause_interval = x
 
 
 # send out "stop" message to stop tcp message
