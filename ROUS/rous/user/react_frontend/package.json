@@ -9,9 +9,9 @@
     "node-fetch": "2.1.1",
     "react": "16.2.0",
     "react-bootstrap": "0.32.1",
+    "react-dev-utils": "^5.0.0",
     "react-dom": "16.2.0",
     "react-scripts": "1.1.0",
-    "react-dev-utils": "^5.0.0",
     "react-sparklines": "1.7.0",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4"
