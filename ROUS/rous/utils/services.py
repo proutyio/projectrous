@@ -26,30 +26,26 @@ def run_service(service, sender_address):
 		# log.info("%s Error - Failed to call serivce", sender_address)
 
 
+# this code looks like it should be refactored but it works like this for
+#	a reason., to allow the config to specifically specify what services 
+#	are offered
 def green_on(sender_address):
-	rpi.green_on()
-	print "green_on ------"
+	rpi.on("green")
 
 def green_off(sender_address):
-	rpi.green_off()
-
+	rpi.off("green")
 
 def red_on(sender_address):
-	rpi.red_on()
-	print "red_on ------"
-
+	rpi.on("red")
 
 def red_off(sender_address):
-	rpi.red_off()
-
+	rpi.off("red")
 
 def blue_on(sender_address):
-	rpi.blue_on()
-	print "blue_on ------"
-
+	rpi.on("blue")
 
 def blue_off(sender_address):
-	rpi.blue_off()
+	rpi.off("blue")
 
 
 def print_file(sender_address):
