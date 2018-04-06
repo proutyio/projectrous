@@ -8,7 +8,9 @@ import rous.utils.utils as utils
 green_threads = []
 red_threads = []
 blue_threads = []
-pins = [("green",18,green_threads),("red",23,red_threads),("blue",24,blue_threads)]
+pins = [("green",18,green_threads),
+		("red",23,red_threads),
+		("blue",24,blue_threads)]
 
 def setup():
 	rpi.setmode(rpi.BCM)
@@ -20,16 +22,20 @@ setup()
 
 def thread_on(str_pin):
 	(pin, threads) = find_pin(str_pin)
-	while getattr(threads, "exit", True):
-		rpi.output(pin,rpi.HIGH)
-		time.sleep(.1)
+	for t in threads:
+		while getattr(t, "exit", True):
+			rpi.output(pin,rpi.HIGH)
+			time.sleep(.1)
 
 
 def off(str_pin):
 	(pin, threads) = find_pin(str_pin)
-	if threads:
-		threads[0].exit = False
-		threads[0].join()
+	try:
+		for t in threads:
+			print t
+			t.exit = False
+			t.join()
+	finally:
 		rpi.output(pin,rpi.LOW)
 		del threads[:]
 
@@ -37,7 +43,7 @@ def off(str_pin):
 def on(str_pin):
 	(pin, threads) = find_pin(str_pin)
 	if not threads:
-		t = threading.Thread(target=thread_on)
+		t = threading.Thread(target=thread_on, args=[str_pin])
 		threads.append(t)
 		t.start()
 

@@ -197,7 +197,7 @@ def finish_bidding(my_bid,msg):
 
 #
 def slow_down():
-    sleep(pause_interval)
+    time.sleep(pause_interval)
 
 #
 def set_pause_interval(x):
@@ -219,7 +219,7 @@ def handle_crtl_c(signal, frame):
 
 #
 def main():
-    try:
+    # try:
         mcast_sock = network.start_multicast_receiver(self_ip)
         network.send_multicast_message(
             '{"tag":"info","message":"starting mcast reciever","address":"'
@@ -234,8 +234,8 @@ def main():
             '{"tag":"info","message":"waiting for message","address":"'
             +self_ip+'"}',ukey,self_ip)
         wait_for_message(mcast_sock)
-    except:
-        pass
+    # except:
+        # pass
         # network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
 
 

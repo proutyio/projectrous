@@ -13,7 +13,7 @@ whitelist = "rous/utils/whitelist.txt"
 ## ATTENTION: ##
 ## nodes need path: rous/utils/keys/ukey.txt
 ## user need path: ../utils/keys/ukey.txt
-def ukey(): return "../utils/keys/ukey.txt"
+def ukey(): return "rous/utils/keys/ukey.txt"
 def akey(): return "rous/utils/keys/akey.txt"
 #############################################       MOVE THIS to 'settings.ini'
 
