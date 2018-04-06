@@ -2,7 +2,8 @@ import ConfigParser
 import imp
 import rous.utils.utils as utils
 
-path = "rous/node/configuration.ini"
+
+settings_path = "rous/settings.ini"
 
 #
 def config_path(basepath):
@@ -16,10 +17,21 @@ def config_parser(file):
 	return config
 
 
+# return path of item
+def settings(item):
+	config = config_parser( config_path(settings_path) )
+	for section in config.sections():
+		for (name, path) in config.items(section):
+			if name == item:
+				return path
+
+
+
 # scans config file and returns list of all
 # 	the services that are defined
+configuration = settings("configuration")
 def all_services():
-	config = config_parser( path )
+	config = config_parser( configuration )
 	services = []
 	for section in config.sections():
 		for (function, file) in config.items(section): 
@@ -27,10 +39,9 @@ def all_services():
 				services.append(function)
 	return services
 
-
 #
 def call_service(service, sender_address):
-	config = config_parser( config_path(path) )
+	config = config_parser( config_path(configuration) )
 	for section in config.sections():
 		for (function, file) in config.items(section): 
 			if(function == service):

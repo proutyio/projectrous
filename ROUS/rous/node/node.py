@@ -48,7 +48,6 @@ def wait_for_message(sock):
         message, (host,port) = sock.recvfrom(1024)
 
         if message:
-            slow_down()
             msg = decrypt_message(message)
             # if check_trust(host, data):
             try:
@@ -58,7 +57,6 @@ def wait_for_message(sock):
                     print
                     print "no good"
                     print msg
-                slow_down()
                 choose_path(msg, sock)
             except:
                 print "bad message"
@@ -66,7 +64,6 @@ def wait_for_message(sock):
 #
 def decrypt_message(message):
     return encryption.decrypt(message, ukey)
-
 
 
 
@@ -115,7 +112,6 @@ def whois_path():
 
 #
 def bid_path(msg):
-    slow_down()
     if msg['tag'] == "bid":
         if msg['bid'].isdigit():
             bids.append(str(msg['bid']))
@@ -132,7 +128,6 @@ def error_path(): pass
 #   services in services module. Then loop list and find if
 #   input string is in list.
 def check_service_exists(msg):
-    slow_down()
     svc = json.loads(json.dumps(msg))['service']
     all_svc = services.all_services()
     all_svc = all_svc[1:-1]

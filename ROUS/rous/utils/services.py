@@ -22,18 +22,24 @@ def all_services():
 
 def run_service(service, sender_address):
 	if not config.call_service(service, sender_address):
-		print "failed"
+		print "run service failed"
 		# log.info("%s Error - Failed to call serivce", sender_address)
 
 
 # this code looks like it should be refactored but it works like this for
-#	a reason., to allow the config to specifically specify what services 
-#	are offered
+#	a reason... to allow the config to specifically specify what services 
+#	are offered and thus there must be the same named function here
+green = False
+red = False
+blue = False
 def green_on(sender_address):
-	rpi.on("green")
+	if not green:
+		rpi.on("green")
+		green = True
 
 def green_off(sender_address):
 	rpi.off("green")
+	green = False
 
 def red_on(sender_address):
 	rpi.on("red")

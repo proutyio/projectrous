@@ -9,6 +9,7 @@ import socket
 import json
 import signal
 import rous.utils.utils as utils
+import rous.utils.config as configuration
 import rous.utils.network as network
 import rous.utils.encryption as encryption
 
@@ -21,7 +22,7 @@ io = SocketIO(app)
 CORS(app)
 
 self_ip = network.find_my_ip()
-ukey = "../utils/keys/ukey.txt"
+ukey = configuration.settings("frontend_key")
 
 data = []
 nodes = []
@@ -55,8 +56,6 @@ def discover_nodes():
 def send_message(message):
 	print message
 	network.send_multicast_message(message,ukey,self_ip)
-	# network.send_multicast_message(
-		# '{"tag":"'+tag+'","message":"'+message+'","address":"'+self_ip+'"}',ukey,self_ip)
 
 
 #

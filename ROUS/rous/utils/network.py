@@ -8,12 +8,13 @@ import re
 import threading
 # import logging as log
 import rous.utils.utils as utils
+import rous.utils.config as configuration
 import rous.utils.encryption as encryption
 
 
-mcast_host = '224.0.0.0'
-mcast_port = 22400
-tcp_port = 24242
+mcast_host = configuration.settings("mcast_host")
+mcast_port = int(configuration.settings("mcast_port"))
+tcp_port = int(configuration.settings("tcp_port"))
 
 
 # make a fake internet query, grab hostname, close socket

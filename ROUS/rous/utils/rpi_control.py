@@ -32,7 +32,6 @@ def off(str_pin):
 	(pin, threads) = find_pin(str_pin)
 	try:
 		for t in threads:
-			print t
 			t.exit = False
 			t.join()
 	finally:

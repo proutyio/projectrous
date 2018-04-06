@@ -8,14 +8,21 @@ import re
 # import logging as log
 
 # log_file = "rous.log"
-whitelist = "rous/utils/whitelist.txt"
 
-## ATTENTION: ##
-## nodes need path: rous/utils/keys/ukey.txt
-## user need path: ../utils/keys/ukey.txt
-def ukey(): return "rous/utils/keys/ukey.txt"
-def akey(): return "rous/utils/keys/akey.txt"
-#############################################       MOVE THIS to 'settings.ini'
+#
+def blacklist():
+    import rous.utils.config as configuration
+    return configuration.settings("blacklist")
+
+#
+def ukey(): 
+    import rous.utils.config as configuration
+    return configuration.settings("node_key")
+
+#
+def akey():
+    import rous.utils.config as configuration 
+    return configuration.settings("admin_key")
 
 #
 def setup_logger():
@@ -30,20 +37,20 @@ def setup_logger():
 #
 def read_from_whitelist(address):
     try:
-        f = open(whitelist, "r")
+        f = open(blacklist(), "r")
         lst = [line.split(',') for line in f.readlines()]
         f.close()
         return lst
     except:
         pass
-        # log.error("%s - FAILED to read whitelist",address)
+        # log.error("%s - FAILED to read blacklist",address)
 
 
 #
 def write_to_whitelist(lst, address):
-    erase_text_file(whitelist, address)
+    erase_text_file(blacklist(), address)
     try:
-        f = open(whitelist, "a")
+        f = open(blacklist(), "a")
         if lst:
             for l in lst:
                 f.write(l)
@@ -51,7 +58,7 @@ def write_to_whitelist(lst, address):
         f.close()
     except:
         pass
-        # log.error("%s - FAILED to write to whitelist",address)
+        # log.error("%s - FAILED to write to blacklist",address)
 
 
 #
