@@ -17,6 +17,10 @@ import {
   Radio,
   ListGroup,
   ListGroupItem,
+  ToggleButtonGroup,
+  ToggleButton,
+  ButtonToolbar,
+  Row
 } from "react-bootstrap";
 
 
@@ -307,7 +311,7 @@ class FormSend extends Component {
     return (
       <Well className="FormSend">
         <Form horizontal onSubmit={this.send}>
-          <FormGroup controlId="">
+         {/* <FormGroup controlId="">
             <Col componentClass={ControlLabel} sm={9}>
               <p>Send a message into the node network. {str}</p>
             </Col>
@@ -317,15 +321,34 @@ class FormSend extends Component {
                  value={this.state.message} 
                  onChange={this.messageChange}/>
             </Col>
-          </FormGroup>
+          </FormGroup>*/}
 
-          <FormGroup>
+         
+        <h4>Select a message to send:</h4>
+        <ButtonToolbar>
+          <ToggleButtonGroup type="radio" name="options" defaultValue={1} vertical>
+            <ToggleButton style={{padding:"15px",color:"green"}}
+                          value={1}>Green ON</ToggleButton>
+            <ToggleButton style={{padding:"15px",color:"green"}}
+                          value={2}>Green OFF</ToggleButton>
+          
+            <ToggleButton style={{padding:"15px",color:"red"}}
+                          value={3}>Red ON</ToggleButton>
+            <ToggleButton style={{padding:"15px",color:"red"}}
+                          value={4}>Red OFF</ToggleButton>
+          </ToggleButtonGroup>
+        </ButtonToolbar>
+
+
+
+         <FormGroup>
             <Col smOffset={5} sm={10}>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                       type="submit">submit</Button>
             </Col>
           </FormGroup>
         </Form> 
+
       </Well>
     );
   }
@@ -363,10 +386,9 @@ export class ConsoleLog extends Component {
         <h2 id="Console_h4" className="text-center">Console Log</h2>
         <div style={{paddingBottom:"100px"}}>
         {this.state.data.map((data,i) =>{
-            if(i >=5){
+            if(i >=25){
               this.setState({data:  []});
             }
-            // {console.log(this.state.data)}
             return (
               <ListGroupItem id="Console_p" className="text-center">
               {JSON.parse(data)['address']+" "+
