@@ -28,6 +28,7 @@ import {
 } from "react-bootstrap";
 
 
+/*#######################################*/
 export const NavBarTop = (
   <Navbar className="fixedTop" fixedTop id="NavBarTop">
     <Navbar.Header>
@@ -42,7 +43,7 @@ export const NavBarTop = (
 
 
 
-
+/*#######################################*/
 export const PageTitle = (
   <PageHeader id="PageTitle">
     Administration: <small>Nodes and Configuration</small>
@@ -51,9 +52,17 @@ export const PageTitle = (
 
 
 
-
+/*#######################################*/
+var check = false;
 function graph_func(n = 40) {
+  if(check == false){
+    check = true;
     return Math.floor(Math.random()*1);
+  }
+  else {
+    check = false;
+    return Math.floor(Math.random()*2);
+  }
 }
 
 class SparkGraph extends Component {
@@ -70,10 +79,12 @@ class SparkGraph extends Component {
   }
   render() {
     return (
+      <Col xs="2" md="4">
       <Sparklines data={this.state.data} limit={25}>
         <SparklinesLine color="#1c8cdc" />
         <SparklinesSpots />
       </Sparklines>
+      </Col>
     );
   }
 };
@@ -81,7 +92,7 @@ class SparkGraph extends Component {
 
 
 
-
+/*#######################################*/
 export class TableMain extends Component {
   constructor() {
     super();
@@ -93,9 +104,7 @@ export class TableMain extends Component {
       styleA:{color:"black", borderStyle:"solid", 
               borderColor:"blue",borderWidth:"2px"},
     };
-  }
-
-  componentDidMount() {
+  
     setInterval(() => {
       this.state.socket.emit("whois");
     },3000);
@@ -137,22 +146,15 @@ export class TableMain extends Component {
             <tbody>
 
               {this.state.data.map((data,i) =>{
-                // var lst = [];
                 var d = JSON.parse(data);
                 if (lst.length > 0){
                   for(i=0;i<lst.length;i++){
-                    // console.log(lst[i]['address']);
-                    // console.log(d['address']);
-                    if( (lst[i]['address']).toString() === (d['address']).toString() ){
-                      // lst.push(d);
-                    } 
-                    else
-                      lst.push(d);
+                    if( (lst[i]['address']).toString() === (d['address']).toString() ){}
+                    else lst.push(d);/*this is dumb logic I need to fix*/ 
                   }
                 }else{
                   lst.push(d);
                 }
-                // console.log(lst[0]);
                 return (
                   <tr key={i}>
                     <td style={{verticalAlign:"middle",
@@ -240,7 +242,7 @@ export class TableMain extends Component {
 
 
 
-
+/*#######################################*/
 class FormSend extends Component {
   constructor() {
     super();
@@ -294,44 +296,47 @@ class FormSend extends Component {
 
 
 
-// // Need to rethink, works, but behavior is not good
-// export class ConsoleLog extends Component {
-//   constructor() {
-//     super();
-//     this.state = { 
-//       socket:socketIOClient("http://127.0.0.1:4242"),
-//       data: [],
-//     };
-//   }
+/*#######################################*/
+export class ConsoleLog extends Component {
+  constructor() {
+    super();
+    this.state = { 
+      socket:socketIOClient("http://127.0.0.1:4242"),
+      data: [],
+    };
+    
+    setInterval(() => {
+      this.state.socket.emit("console");
+    },2000);
+    
+    this.state.socket.on("update_console", (data)=> 
+      this.setState({ data: this.state.data.concat(data) }));
+  }
 
-//   componentDidMount() {
-//     setInterval(() => {
-//       this.state.socket.emit("console");
-//     },2000);
-//     this.state.socket.on("update_console", (data)=> 
-//this.setState({ data: this.state.data.concat(data) }));
-//   }
+  componentWillUnmount() {
+    clearInterval();
+  }
 
-//   componentWillUnmount() {
-//     clearInterval();
-//   }
-
-//   render() {
-//     return (
-//       <Well id="ConsoleLog">
-//         <h4 style={{color:"white"}}>Console Log</h4>
-//         {this.state.data.map((data,i) =>{
-//             //var d = JSON.parse(data);
-//             {console.log(this.state.data)}
-//             return (
-//               <p>{data}</p>
-//             );
-//         })}
+  render() {
+    return (
+      <Well id="ConsoleLog">
+        <h4 style={{color:"white",
+                    fontWeight:"bold",
+                    fontSize:"20px",}}>Console Log</h4>
+        {this.state.data.map((data,i) =>{
+            {console.log(this.state.data)}
+            return (
+              <p className="text-center" 
+                 style={{color:"white",
+                         fontWeight:"regular",
+                         fontSize:"12px"}}>{data}</p>
+            );
+        })}
         
-//       </Well>
-//     );
-//   }
-// }
+      </Well>
+    );
+  }
+}
 
 
 
