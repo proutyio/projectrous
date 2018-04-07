@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from 'react-dom'
 import socketIOClient from "socket.io-client";
 import './style.css';
 import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
@@ -9,21 +8,12 @@ import {
   Button,
   Nav,
   Navbar,
-  NavItem,
-  NavDropdown,
   Form,
   FormGroup,
   FormControl,
   Col,
   ControlLabel,
-  Checkbox,
-  DropdownButton,
-  MenuItem,
-  ButtonToolbar,
-  ListGroup,
-  ListGroupItem,
   PageHeader,
-  Row,
   Radio
 } from "react-bootstrap";
 
@@ -55,7 +45,7 @@ export const PageTitle = (
 /*#######################################*/
 var check = false;
 function graph_func(n = 40) {
-  if(check == false){
+  if(check === false){
     check = true;
     return Math.floor(Math.random()*1);
   }
@@ -101,8 +91,8 @@ export class TableMain extends Component {
       data:[],
       trust:'',
       style:{color:"black"},
-      styleA:{color:"black", borderStyle:"solid", 
-              borderColor:"blue",borderWidth:"2px"},
+      style_wait:{color:"black"},
+      style_bid:{color:"black"},
     };
   
     setInterval(() => {
@@ -110,6 +100,11 @@ export class TableMain extends Component {
     },3000);
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
+    this.state.socket.on("update_waiting", 
+      () => this.setState(
+        {style_wait:{color:"black", borderStyle:"solid", 
+                  borderColor:"blue",borderWidth:"2px"}},
+      ));
 
   }
 
@@ -150,7 +145,7 @@ export class TableMain extends Component {
                 if (lst.length > 0){
                   for(i=0;i<lst.length;i++){
                     if( (lst[i]['address']).toString() === (d['address']).toString() ){}
-                    else lst.push(d);/*this is dumb logic I need to fix*/ 
+                    else lst.push(d);/*this is dumb logic, I need to fix*/ 
                   }
                 }else{
                   lst.push(d);
@@ -174,7 +169,7 @@ export class TableMain extends Component {
                     
                     </td>
                     <td style={{verticalAlign:"middle"}}>
-                      <p style={this.state.styleA}>WAITING</p>
+                      <p style={this.state.style_wait}>WAITING</p>
                       <p style={this.state.style}>CHECKING</p>
                       <p style={this.state.style}>BIDDING</p>
                       <p style={this.state.style}>SERVICE</p>
@@ -208,8 +203,6 @@ export class TableMain extends Component {
               </div>
               {this.state.data.map((data,i) =>{
                 var d = JSON.parse(data);
-                var lst = [];
-                var x = 0;
                 return (
                   <div style={{textAlign:"center"}}>     
                     <Radio name="radioGroup" 
@@ -303,6 +296,7 @@ export class ConsoleLog extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       data: [],
+      log_items:20,
     };
     
     setInterval(() => {
@@ -320,23 +314,18 @@ export class ConsoleLog extends Component {
   render() {
     return (
       <Well id="ConsoleLog">
-        <h4 style={{color:"white",
-                    fontWeight:"bold",
-                    fontSize:"20px",}}>Console Log</h4>
+        <h4 id="Console_h4">Console Log</h4>
+        <div style={{paddingBottom:"100px"}}>
         {this.state.data.map((data,i) =>{
-            if(i == 10){
-              this.state.socket.emit("erase_data");
-              this.state.data = []
+            if(i === this.state.log_items){
+              this.setState.data = []
             }
             // {console.log(this.state.data)}
             return (
-              <p className="text-center" 
-                 style={{color:"white",
-                         fontWeight:"regular",
-                         fontSize:"14px"}}>{data}</p>
+              <p id="Console_p" className="text-center">{data}</p>
             );
         })}
-        
+        </div>
       </Well>
     );
   }
@@ -382,9 +371,6 @@ export class ConsoleLog extends Component {
 //       socket:socketIOClient("http://127.0.0.1:4242"),
 //       data:[],
 //     };
-//   }
-
-//   componentDidMount() {
 //     setInterval(() => this.state.socket.emit("whois"), 5000);
 //   }
 //   componentWillUnmount() {

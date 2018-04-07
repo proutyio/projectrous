@@ -62,6 +62,19 @@ svg {
 
 #ConsoleLog {
 	background-color: grey;
+	
+}
+
+#Console_h4 {
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+#Console_p {
+	color: white;
+	font-weight: regular;
+	font-size: 14px;
 }
 
 

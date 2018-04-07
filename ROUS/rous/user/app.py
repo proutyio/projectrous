@@ -76,6 +76,16 @@ def erase_data():
 		mutex.release()
 
 
+#
+# @io.on("update_waiting")
+# def update_waiting():
+# 	mutex.acquire()
+# 	try:
+# 		emit("update_console", data)
+# 	finally:
+# 		mutex.release()
+
+
 # when restoring I want to issue new keys to removed list + found nodes
 # lot of error checking, looks nasty, sorry
 @io.on('trust')
