@@ -324,12 +324,16 @@ export class ConsoleLog extends Component {
                     fontWeight:"bold",
                     fontSize:"20px",}}>Console Log</h4>
         {this.state.data.map((data,i) =>{
-            {console.log(this.state.data)}
+            if(i == 10){
+              this.state.socket.emit("erase_data");
+              this.state.data = []
+            }
+            // {console.log(this.state.data)}
             return (
               <p className="text-center" 
                  style={{color:"white",
                          fontWeight:"regular",
-                         fontSize:"12px"}}>{data}</p>
+                         fontSize:"14px"}}>{data}</p>
             );
         })}
         
