@@ -344,7 +344,7 @@ export class ConsoleLog extends Component {
     
     setInterval(() => {
       this.state.socket.emit("console");
-    },2000);
+    },1000);
     
     this.state.socket.on("update_console", (data)=> 
       this.setState({ data: this.state.data.concat(data) }));
@@ -357,7 +357,7 @@ export class ConsoleLog extends Component {
   render() {
     return (
       <Well id="ConsoleLog">
-        <h4 id="Console_h4">Console Log</h4>
+        <h2 id="Console_h4">Console Log</h2>
         <div style={{paddingBottom:"100px"}}>
         {this.state.data.map((data,i) =>{
             if(i === 20){

@@ -185,7 +185,9 @@ def finish_bidding(my_bid,msg):
             network.send_multicast_message(
                 '{"tag":"winner","address":"'+self_ip+'"}',ukey,self_ip)
             services.run_service(msg['service'],self_ip)
-            time.sleep(2)
+            time.sleep(1)
+            network.send_multicast_message(
+            '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
         else:
             print "\tLOST" 
     except:
@@ -195,6 +197,7 @@ def finish_bidding(my_bid,msg):
         del bids[:]
         network.send_multicast_message(
             '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
+        
 
 
 #
