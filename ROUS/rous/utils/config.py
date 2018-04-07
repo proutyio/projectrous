@@ -41,7 +41,7 @@ def all_services():
 
 #
 def call_service(service, sender_address):
-	config = config_parser( config_path(configuration) )
+	config = config_parser( configuration )
 	for section in config.sections():
 		for (function, file) in config.items(section): 
 			if(function == service):

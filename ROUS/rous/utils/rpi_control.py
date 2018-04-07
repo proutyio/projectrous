@@ -3,14 +3,16 @@ import time
 import threading
 # import logging as log
 import rous.utils.utils as utils
+import rous.utils.config as config
 
 
 green_threads = []
 red_threads = []
 blue_threads = []
-pins = [("green",18,green_threads),
-		("red",23,red_threads),
-		("blue",24,blue_threads)]
+
+pins = [("green",int(config.settings("green_pin")),green_threads),
+		("red",int(config.settings("red_pin")),red_threads),
+		("blue",int(config.settings("blue_pin")),blue_threads)]
 
 def setup():
 	rpi.setmode(rpi.BCM)
@@ -21,6 +23,7 @@ setup()
 
 
 def thread_on(str_pin):
+	print "ON"
 	(pin, threads) = find_pin(str_pin)
 	for t in threads:
 		while getattr(t, "exit", True):

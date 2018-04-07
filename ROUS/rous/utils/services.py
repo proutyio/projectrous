@@ -29,17 +29,11 @@ def run_service(service, sender_address):
 # this code looks like it should be refactored but it works like this for
 #	a reason... to allow the config to specifically specify what services 
 #	are offered and thus there must be the same named function here
-green = False
-red = False
-blue = False
 def green_on(sender_address):
-	if not green:
-		rpi.on("green")
-		green = True
+	rpi.on("green")
 
 def green_off(sender_address):
 	rpi.off("green")
-	green = False
 
 def red_on(sender_address):
 	rpi.on("red")
