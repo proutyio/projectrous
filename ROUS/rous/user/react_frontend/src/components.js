@@ -48,11 +48,11 @@ var check = false;
 function graph_func(n = 40) {
   if(check === false){
     check = true;
-    return Math.floor(Math.random()*1);
+    return .2;
   }
   else {
     check = false;
-    return Math.floor(Math.random()*2);
+    return .1;
   }
 }
 
@@ -90,7 +90,9 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
+      graphdata: [],
       trust:'',
+      style_graph:"#1c8cdc",
       style_basic:{color:"black"},
       style_wait:{color:"black"},
       style_bid:{color:"black"},
@@ -98,7 +100,15 @@ export class TableMain extends Component {
       style_blue:{color:"black", borderStyle:"solid",borderColor:"blue",borderWidth:"4px"},
       style_green:{color:"black", borderStyle:"solid",borderColor:"green",borderWidth:"4px"},
       style_red:{color:"black", borderStyle:"solid",borderColor:"red",borderWidth:"4px"},
+      just_blue:"#1c8cdc",
+      just_green:"green",
+      just_red:"red",
     };
+    setInterval(
+      () =>
+        this.setState({
+          graphdata:this.state.graphdata.concat([graph_func()])
+    }),500);
   
     setInterval(() => {
       this.state.socket.emit("check_wait")
@@ -113,6 +123,7 @@ export class TableMain extends Component {
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== []){
         this.setState({style_wait:this.state.style_blue});
+        this.setState({style_graph:this.state.just_blue});
         this.setState({style_bid:this.state.style_basic});
         this.setState({style_win:this.state.style_basic});
       }
@@ -121,6 +132,7 @@ export class TableMain extends Component {
       if(nodes !== []){
         this.setState({style_wait:this.state.style_basic});
         this.setState({style_bid:this.state.style_red});
+        this.setState({style_graph:this.state.just_red});
         this.setState({style_win:this.state.style_basic});
       }
     });
@@ -129,6 +141,7 @@ export class TableMain extends Component {
         this.setState({style_wait:this.state.style_basic});
         this.setState({style_bid:this.state.style_basic});
         this.setState({style_win:this.state.style_green});
+        this.setState({style_graph:this.state.just_green});
       }
     });
   }
@@ -198,7 +211,14 @@ export class TableMain extends Component {
                       <p style={this.state.style_bid}>BIDDING</p>
                       <p style={this.state.style_win}>SERVICE</p>
                     </td>
-                    <td style={{verticalAlign:"middle"}}><SparkGraph/></td>
+                    <td style={{verticalAlign:"middle"}}>
+                        <Col xs="2" md="4">
+                          <Sparklines data={this.state.graphdata} limit={25}>
+                            <SparklinesLine color={this.state.style_graph} />
+                            <SparklinesSpots />
+                          </Sparklines>
+                        </Col>
+                    </td>
                   </tr>
                 );
               })}
