@@ -91,25 +91,45 @@ export class TableMain extends Component {
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
       trust:'',
-      style:{color:"black"},
+      style_basic:{color:"black"},
       style_wait:{color:"black"},
       style_bid:{color:"black"},
-      styleA:{color:"black", borderStyle:"solid",borderColor:"blue",borderWidth:"2px"},
+      style_win:{color:"black"},
+      style_blue:{color:"black", borderStyle:"solid",borderColor:"blue",borderWidth:"4px"},
+      style_green:{color:"black", borderStyle:"solid",borderColor:"green",borderWidth:"4px"},
+      style_red:{color:"black", borderStyle:"solid",borderColor:"red",borderWidth:"4px"},
     };
   
     setInterval(() => {
       this.state.socket.emit("check_wait")
+      this.state.socket.emit("check_bid")
+      this.state.socket.emit("check_win")
+    },10);
+    setInterval(() => {
       this.state.socket.emit("whois");
-      // this.state.data.map((data,i) =>{
-      //   var d = JSON.parse(data);
-      //   if(data['tag'] === "waiting")
-      //     console.log(data['tag'])
-      // });
     },3000);
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
-    this.state.socket.on("check_waiting", (wait_nodes) => {
-        this.setState({style_wait:this.state.styleA});
+    this.state.socket.on("check_waiting", (nodes) => {
+      if(nodes !== []){
+        this.setState({style_wait:this.state.style_blue});
+        this.setState({style_bid:this.state.style_basic});
+        this.setState({style_win:this.state.style_basic});
+      }
+    });
+    this.state.socket.on("check_bidding", (nodes) => {
+      if(nodes !== []){
+        this.setState({style_wait:this.state.style_basic});
+        this.setState({style_bid:this.state.style_red});
+        this.setState({style_win:this.state.style_basic});
+      }
+    });
+    this.state.socket.on("check_winning", (nodes) => {
+      if(nodes !== []){
+        this.setState({style_wait:this.state.style_basic});
+        this.setState({style_bid:this.state.style_basic});
+        this.setState({style_win:this.state.style_green});
+      }
     });
   }
 
@@ -175,9 +195,8 @@ export class TableMain extends Component {
                     </td>
                     <td style={{verticalAlign:"middle"}}>
                       <p style={this.state.style_wait}>WAITING</p>
-                      <p style={this.state.style}>CHECKING</p>
-                      <p style={this.state.style}>BIDDING</p>
-                      <p style={this.state.style}>SERVICE</p>
+                      <p style={this.state.style_bid}>BIDDING</p>
+                      <p style={this.state.style_win}>SERVICE</p>
                     </td>
                     <td style={{verticalAlign:"middle"}}><SparkGraph/></td>
                   </tr>
@@ -301,7 +320,6 @@ export class ConsoleLog extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       data: [],
-      log_items:20,
     };
     
     setInterval(() => {
@@ -322,7 +340,7 @@ export class ConsoleLog extends Component {
         <h4 id="Console_h4">Console Log</h4>
         <div style={{paddingBottom:"100px"}}>
         {this.state.data.map((data,i) =>{
-            if(i === this.state.log_items){
+            if(i === 20){
               this.setState.data = []
             }
             // {console.log(this.state.data)}
