@@ -45,7 +45,7 @@ pause_interval = 0
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
     network.send_multicast_message(
-            '{"tag":"waiting",address":"'+self_ip+'}',ukey,self_ip)
+            '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
     while True:
         message, (host,port) = sock.recvfrom(1024)
 
@@ -100,7 +100,7 @@ def service_path(msg, sock):
         my_bid = random.randint(1,1000)
         timer(my_bid, msg)
         network.send_multicast_message(
-            '{"tag":"bidding",address":"'+self_ip+'}',ukey,self_ip)
+            '{"tag":"bidding","address":"'+self_ip+'"}',ukey,self_ip)
         place_bid(my_bid)
         return    
 
@@ -183,7 +183,7 @@ def finish_bidding(my_bid,msg):
         if bids and (str(my_bid) >= max(bids)):
             print "\tWON"
             network.send_multicast_message(
-                '{"tag":"winner",address":"'+self_ip+'}',ukey,self_ip)
+                '{"tag":"winner","address":"'+self_ip+'"}',ukey,self_ip)
             services.run_service(msg['service'],self_ip)
         else:
             print "\tLOST" 
@@ -193,7 +193,7 @@ def finish_bidding(my_bid,msg):
     finally:
         del bids[:]
         network.send_multicast_message(
-            '{"tag":"waiting",address":"'+self_ip+'}',ukey,self_ip)
+            '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
 
 
 #

@@ -18,6 +18,7 @@ import {
 } from "react-bootstrap";
 
 
+
 /*#######################################*/
 export const NavBarTop = (
   <Navbar className="fixedTop" fixedTop id="NavBarTop">
@@ -93,19 +94,23 @@ export class TableMain extends Component {
       style:{color:"black"},
       style_wait:{color:"black"},
       style_bid:{color:"black"},
+      styleA:{color:"black", borderStyle:"solid",borderColor:"blue",borderWidth:"2px"},
     };
   
     setInterval(() => {
+      this.state.socket.emit("check_wait")
       this.state.socket.emit("whois");
+      // this.state.data.map((data,i) =>{
+      //   var d = JSON.parse(data);
+      //   if(data['tag'] === "waiting")
+      //     console.log(data['tag'])
+      // });
     },3000);
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
-    this.state.socket.on("update_waiting", 
-      () => this.setState(
-        {style_wait:{color:"black", borderStyle:"solid", 
-                  borderColor:"blue",borderWidth:"2px"}},
-      ));
-
+    this.state.socket.on("check_waiting", (wait_nodes) => {
+        this.setState({style_wait:this.state.styleA});
+    });
   }
 
   componentWillUnmount() {
@@ -322,7 +327,10 @@ export class ConsoleLog extends Component {
             }
             // {console.log(this.state.data)}
             return (
-              <p id="Console_p" className="text-center">{data}</p>
+              <p id="Console_p" className="text-center">
+              {JSON.parse(data)['address']+" "+
+               JSON.parse(data)['tag']+" "+
+               JSON.parse(data)['message']}</p>
             );
         })}
         </div>

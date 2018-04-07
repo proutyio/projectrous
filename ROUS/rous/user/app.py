@@ -25,6 +25,7 @@ ukey = str(configuration.settings("frontend_key"))
 data = []
 nodes = []
 removed = []
+wait_nodes = []
 mutex = Lock()
 
 
@@ -47,6 +48,13 @@ def disconnect():
 def discover_nodes():
 	find_nodes()
 	emit("discover_nodes", nodes)
+
+
+#
+@io.on('check_wait')
+def check_wait():
+	check_waiting()
+	emit("check_waiting", wait_nodes)
 
 
 #
@@ -74,16 +82,6 @@ def erase_data():
 		del data[:]
 	finally:
 		mutex.release()
-
-
-#
-# @io.on("update_waiting")
-# def update_waiting():
-# 	mutex.acquire()
-# 	try:
-# 		emit("update_console", data)
-# 	finally:
-# 		mutex.release()
 
 
 # when restoring I want to issue new keys to removed list + found nodes
@@ -122,6 +120,9 @@ def thread_listener(sock, address):
 			msg = encryption.decrypt(message, ukey)
 			try:
 				if json.loads(msg)['tag'] == "stop": break
+				# if json.loads(msg)['tag'] == "waiting": print "\nwaiting"
+				# if json.loads(msg)['tag'] == "bidding": emit("test")
+				# if json.loads(msg)['tag'] == "winner": emit_msg()
 			except: pass
 			mutex.acquire()
 			try:
@@ -165,6 +166,28 @@ def find_nodes():
 		# print nodes
 		del data[:]
 		mutex.release()
+
+
+#
+def check_waiting():
+	mutex.acquire()
+	try:
+		if data:
+			for d in data:
+				d = json.loads(d)
+				print d
+				if d['tag'] == "waiting":
+					wait_nodes.append(json.dumps(d))
+
+	except:
+		pass
+	finally:
+		mutex.release()
+
+
+#
+def check_bidding():
+	pass
 
 
 #
