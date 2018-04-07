@@ -29,13 +29,13 @@ const App = () => (
 
 
     <Row className="show-grid">
-      <Col xs={1} md={4}/>
-      <Col xs={10} md={4}>
+      <Col xs={1} md={3}/>
+      <Col xs={10} md={6}>
 
         <ConsoleLog/>
         
       </Col>
-      <Col xs={1} md={4}/>
+      <Col xs={1} md={3}/>
     </Row>
   </div>
 

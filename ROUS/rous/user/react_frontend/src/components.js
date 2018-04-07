@@ -14,7 +14,9 @@ import {
   Col,
   ControlLabel,
   PageHeader,
-  Radio
+  Radio,
+  ListGroup,
+  ListGroupItem,
 } from "react-bootstrap";
 
 
@@ -356,22 +358,24 @@ export class ConsoleLog extends Component {
 
   render() {
     return (
-      <Well id="ConsoleLog">
-        <h2 id="Console_h4">Console Log</h2>
+      <Well>
+      <ListGroup >
+        <h2 id="Console_h4" className="text-center">Console Log</h2>
         <div style={{paddingBottom:"100px"}}>
         {this.state.data.map((data,i) =>{
-            if(i === 20){
-              this.setState.data = []
+            if(i >=5){
+              this.setState({data:  []});
             }
             // {console.log(this.state.data)}
             return (
-              <p id="Console_p" className="text-center">
+              <ListGroupItem id="Console_p" className="text-center">
               {JSON.parse(data)['address']+" "+
                JSON.parse(data)['tag']+" "+
-               JSON.parse(data)['message']}</p>
+               JSON.parse(data)['message']}</ListGroupItem>
             );
         })}
         </div>
+      </ListGroup>
       </Well>
     );
   }

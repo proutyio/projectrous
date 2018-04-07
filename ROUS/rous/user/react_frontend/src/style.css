@@ -61,20 +61,21 @@ svg {
 }
 
 #ConsoleLog {
-	background-color: grey;
+	background-color: #dcdcdc;
 	
 }
 
 #Console_h4 {
-	color: white;
+	color: black;
 	font-weight: bold;
 	font-size: 20px;
 }
 
 #Console_p {
-	color: white;
+	color: #D73F09;
 	font-weight: regular;
 	font-size: 18px;
+	margin: 0px 120px 0px 120px
 }
 
 
