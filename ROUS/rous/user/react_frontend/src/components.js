@@ -104,7 +104,7 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },10);
+    },15);
     setInterval(() => {
       this.state.socket.emit("whois");
     },3000);
