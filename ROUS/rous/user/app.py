@@ -13,16 +13,14 @@ import rous.utils.config as configuration
 import rous.utils.network as network
 import rous.utils.encryption as encryption
 
-from flask_socketio import SocketIO, emit
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
+CORS(app)
 io = SocketIO(app)
 
-CORS(app)
-
 self_ip = network.find_my_ip()
-ukey = configuration.settings("frontend_key")
+ukey = str(configuration.settings("frontend_key"))
+
 
 data = []
 nodes = []

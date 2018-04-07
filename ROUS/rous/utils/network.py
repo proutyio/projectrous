@@ -29,7 +29,7 @@ def find_my_ip():
 		utils.write_to_whitelist([ip],ip)#ignore message from myself
 		return ip
 	except:
-		pass
+		print "failed to find_my_ip"
 		# log.error("FAILED to find my IP address")
 
 
@@ -96,7 +96,7 @@ def update_key(data, host):
 				if len(newkey) == 32:
 					utils.write_new_key(key, newkey, host)
 	except:
-		pass
+		print "failed to update_key"
 
 
 
