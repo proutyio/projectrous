@@ -66,16 +66,16 @@ svg {
 }
 
 #Console_h4 {
-	color: black;
+	/*color: black;
 	font-weight: bold;
-	font-size: 20px;
+	font-size: 20px;*/
 }
 
 #Console_p {
-	color: #D73F09;
+	/*color: #D73F09;*/
 	font-weight: regular;
 	font-size: 18px;
-	margin: 0px 120px 0px 120px
+	margin: 0px 80px 0px 80px
 }
 
 

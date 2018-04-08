@@ -241,7 +241,7 @@ export class TableMain extends Component {
 
         <Col xs={4} md={6}>
           <Well className="FormTrust">
-            <h3 className="text-center">Manage Node Trust</h3>
+            <h3 className="text-center">Manage Trust</h3>
             <Form horizontal onSubmit={this.removeTrust}>
               <FormGroup>
               <div style={{textAlign:"center"}}> 
@@ -267,7 +267,7 @@ export class TableMain extends Component {
               </FormGroup>
               
               <FormGroup>
-                <Col smOffset={5} sm={9}>
+                <Col smOffset={4} sm={10}>
                   <div style={{textAlign:"left", margin:"0 auto"}}> 
                     <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                             type="submit">remove trust</Button>
@@ -292,6 +292,13 @@ class FormSend extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       message: '',
+      g_on:'{"tag":"service","service":"green_on"}',
+      g_off: '{"tag":"service","service":"green_off"}',
+      r_on: '{"tag":"service","service":"red_on"}',
+      r_off: '{"tag":"service","service":"red_off"}',
+      b_on: '{"tag":"service","service":"blue_on"}',
+      b_off: '{"tag":"service","service":"blue_off"}',
+      print: '{"tag":"service","service":"print_file"}',
     };
   }
 
@@ -307,7 +314,7 @@ class FormSend extends Component {
   };
 
   render() {
-    var str = '{"tag":"service","service":"green_on"}';
+
     return (
       <Well className="FormSend">
         <Form horizontal onSubmit={this.send}>
@@ -324,27 +331,37 @@ class FormSend extends Component {
           </FormGroup>*/}
 
          
-        <h4>Select a message to send:</h4>
+        <h3 className="text-center">Select Service</h3>
         <ButtonToolbar>
-          <ToggleButtonGroup type="radio" name="options" defaultValue={1} vertical>
+          <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical block>
             <ToggleButton style={{padding:"15px",color:"green"}}
-                          value={1}>Green ON</ToggleButton>
+                          value={this.state.g_on} onChange={this.messageChange}>
+                          Green ON</ToggleButton>
             <ToggleButton style={{padding:"15px",color:"green"}}
-                          value={2}>Green OFF</ToggleButton>
-          
+                          value={this.state.g_off} onChange={this.messageChange}>
+                          Green OFF</ToggleButton>
             <ToggleButton style={{padding:"15px",color:"red"}}
-                          value={3}>Red ON</ToggleButton>
+                          value={this.state.r_on} onChange={this.messageChange}>
+                          Red ON</ToggleButton>
             <ToggleButton style={{padding:"15px",color:"red"}}
-                          value={4}>Red OFF</ToggleButton>
+                          value={this.state.r_off} onChange={this.messageChange}>
+                          Red OFF</ToggleButton>
+            <ToggleButton style={{padding:"15px",color:"blue"}}
+                          value={this.state.b_on} onChange={this.messageChange}>
+                          Blue ON</ToggleButton>
+            <ToggleButton style={{padding:"15px",color:"blue"}}
+                          value={this.state.b_off} onChange={this.messageChange}>
+                          Blue OFF</ToggleButton>
+            <ToggleButton style={{padding:"15px"}}
+                          value={this.state.print} onChange={this.messageChange}>
+                          Print File</ToggleButton>
           </ToggleButtonGroup>
         </ButtonToolbar>
-
-
-
-         <FormGroup>
-            <Col smOffset={5} sm={10}>
+   
+         <FormGroup className="text-center" style={{marginTop:"10px"}}>
+            <Col>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
-                      type="submit">submit</Button>
+                      type="submit">send to node network</Button>
             </Col>
           </FormGroup>
         </Form> 
@@ -383,14 +400,14 @@ export class ConsoleLog extends Component {
     return (
       <Well>
       <ListGroup >
-        <h2 id="Console_h4" className="text-center">Console Log</h2>
+        <h3 id="Console_h4" className="text-center">Console Log</h3>
         <div style={{paddingBottom:"100px"}}>
         {this.state.data.map((data,i) =>{
-            if(i >=25){
+            if(i >=100){
               this.setState({data:  []});
             }
             return (
-              <ListGroupItem id="Console_p" className="text-center">
+              <ListGroupItem bsStyle="warning" id="Console_p" className="text-center">
               {JSON.parse(data)['address']+" "+
                JSON.parse(data)['tag']+" "+
                JSON.parse(data)['message']}</ListGroupItem>
