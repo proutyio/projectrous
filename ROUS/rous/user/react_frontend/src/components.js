@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import './style.css';
-import { Sparklines, SparklinesLine, SparklinesSpots, SparklinesBar } from "react-sparklines";
+// import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 import {
   Table,
   Well,
@@ -10,9 +10,9 @@ import {
   Navbar,
   Form,
   FormGroup,
-  FormControl,
+  // FormControl,
   Col,
-  ControlLabel,
+  // ControlLabel,
   PageHeader,
   Radio,
   ListGroup,
@@ -20,7 +20,6 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   ButtonToolbar,
-  Row
 } from "react-bootstrap";
 
 
@@ -50,41 +49,41 @@ export const PageTitle = (
 
 
 /*#######################################*/
-var check = false;
-function graph_func(n = 40) {
-  if(check === false){
-    check = true;
-    return .2;
-  }
-  else {
-    check = false;
-    return .1;
-  }
-}
+// var check = false;
+// function graph_func(n = 40) {
+//   if(check === false){
+//     check = true;
+//     return .2;
+//   }
+//   else {
+//     check = false;
+//     return .1;
+//   }
+// }
 
-class SparkGraph extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { data: [] };
-    setInterval(
-      () =>
-        this.setState({
-          data:this.state.data.concat([graph_func()])
-        }),
-      500
-    );
-  }
-  render() {
-    return (
-      <Col xs="2" md="4">
-      <Sparklines data={this.state.data} limit={25}>
-        <SparklinesBar  color="#1c8cdc" />
-        <SparklinesSpots/>
-      </Sparklines>
-      </Col>
-    );
-  }
-};
+// class SparkGraph extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = { data: [] };
+//     setInterval(
+//       () =>
+//         this.setState({
+//           data:this.state.data.concat([graph_func()])
+//         }),
+//       500
+//     );
+//   }
+//   render() {
+//     return (
+//       <Col xs="2" md="4">
+//       <Sparklines data={this.state.data} limit={25}>
+//         <SparklinesLine color="#1c8cdc" />
+//         <SparklinesSpots/>
+//       </Sparklines>
+//       </Col>
+//     );
+//   }
+// };
 
 
 
@@ -95,7 +94,11 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
-      graphdata: [1,1,1,1,1,1,1,1,1],
+      rowA: [1,1,1,1,1,1,1,1,1],
+      waitdata:[],
+      biddata:[],
+      windata:[],
+      graphdata:[],
       sortdata:[],
       trust:'',
       style_graph:"#1c8cdc",
@@ -119,12 +122,10 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },500);
+    },551);
     
     setInterval(() => {
       this.state.socket.emit("whois");
-      this.nodeSize()
-      this.sortNodes()
     },3000);
 
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
@@ -132,6 +133,8 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== []){
+        console.log(nodes);
+        this.setState({waitdata:nodes});
         this.setState({style_wait:this.state.style_blue});
         this.setState({style_graph:this.state.just_blue});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -141,6 +144,8 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
+        console.log(nodes);
+        this.setState({biddata:nodes});
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
         this.setState({style_graph:this.state.just_red});
@@ -150,6 +155,9 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
+        console.log(nodes);
+        this.setState({windata:nodes});
+
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:{color:this.state.just_red}});
         this.setState({style_win:this.state.style_green});
@@ -170,23 +178,7 @@ export class TableMain extends Component {
   }
 
   nodeSize = (e) => {
-    console.log(this.state.data.length)
     return this.state.data.length;
-  }
-
-  sortNodes = (e) => {
-    this.setState({sortdata:[]});
-    this.state.data.map((data,i)=>{
-      this.state.sortdata.push(parseInt(JSON.parse(data)['address'].split('.')[3]));
-      // var tmp = this.state.sortdata.sort((x,y) => x.a > y.a)
-      // var obj = [...this.state.sortdata];
-      
-      // console.log(lst)
-    });
-    // this.setState({sortdata:obj.sort((a,b) => a.timeM < b.timeM)})
-    var obj = [...this.state.sortdata];
-    obj.sort((a,b) => a.timeM > b.timeM);
-    console.log(obj)
   }
 
   changeTrust = (e) => {
@@ -194,7 +186,6 @@ export class TableMain extends Component {
   }
 
   render() {
-    var lst = [];
     return (
       <div>
         <Well className="TableMain">
@@ -211,8 +202,7 @@ export class TableMain extends Component {
             <tbody>
 
               {this.state.data.map((data,i) =>{
-                var d = JSON.parse(data);
-                
+                var parsed_data = JSON.parse(data);                
                 // if (lst.length > 0){
                 //   for(i=0;i<lst.length;i++){
                 //     if( (lst[i]['address']).toString() === (d['address']).toString() ){}
@@ -229,11 +219,11 @@ export class TableMain extends Component {
                     <td style={{verticalAlign:"middle",
                                 marginTop:"20px",
                                 color:"#D73F09",
-                                fontSize:"26px"}}>{d['address']}
+                                fontSize:"26px"}}>{parsed_data['address']}
                     </td>
                     
                     <td style={{verticalAlign:"middle"}}>                  
-                      {JSON.parse(d['services']).map((data,i) => {
+                      {JSON.parse(parsed_data['services']).map((data,i) => {
                         return (
                           <div id="service" key={i}>{data['service']}</div>
                         );
@@ -247,45 +237,63 @@ export class TableMain extends Component {
                     </td>
                    
                     <td style={{verticalAlign:"middle"}}>
-                        {/*<Col xs="2" md="4">
-                          <Sparklines limit={25}>
-                            <SparklinesBar color={this.state.style_graph} />
-                            <SparklinesSpots />
-                          </Sparklines>
-                        </Col>*/}
-                        <Table id="GraphTable" striped bordered condensed hover>
-                          <thead>
+                        
+                      <Table id="GraphTable" striped bordered condensed hover>
+                        <thead>
 
-                            {this.state.graphdata.map(()=>{
-                              return ( <th style={{borderTop:"1px solid #f5f5f5",
-                                    borderLeft:"1px solid #f5f5f5",
-                                    borderRight:"1px solid #f5f5f5",
-                                    backgroundColor:"#f5f5f5",
-                                    padding:"20px"}}></th>);
+                          {this.state.rowA.map(()=>{
+                            return ( <th style={{borderTop:"1px solid #f5f5f5",
+                                  borderLeft:"1px solid #f5f5f5",
+                                  borderRight:"1px solid #f5f5f5",
+                                  backgroundColor:"#f5f5f5",
+                                  padding:"20px"}}></th>);
+                            })
+                          }
+                        </thead>
+                        <tbody>
+                          <tr>
+
+                            {this.state.rowA.map((d,i)=>{
+                                if(d === 1){ //if col is empty
+                                  //check current IP is in winlist
+                                  if(parsed_data['address'] === this.state.windata.map((g,j)=>{ 
+                                    return JSON.parse(g)['address']
+                                  }));
+                                  return <td style={{backgroundColor:"green"}}></td>
+                                }
+                                else
+                                  return <td></td>
+                                
+
+                                // if(i%2 === 0)
+                                //   return <td style={{backgroundColor:"green"}}></td>
+                                // else
+                                //   return <td></td>
                               })
                             }
-                          </thead>
-                          <tbody>
-                            <tr>
-                              {this.state.graphdata.map(()=>{
+                          </tr>
+                          <tr>
+                            {this.state.rowA.map((data,i)=>{
+                                // {console.log(data);}
+                                if(i%2 === 0)
+                                  return <td style={{backgroundColor:"red"}}></td>
+                                else
                                   return <td></td>
-                                })
-                              }
-                            </tr>
-                            <tr>
-                              {this.state.graphdata.map(()=>{
+                              })
+                            }
+                          </tr>
+                          <tr>
+                            {this.state.rowA.map((data,i)=>{
+                                // {console.log(data);}
+                                if(i%2 === 0)
+                                  return <td style={{backgroundColor:"blue"}}></td>
+                                else
                                   return <td></td>
-                                })
-                              }
-                            </tr>
-                            <tr>
-                              {this.state.graphdata.map(()=>{
-                                  return <td></td>
-                                })
-                              }
-                            </tr>
-                          </tbody>
-                        </Table>;
+                              })
+                            }
+                          </tr>
+                        </tbody>
+                      </Table>;
                     </td>
                   </tr>
                 );

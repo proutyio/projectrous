@@ -92,7 +92,6 @@ def update_console():
 	finally:
 		mutex.release()
 
-
 #
 @io.on("erase_data")
 def erase_data():
