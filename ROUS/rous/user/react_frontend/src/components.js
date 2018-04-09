@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import './style.css';
-import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
+import { Sparklines, SparklinesLine, SparklinesSpots, SparklinesBar } from "react-sparklines";
 import {
   Table,
   Well,
@@ -78,14 +78,13 @@ class SparkGraph extends Component {
     return (
       <Col xs="2" md="4">
       <Sparklines data={this.state.data} limit={25}>
-        <SparklinesLine color="#1c8cdc" />
-        <SparklinesSpots />
+        <SparklinesBar  color="#1c8cdc" />
+        <SparklinesSpots/>
       </Sparklines>
       </Col>
     );
   }
 };
-
 
 
 
@@ -96,33 +95,33 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
-      graphdata: [],
+      graphdata: [[]],
       trust:'',
       style_graph:"#1c8cdc",
-      style_basic:{color:"black"},
-      style_wait:{color:"black"},
-      style_bid:{color:"black"},
-      style_win:{color:"black"},
-      style_blue:{color:"black", borderStyle:"solid",borderColor:"blue",borderWidth:"4px"},
-      style_green:{color:"black", borderStyle:"solid",borderColor:"green",borderWidth:"4px"},
-      style_red:{color:"black", borderStyle:"solid",borderColor:"red",borderWidth:"4px"},
-      just_blue:"#1c8cdc",
+      style_wait:{color:"blue"},
+      style_bid:{color:"red"},
+      style_win:{color:"green"},
+      style_blue:{color:"blue", borderStyle:"solid",borderColor:"blue",borderWidth:"4px"},
+      style_green:{color:"green", borderStyle:"solid",borderColor:"green",borderWidth:"4px"},
+      style_red:{color:"red", borderStyle:"solid",borderColor:"red",borderWidth:"4px"},
+      just_blue:"blue",
       just_green:"green",
       just_red:"red",
     };
-    setInterval(
-      () =>
-        this.setState({
-          graphdata:this.state.graphdata.concat([graph_func()])
-    }),500);
+    // setInterval(
+    //   () =>
+    //     this.setState({
+    //       graphdata:this.state.graphdata.concat([graph_func()])
+    // }),500);
   
     setInterval(() => {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },15);
+    },500);
     setInterval(() => {
       this.state.socket.emit("whois");
+      this.nodeSize()
     },3000);
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
@@ -130,22 +129,22 @@ export class TableMain extends Component {
       if(nodes !== []){
         this.setState({style_wait:this.state.style_blue});
         this.setState({style_graph:this.state.just_blue});
-        this.setState({style_bid:this.state.style_basic});
-        this.setState({style_win:this.state.style_basic});
+        this.setState({style_bid:{color:this.state.just_red}});
+        this.setState({style_win:{color:this.state.just_green}});
       }
     });
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
-        this.setState({style_wait:this.state.style_basic});
+        this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
         this.setState({style_graph:this.state.just_red});
-        this.setState({style_win:this.state.style_basic});
+        this.setState({style_win:{color:this.state.just_green}});
       }
     });
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
-        this.setState({style_wait:this.state.style_basic});
-        this.setState({style_bid:this.state.style_basic});
+        this.setState({style_wait:{color:this.state.just_blue}});
+        this.setState({style_bid:{color:this.state.just_red}});
         this.setState({style_win:this.state.style_green});
         this.setState({style_graph:this.state.just_green});
       }
@@ -161,6 +160,11 @@ export class TableMain extends Component {
     console.log(this.state.trust);
     var t = this.state.trust;
     this.state.socket.emit("trust", t);
+  }
+
+  nodeSize = (e) => {
+    console.log(this.state.data.length)
+    return this.state.data.length;
   }
 
   changeTrust = (e) => {
@@ -186,14 +190,16 @@ export class TableMain extends Component {
 
               {this.state.data.map((data,i) =>{
                 var d = JSON.parse(data);
-                if (lst.length > 0){
-                  for(i=0;i<lst.length;i++){
-                    if( (lst[i]['address']).toString() === (d['address']).toString() ){}
-                    else lst.push(d);/*this is dumb logic, I need to fix*/ 
-                  }
-                }else{
-                  lst.push(d);
-                }
+                
+                // if (lst.length > 0){
+                //   for(i=0;i<lst.length;i++){
+                //     if( (lst[i]['address']).toString() === (d['address']).toString() ){}
+                //     else lst.push(d);/*this is dumb logic, I need to fix*/ 
+                //   }
+                // }else{
+                //   lst.push(d);
+                // }
+                {console.log(lst)}
                 return (
                   <tr key={i}>
                     <td style={{verticalAlign:"middle",
@@ -218,12 +224,45 @@ export class TableMain extends Component {
                       <p style={this.state.style_win}>SERVICE</p>
                     </td>
                     <td style={{verticalAlign:"middle"}}>
-                        <Col xs="2" md="4">
-                          <Sparklines data={this.state.graphdata} limit={25}>
-                            <SparklinesLine color={this.state.style_graph} />
+                        {/*<Col xs="2" md="4">
+                          <Sparklines limit={25}>
+                            <SparklinesBar color={this.state.style_graph} />
                             <SparklinesSpots />
                           </Sparklines>
-                        </Col>
+                        </Col>*/}
+                        <Table id="GraphTable" striped bordered condensed hover>
+                          <thead>
+
+                            {[1,1,1,1,1,1,1,1,1].map(()=>{
+                              return ( <th style={{borderTop:"1px solid #f5f5f5",
+                                    borderLeft:"1px solid #f5f5f5",
+                                    borderRight:"1px solid #f5f5f5",
+                                    backgroundColor:"#f5f5f5",
+                                    padding:"20px"}}></th>);
+                              })
+                            }
+                          </thead>
+                          <tbody>
+                            <tr>
+                              {[1,1,1,1,1,1,1,1,1].map(()=>{
+                                  return <td></td>
+                                })
+                              }
+                            </tr>
+                            <tr>
+                              {[1,1,1,1,1,1,1,1,1].map(()=>{
+                                  return <td></td>
+                                })
+                              }
+                            </tr>
+                            <tr>
+                              {[1,1,1,1,1,1,1,1,1].map(()=>{
+                                  return <td></td>
+                                })
+                              }
+                            </tr>
+                          </tbody>
+                        </Table>;
                     </td>
                   </tr>
                 );
@@ -232,12 +271,10 @@ export class TableMain extends Component {
             </tbody>
           </Table>
         </Well>
-
         
         <Col xs={4} md={6}>
           <FormSend/>
         </Col>
-        
 
         <Col xs={4} md={6}>
           <Well className="FormTrust">
@@ -278,7 +315,6 @@ export class TableMain extends Component {
           </Well>
         </Col>
       </div>
-
     );
   }
 }
@@ -314,7 +350,6 @@ class FormSend extends Component {
   };
 
   render() {
-
     return (
       <Well className="FormSend">
         <Form horizontal onSubmit={this.send}>
@@ -329,8 +364,6 @@ class FormSend extends Component {
                  onChange={this.messageChange}/>
             </Col>
           </FormGroup>*/}
-
-         
         <h3 className="text-center">Select Service</h3>
         <ButtonToolbar>
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical block>

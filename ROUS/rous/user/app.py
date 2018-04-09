@@ -176,10 +176,12 @@ def find_nodes():
 							n = json.loads(n)
 							if str(d['address']) == str(n['address']):
 								check = True
-								return
+								break
 						if not check:
+							print json.dumps(d)
 							nodes.append(json.dumps(d))
 					else:
+						print json.dumps(d)
 						nodes.append(json.dumps(d))
 	except:
 		pass
