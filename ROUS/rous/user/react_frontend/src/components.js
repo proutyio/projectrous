@@ -95,7 +95,8 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
-      graphdata: [[]],
+      graphdata: [1,1,1,1,1,1,1,1,1],
+      sortdata:[],
       trust:'',
       style_graph:"#1c8cdc",
       style_wait:{color:"blue"},
@@ -119,12 +120,16 @@ export class TableMain extends Component {
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
     },500);
+    
     setInterval(() => {
       this.state.socket.emit("whois");
       this.nodeSize()
+      this.sortNodes()
     },3000);
+
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
+    
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== []){
         this.setState({style_wait:this.state.style_blue});
@@ -133,6 +138,7 @@ export class TableMain extends Component {
         this.setState({style_win:{color:this.state.just_green}});
       }
     });
+    
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
         this.setState({style_wait:{color:this.state.just_blue}});
@@ -141,6 +147,7 @@ export class TableMain extends Component {
         this.setState({style_win:{color:this.state.just_green}});
       }
     });
+    
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
         this.setState({style_wait:{color:this.state.just_blue}});
@@ -165,6 +172,21 @@ export class TableMain extends Component {
   nodeSize = (e) => {
     console.log(this.state.data.length)
     return this.state.data.length;
+  }
+
+  sortNodes = (e) => {
+    this.setState({sortdata:[]});
+    this.state.data.map((data,i)=>{
+      this.state.sortdata.push(parseInt(JSON.parse(data)['address'].split('.')[3]));
+      // var tmp = this.state.sortdata.sort((x,y) => x.a > y.a)
+      // var obj = [...this.state.sortdata];
+      
+      // console.log(lst)
+    });
+    // this.setState({sortdata:obj.sort((a,b) => a.timeM < b.timeM)})
+    var obj = [...this.state.sortdata];
+    obj.sort((a,b) => a.timeM > b.timeM);
+    console.log(obj)
   }
 
   changeTrust = (e) => {
@@ -199,30 +221,31 @@ export class TableMain extends Component {
                 // }else{
                 //   lst.push(d);
                 // }
-                {console.log(lst)}
                 return (
                   <tr key={i}>
                     <td style={{verticalAlign:"middle",
-                                fontSize:"20px",fontWeight:"bold"}}>{i+1}</td>
+                                fontSize:"20px",fontWeight:"bold"}}>{i+1}
+                    </td>
                     <td style={{verticalAlign:"middle",
                                 marginTop:"20px",
                                 color:"#D73F09",
-                                fontSize:"26px"}}>{d['address']}</td>
+                                fontSize:"26px"}}>{d['address']}
+                    </td>
+                    
                     <td style={{verticalAlign:"middle"}}>                  
-                   
-
                       {JSON.parse(d['services']).map((data,i) => {
                         return (
                           <div id="service" key={i}>{data['service']}</div>
                         );
                       })}
-                    
                     </td>
+
                     <td style={{verticalAlign:"middle"}}>
                       <p style={this.state.style_wait}>WAITING</p>
                       <p style={this.state.style_bid}>BIDDING</p>
                       <p style={this.state.style_win}>SERVICE</p>
                     </td>
+                   
                     <td style={{verticalAlign:"middle"}}>
                         {/*<Col xs="2" md="4">
                           <Sparklines limit={25}>
@@ -233,7 +256,7 @@ export class TableMain extends Component {
                         <Table id="GraphTable" striped bordered condensed hover>
                           <thead>
 
-                            {[1,1,1,1,1,1,1,1,1].map(()=>{
+                            {this.state.graphdata.map(()=>{
                               return ( <th style={{borderTop:"1px solid #f5f5f5",
                                     borderLeft:"1px solid #f5f5f5",
                                     borderRight:"1px solid #f5f5f5",
@@ -244,19 +267,19 @@ export class TableMain extends Component {
                           </thead>
                           <tbody>
                             <tr>
-                              {[1,1,1,1,1,1,1,1,1].map(()=>{
+                              {this.state.graphdata.map(()=>{
                                   return <td></td>
                                 })
                               }
                             </tr>
                             <tr>
-                              {[1,1,1,1,1,1,1,1,1].map(()=>{
+                              {this.state.graphdata.map(()=>{
                                   return <td></td>
                                 })
                               }
                             </tr>
                             <tr>
-                              {[1,1,1,1,1,1,1,1,1].map(()=>{
+                              {this.state.graphdata.map(()=>{
                                   return <td></td>
                                 })
                               }

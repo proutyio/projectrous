@@ -49,7 +49,8 @@ def disconnect():
 @io.on('whois')
 def discover_nodes():
 	find_nodes()
-	emit("discover_nodes", nodes)
+	sorted_nodes = sorted(nodes, key=lambda n: json.loads(n)['address'], reverse=False)
+	emit("discover_nodes", sorted_nodes)
 
 
 #
@@ -178,10 +179,10 @@ def find_nodes():
 								check = True
 								break
 						if not check:
-							print json.dumps(d)
+							# print json.dumps(d)
 							nodes.append(json.dumps(d))
 					else:
-						print json.dumps(d)
+						# print json.dumps(d)
 						nodes.append(json.dumps(d))
 	except:
 		pass
@@ -189,6 +190,7 @@ def find_nodes():
 		# print nodes
 		del data[:]
 		mutex.release()
+
 
 
 #
