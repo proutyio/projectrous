@@ -96,13 +96,7 @@ export class TableMain extends Component {
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
       rowA: [1,1,1,1,1,1,1,1,1],
-      rowB: [1,1,1,1,1,1,1,1,1],
-      rowC: [1,1,1,1,1,1,1,1,1],
-      waitdata:[],
-      biddata:[],
-      windata:[],
       graphdata:[],
-      sortdata:[],
       trust:'',
       check:false,
       style_graph:"#1c8cdc",
@@ -115,6 +109,9 @@ export class TableMain extends Component {
       just_blue:"blue",
       just_green:"green",
       just_red:"red",
+      a0:<td/>,a1:<td/>,a2:<td/>,a3:<td/>,a4:<td/>,a5:<td/>,a6:<td/>,a7:<td/>,a8:<td/>,a9:<td/>,
+      b0:<td/>,b1:<td/>,b2:<td/>,b3:<td/>,b4:<td/>,b5:<td/>,b6:<td/>,b7:<td/>,b8:<td/>,b9:<td/>,
+      c0:<td/>,c1:<td/>,c2:<td/>,c3:<td/>,c4:<td/>,c5:<td/>,c6:<td/>,c7:<td/>,c8:<td/>,c9:<td/>,
     };
     // setInterval(
     //   () =>
@@ -137,10 +134,7 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== []){
-        // console.log(nodes);
-        console.log(nodes)
-
-
+        this.setState({a0:<td style={{backgroundColor:"blue"}}></td>})
 
         this.setState({style_wait:this.state.style_blue});
         this.setState({style_graph:this.state.just_blue});
@@ -151,8 +145,9 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
-        // console.log(nodes);
-        this.setState({biddata:nodes});
+        
+        this.setState({b0:<td style={{backgroundColor:"red"}}></td>})
+
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
         this.setState({style_graph:this.state.just_red});
@@ -162,8 +157,9 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
-        // console.log(nodes);
-        this.setState({windata:nodes});
+        
+        this.setState({c0:<td style={{backgroundColor:"green"}}></td>})
+
         this.setState({check:false});
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -188,24 +184,6 @@ export class TableMain extends Component {
     return this.state.data.length;
   }
 
-  check = (e) => {
-    this.state.waitdata.map((data,i)=>{
-      // console.log(Type(this.state.waitdata))
-
-      var waitdata = JSON.parse(data)
-      waitdata = waitdata.toString().split(":")[2].replace(/}|"/g,'')
-      
-      var parsed_data = JSON.parse(this.state.data)
-      console.log(waitdata === parsed_data['address'])
-      
-      if(parsed_data['address'] === waitdata) {
-        this.setState({check:true})
-        return true
-      }
-    })
-    return false
-  }
-
   changeTrust = (e) => {
     this.setState({trust: e.currentTarget.value});
   }
@@ -224,18 +202,10 @@ export class TableMain extends Component {
                 <th>Graph</th>
               </tr>
             </thead>
+            
             <tbody>
-
               {this.state.data.map((data,i) =>{
                 var parsed_data = JSON.parse(data);                
-                // if (lst.length > 0){
-                //   for(i=0;i<lst.length;i++){
-                //     if( (lst[i]['address']).toString() === (d['address']).toString() ){}
-                //     else lst.push(d);/*this is dumb logic, I need to fix*/ 
-                //   }
-                // }else{
-                //   lst.push(d);
-                // }
                 return (
                   <tr key={i}>
                     <td style={{verticalAlign:"middle",
@@ -262,8 +232,8 @@ export class TableMain extends Component {
                     </td>
                    
                     <td style={{verticalAlign:"middle"}}>
-                        
                       <Table id="GraphTable" striped bordered condensed hover>
+                        
                         <thead>
 
                           {this.state.rowA.map(()=>{
@@ -275,80 +245,22 @@ export class TableMain extends Component {
                             })
                           }
                         </thead>
+                        
                         <tbody>
                           <tr>
-
-                            {this.state.rowA.map((d,i)=>{
-                              // console.log(this.state.check)
-                              // if(this.state.check === false && d === 1){ //if col is empty
-                                  
-                                  //check current IP is in winlist
-                                //   this.state.windata.map((g,j)=>{ 
-                                //     if(parsed_data['address'] === JSON.parse(g)['address']){
-                                  
-                               
-                                // for(var x=0;x<this.state.waitdata.length;x++){
-                                //   // console.log(Type(this.state.waitdata))
-
-                                //   var waitdata = JSON.parse(this.state.waitdata[x])
-                                //   waitdata = waitdata.toString().split(":")[2].replace(/}|"/g,'')
-                                //   console.log(waitdata === parsed_data['address'])
-                                  
-                                //   if(parsed_data['address'] === waitdata) {
-                                //     this.setState({check:true})
-                                //     return <td style={{backgroundColor:"green"}}></td>
-                                //   }
-                                //   // else return <td></td>
-                                // }
-                                // if(this.check())
-                                //   return <td style={{backgroundColor:"green"}}></td>
-                                // else
-                                  return <td></td>
-                                // if(parsed_data['address'] === this.state.waitdata.map((g,j)=>{ 
-                                //     return JSON.parse(g)['address']
-                                //   }));
-                                //      this.setState({check:true});
-                                //   return <td style={{backgroundColor:"green"}}></td>
-                                // }});
-                                  
-                              // }
-                              // else
-                              //   return <td></td>
-                              
-                              
-                                
-
-                                // if(i%2 === 0)
-                                //   return <td style={{backgroundColor:"green"}}></td>
-                                // else
-                                //   return <td></td>
-                              })
-                            }
+                            {this.state.a0}{this.state.a1}{this.state.a2}
+                            {this.state.a3}{this.state.a4}{this.state.a5}
+                            {this.state.a6}{this.state.a7}{this.state.a8}
                           </tr>
                           <tr>
-                            {this.state.rowA.map((data,i)=>{
-                                // {console.log(data);}
-                                // if(i%2 === 0)
-                                //   return <td style={{backgroundColor:"red"}}></td>
-                                // else
-                                  return <td></td>
-                              })
-                            }
+                            {this.state.b0}{this.state.b1}{this.state.b2}
+                            {this.state.b3}{this.state.b4}{this.state.b5}
+                            {this.state.b6}{this.state.b7}{this.state.b8}
                           </tr>
                           <tr>
-                            {this.state.rowA.map((d,i)=>{
-                                
-                                // if(d === 1){ //if col is empty
-                                //   //check current IP is in winlist
-                                //   if(parsed_data['address'] === this.state.waitdata.map((g,j)=>{ 
-                                //     return JSON.parse(g)['address']
-                                //   }));
-                                //   return <td style={{backgroundColor:"blue"}}></td>
-                                // }
-                                // else
-                                  return <td></td>
-                              })
-                            }
+                            {this.state.c0}{this.state.c1}{this.state.c2}
+                            {this.state.c3}{this.state.c4}{this.state.c5}
+                            {this.state.c6}{this.state.c7}{this.state.c8}
                           </tr>
                         </tbody>
                       </Table>;
@@ -356,7 +268,6 @@ export class TableMain extends Component {
                   </tr>
                 );
               })}
-
             </tbody>
           </Table>
         </Well>
@@ -532,7 +443,7 @@ export class ConsoleLog extends Component {
     else if(JSON.parse(data)['tag']==="bidding")
       return <p style={{color:"red",fontWeight:"bold"}}>BIDDING</p>
     else if(JSON.parse(data)['tag']==="waiting")
-      return <p style={{color:"red",fontWeight:"bold"}}>WAITING</p>
+      return <p style={{color:"blue",fontWeight:"bold"}}>WAITING</p>
     else if (JSON.parse(data)['tag']==="timer")
       return ""
     else
