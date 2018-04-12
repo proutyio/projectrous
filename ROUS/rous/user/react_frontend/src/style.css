@@ -73,13 +73,13 @@ svg {
 
 #Console_p {
 	/*color: #D73F09;*/
-	font-weight: regular;
-	font-size: 18px;
+	/*font-weight: regular;*/
+	font-size: 20px;
 	margin: 0px 80px 0px 80px
 }
 
 #GraphTable {
-	
+
 }
 #GraphTable td {
 	padding:20px;
