@@ -584,7 +584,8 @@ class FormSend extends Component {
       r_off: '{"tag":"service","service":"red_off"}',
       b_on: '{"tag":"service","service":"blue_on"}',
       b_off: '{"tag":"service","service":"blue_off"}',
-      print: '{"tag":"service","service":"print_file","file":"' + this.fileInput + '"}',
+      print: '{"tag":"service","service":"print_file"}',
+      // print: '{"tag":"service","service":"print_file","file":"' + this.fileInput + '"}',
     };
   }
 
@@ -600,16 +601,28 @@ class FormSend extends Component {
 
   };
 
-  fileInput = (e) => {
-    var file = document.getElementById('theFile').theFile[0];
-     if (file) {
-       var reader = new FileReader();
-       reader.readAsText(file);
-       return reader;
-     }
-    
-
-  }
+  // fileInput = (e) => {
+  //   var file = document.getElementById('theFile').theFile[0];
+  //    if (file) {
+  //      var reader = new FileReader();
+  //      reader.readAsText(file);
+  //      return reader;
+  //    }
+  // }
+  //
+  //here is the string sent to the nodes:
+  /*
+    {"tag":"service","service":"print_file","file":"function (e) {
+      var file = document.getElementById('theFile').theFile[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.readAsText(file);
+        return reader;
+      }
+    }"}
+  */
+  //might want to read the documentation of how that FileReader works.
+  //
   render() {
     return (
       <Well className="FormSend">
@@ -648,7 +661,8 @@ class FormSend extends Component {
                           Blue OFF</ToggleButton>
             <ToggleButton style={{padding:"15px"}}
                           value={this.state.print} type="text" onChange={this.messageChange} >
-                          Print File <input type="file" id="theFile" name="theFile" /></ToggleButton>
+                          Print File {/*<input type="file" id="theFile" name="theFile" />*/}
+            </ToggleButton>
           </ToggleButtonGroup>
         </ButtonToolbar>
    
