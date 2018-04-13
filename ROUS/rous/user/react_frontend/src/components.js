@@ -94,8 +94,15 @@ export class TableMain extends Component {
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
       graphdata:[],
+      graph_rowA:[],
+      graph_rowB:[],
+      graph_rowC:[],
+      track_rowA:[],
+      track_rowB:[],
+      track_rowC:[],
       trust:'',
       check:false,
+      row:[1,1,1,1,1,1,1,1,1],
       style_graph:"#1c8cdc",
       style_wait:{color:"blue"},
       style_bid:{color:"red"},
@@ -120,106 +127,89 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },1);
+    },1000);
     
     setInterval(() => {
       this.state.socket.emit("whois");
     },3000);
 
-    this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
-    this.state.socket.on("update_service", (color) => this.setState({style:color}));
+    this.state.socket.on("discover_nodes", (nodes)=> {
+      this.setState({ data: nodes });
+      
+      if(this.state.graph_rowA.length===0){
+        this.setState({graph_rowA:this.create_arr()});
+        this.setState({track_rowA:this.track_arr()});
+      }
+      if(this.state.graph_rowB.length===0){
+        this.setState({graph_rowB:this.create_arr()});
+        this.setState({track_rowB:this.track_arr()});
+      }
+      if(this.state.graph_rowC.length===0){
+        this.setState({graph_rowC:this.create_arr()});
+        this.setState({track_rowC:this.track_arr()});
+      }
+    });
+    
+    this.state.socket.on("update_service", (color) => {
+      this.setState({style:color})
+    });
     
     //NOTE: this is verbose logic because I tried to use sprintf type functions
     //  with no success, so I went the hardcoded way. its because of
     //  how setState works
-    var track_rows = [1,1,1,1,1,1,1,1,1];
+    // var track_rows = [1,1,1,1,1,1,1,1,1];
     this.state.socket.on("check_waiting", (nodes) => {
-      if(nodes !== []){
-        var color = "blue"
-        var check = false;
-        track_rows.map((data,i)=>{  
-          if(i===8 && data===2 && check===false){
-            this.setState({a0:<td style={{backgroundColor:color}}></td>});
-            this.setState({a1:<td style={{backgroundColor:""}}></td>})
-            this.setState({a2:<td style={{backgroundColor:""}}></td>})
-            this.setState({a3:<td style={{backgroundColor:""}}></td>})
-            this.setState({a4:<td style={{backgroundColor:""}}></td>})
-            this.setState({a5:<td style={{backgroundColor:""}}></td>})
-            this.setState({a6:<td style={{backgroundColor:""}}></td>})
-            this.setState({a7:<td style={{backgroundColor:""}}></td>})
-            this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            check = true;
-            track_rows = [2,1,1,1,1,1,1,1,1]
-          }
-          else if(data===1 && check===false){
-            if(i===0){
-              this.setState({a0:<td style={{backgroundColor:color}}></td>})
-              this.setState({a1:<td style={{backgroundColor:""}}></td>})
-              this.setState({a2:<td style={{backgroundColor:""}}></td>})
-              this.setState({a3:<td style={{backgroundColor:""}}></td>})
-              this.setState({a4:<td style={{backgroundColor:""}}></td>})
-              this.setState({a5:<td style={{backgroundColor:""}}></td>})
-              this.setState({a6:<td style={{backgroundColor:""}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
+      if(nodes !== 0){
+        var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
+        if(IP==='192.168.0.100'){
+          
+          var color = "green";
+          var check = false;
+          this.state.track_rowA[0].map((data,i)=>{
+            if(i===8 && data===2 && check===false){
+              this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
+              this.state.graph_rowA[0][i] = <td style={{backgroundColor:""}}/>
+              check = true;
+              this.state.track_rowA[0][0] = 2
             }
-            else if(i===1){
-              this.setState({a1:<td style={{backgroundColor:color}}></td>})
-              this.setState({a2:<td style={{backgroundColor:""}}></td>})
-              this.setState({a3:<td style={{backgroundColor:""}}></td>})
-              this.setState({a4:<td style={{backgroundColor:""}}></td>})
-              this.setState({a5:<td style={{backgroundColor:""}}></td>})
-              this.setState({a6:<td style={{backgroundColor:""}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
+            else if(data===1 && check===false){
+              if(i===0){
+                this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
+                this.state.graph_rowA[0][i] = <td style={{backgroundColor:""}}/>
+                // check = true;
+                // this.state.track_rowA[0][0] = 2
+              }
+              else if(i===1){
+                this.state.graph_rowA[0][1] = <td style={{backgroundColor:"blue"}}/>
+                this.state.graph_rowA[0][i] = <td style={{backgroundColor:""}}/>
+                // check = true;
+                // this.state.track_rowA[0][1] = 2
+              }
+              else if(i===2){
+                this.state.graph_rowA[0][2] = <td style={{backgroundColor:"blue"}}/>
+                this.state.graph_rowA[0][i] = <td style={{backgroundColor:""}}/>
+                // check = true;
+                // this.state.track_rowA[0][2] = 2
+              }
+              else if(i===3){
+              }
+              check = true;
+              this.state.track_rowA[0][i] = 2;
             }
-            else if(i===2){
-              this.setState({a2:<td style={{backgroundColor:color}}></td>})
-              this.setState({a3:<td style={{backgroundColor:""}}></td>})
-              this.setState({a4:<td style={{backgroundColor:""}}></td>})
-              this.setState({a5:<td style={{backgroundColor:""}}></td>})
-              this.setState({a6:<td style={{backgroundColor:""}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===3){
-              this.setState({a3:<td style={{backgroundColor:color}}></td>})
-              this.setState({a4:<td style={{backgroundColor:""}}></td>})
-              this.setState({a5:<td style={{backgroundColor:""}}></td>})
-              this.setState({a6:<td style={{backgroundColor:""}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===4){
-              this.setState({a4:<td style={{backgroundColor:color}}></td>})
-              this.setState({a5:<td style={{backgroundColor:""}}></td>})
-              this.setState({a6:<td style={{backgroundColor:""}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===5){
-              this.setState({a5:<td style={{backgroundColor:color}}></td>})
-              this.setState({a6:<td style={{backgroundColor:""}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===6){
-              this.setState({a6:<td style={{backgroundColor:color}}></td>})
-              this.setState({a7:<td style={{backgroundColor:""}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===7){
-              this.setState({a7:<td style={{backgroundColor:color}}></td>})
-              this.setState({a8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===8){
-              this.setState({a8:<td style={{backgroundColor:color}}></td>})
-            }
-            check = true;
-            track_rows[i] = 2;
-            console.log(track_rows);
-          }
-        });
+
+
+
+         }); // this.state.graph_rowA[0][3] = <td style={{backgroundColor:"blue"}}/>
+        }
+       
+
+
+
+        // if(JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'')==='192.168.0.101')
+        //   this.state.graph_rowB[1][3] = <td style={{backgroundColor:"red"}}/>
+        
+        console.log(nodes)
+
         this.setState({style_wait:this.state.style_blue});
         this.setState({style_graph:this.state.just_blue});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -229,90 +219,90 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
-        var color = "red"
-        var check = false;
-        track_rows.map((data,i)=>{  
-          if(i===8 && data===2 && check===false){
-            this.setState({b0:<td style={{backgroundColor:color}}></td>});
-            this.setState({b1:<td style={{backgroundColor:""}}></td>})
-            this.setState({b2:<td style={{backgroundColor:""}}></td>})
-            this.setState({b3:<td style={{backgroundColor:""}}></td>})
-            this.setState({b4:<td style={{backgroundColor:""}}></td>})
-            this.setState({b5:<td style={{backgroundColor:""}}></td>})
-            this.setState({b6:<td style={{backgroundColor:""}}></td>})
-            this.setState({b7:<td style={{backgroundColor:""}}></td>})
-            this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            check = true;
-            track_rows = [2,1,1,1,1,1,1,1,1]
-          }
-          else if(data===1 && check===false){
-            if(i===0){
-              this.setState({b0:<td style={{backgroundColor:color}}></td>})
-              this.setState({b1:<td style={{backgroundColor:""}}></td>})
-              this.setState({b2:<td style={{backgroundColor:""}}></td>})
-              this.setState({b3:<td style={{backgroundColor:""}}></td>})
-              this.setState({b4:<td style={{backgroundColor:""}}></td>})
-              this.setState({b5:<td style={{backgroundColor:""}}></td>})
-              this.setState({b6:<td style={{backgroundColor:""}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===1){
-              this.setState({b1:<td style={{backgroundColor:color}}></td>})
-              this.setState({b2:<td style={{backgroundColor:""}}></td>})
-              this.setState({b3:<td style={{backgroundColor:""}}></td>})
-              this.setState({b4:<td style={{backgroundColor:""}}></td>})
-              this.setState({b5:<td style={{backgroundColor:""}}></td>})
-              this.setState({b6:<td style={{backgroundColor:""}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===2){
-              this.setState({b2:<td style={{backgroundColor:color}}></td>})
-              this.setState({b3:<td style={{backgroundColor:""}}></td>})
-              this.setState({b4:<td style={{backgroundColor:""}}></td>})
-              this.setState({b5:<td style={{backgroundColor:""}}></td>})
-              this.setState({b6:<td style={{backgroundColor:""}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===3){
-              this.setState({b3:<td style={{backgroundColor:color}}></td>})
-              this.setState({b4:<td style={{backgroundColor:""}}></td>})
-              this.setState({b5:<td style={{backgroundColor:""}}></td>})
-              this.setState({b6:<td style={{backgroundColor:""}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===4){
-              this.setState({b4:<td style={{backgroundColor:color}}></td>})
-              this.setState({b5:<td style={{backgroundColor:""}}></td>})
-              this.setState({b6:<td style={{backgroundColor:""}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===5){
-              this.setState({b5:<td style={{backgroundColor:color}}></td>})
-              this.setState({b6:<td style={{backgroundColor:""}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===6){
-              this.setState({b6:<td style={{backgroundColor:color}}></td>})
-              this.setState({b7:<td style={{backgroundColor:""}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===7){
-              this.setState({b7:<td style={{backgroundColor:color}}></td>})
-              this.setState({b8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===8){
-              this.setState({b8:<td style={{backgroundColor:color}}></td>})
-            }
-            check = true;
-            track_rows[i] = 2;
-          }
-        });
+        // var color = "red"
+        // var check = false;
+        // track_rows.map((data,i)=>{  
+        //   if(i===8 && data===2 && check===false){
+        //     this.setState({b0:<td style={{backgroundColor:color}}></td>});
+        //     this.setState({b1:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b2:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b3:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b4:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b5:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //     this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     check = true;
+        //     track_rows = [2,1,1,1,1,1,1,1,1]
+        //   }
+        //   else if(data===1 && check===false){
+        //     if(i===0){
+        //       this.setState({b0:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b1:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b2:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b3:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===1){
+        //       this.setState({b1:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b2:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b3:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===2){
+        //       this.setState({b2:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b3:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===3){
+        //       this.setState({b3:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===4){
+        //       this.setState({b4:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===5){
+        //       this.setState({b5:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===6){
+        //       this.setState({b6:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===7){
+        //       this.setState({b7:<td style={{backgroundColor:color}}></td>})
+        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
+        //     }
+        //     else if(i===8){
+        //       this.setState({b8:<td style={{backgroundColor:color}}></td>})
+        //     }
+        //     check = true;
+        //     track_rows[i] = 2;
+        //   }
+        // });
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
         this.setState({style_graph:this.state.just_red});
@@ -322,90 +312,7 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
-        var color = "green"
-        var check = false;
-        track_rows.map((data,i)=>{  
-          if(i===8 && data===2 && check===false){
-            this.setState({c0:<td style={{backgroundColor:color}}></td>});
-            this.setState({c1:<td style={{backgroundColor:""}}></td>})
-            this.setState({c2:<td style={{backgroundColor:""}}></td>})
-            this.setState({c3:<td style={{backgroundColor:""}}></td>})
-            this.setState({c4:<td style={{backgroundColor:""}}></td>})
-            this.setState({c5:<td style={{backgroundColor:""}}></td>})
-            this.setState({c6:<td style={{backgroundColor:""}}></td>})
-            this.setState({c7:<td style={{backgroundColor:""}}></td>})
-            this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            check = true;
-            track_rows = [2,1,1,1,1,1,1,1,1]
-          }
-          else if(data===1 && check===false){
-            if(i===0){
-              this.setState({c0:<td style={{backgroundColor:color}}></td>})
-              this.setState({c1:<td style={{backgroundColor:""}}></td>})
-              this.setState({c2:<td style={{backgroundColor:""}}></td>})
-              this.setState({c3:<td style={{backgroundColor:""}}></td>})
-              this.setState({c4:<td style={{backgroundColor:""}}></td>})
-              this.setState({c5:<td style={{backgroundColor:""}}></td>})
-              this.setState({c6:<td style={{backgroundColor:""}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===1){
-              this.setState({c1:<td style={{backgroundColor:color}}></td>})
-              this.setState({c2:<td style={{backgroundColor:""}}></td>})
-              this.setState({c3:<td style={{backgroundColor:""}}></td>})
-              this.setState({c4:<td style={{backgroundColor:""}}></td>})
-              this.setState({c5:<td style={{backgroundColor:""}}></td>})
-              this.setState({c6:<td style={{backgroundColor:""}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===2){
-              this.setState({c2:<td style={{backgroundColor:color}}></td>})
-              this.setState({c3:<td style={{backgroundColor:""}}></td>})
-              this.setState({c4:<td style={{backgroundColor:""}}></td>})
-              this.setState({c5:<td style={{backgroundColor:""}}></td>})
-              this.setState({c6:<td style={{backgroundColor:""}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===3){
-              this.setState({c3:<td style={{backgroundColor:color}}></td>})
-              this.setState({c4:<td style={{backgroundColor:""}}></td>})
-              this.setState({c5:<td style={{backgroundColor:""}}></td>})
-              this.setState({c6:<td style={{backgroundColor:""}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===4){
-              this.setState({c4:<td style={{backgroundColor:color}}></td>})
-              this.setState({c5:<td style={{backgroundColor:""}}></td>})
-              this.setState({c6:<td style={{backgroundColor:""}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===5){
-              this.setState({c5:<td style={{backgroundColor:color}}></td>})
-              this.setState({c6:<td style={{backgroundColor:""}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===6){
-              this.setState({c6:<td style={{backgroundColor:color}}></td>})
-              this.setState({c7:<td style={{backgroundColor:""}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===7){
-              this.setState({c7:<td style={{backgroundColor:color}}></td>})
-              this.setState({c8:<td style={{backgroundColor:""}}></td>})
-            }
-            else if(i===8){
-              this.setState({c8:<td style={{backgroundColor:color}}></td>})
-            }
-            check = true;
-            track_rows[i] = 2;
-          }
-        });
+        
         this.setState({check:false});
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -419,9 +326,34 @@ export class TableMain extends Component {
     clearInterval();
   }
 
-  concat = (str, num) => {
-    return str+num.toString();
-  }
+  // parseIP = (nodes) => {
+  //   var lst = new Array(nodes.length*2);
+  //   console.log(lst.length)
+  //   console.log(nodes)
+    
+  //   nodes.map((n,i)=>{
+  //     if(lst.length===0)
+  //       lst[i] = JSON.parse(n).toString().split(":")[2].replace(/}|"/g,'');
+  //     else{
+  //       var ip = JSON.parse(n).toString().split(":")[2].replace(/}|"/g,'');
+  //       var check = false;
+  //       lst.map((l,j)=>{
+  //         if(l === ip)
+  //           check = true;
+  //           console.log(l)
+  //           console.log(ip) 
+  //       });
+  //       if(check === false)
+  //         lst[i] = ip
+  //     }
+
+  //     // console.log(n);
+  //     // var waitdata = JSON.parse(n);
+  //     // waitdata = waitdata.toString().split(":")[2].replace(/}|"/g,'');
+  //     // console.log(waitdata);
+  //   });
+  //   console.log(lst);
+  // }
 
   removeTrust = (e) => {
     e.preventDefault();
@@ -438,7 +370,24 @@ export class TableMain extends Component {
     this.setState({trust: e.currentTarget.value});
   }
 
+  create_arr = (e) => {
+    var arr = new Array(this.state.data.length);
+    this.state.data.map((data,i)=>{
+      arr[i] = [<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>];
+    });
+    return arr;
+  }
+
+  track_arr = (e) => {
+    var arr = new Array(this.state.data.length);
+    this.state.data.map((data,i)=>{
+      arr[i] = [1,1,1,1,1,1,1,1,1];
+    });
+    return arr;
+  }
+
   render() {
+    this.state.graphdata
     return (
       <div>
         <Well className="TableMain">
@@ -468,9 +417,9 @@ export class TableMain extends Component {
                     </td>
                     
                     <td style={{verticalAlign:"middle"}}>                  
-                      {JSON.parse(parsed_data['services']).map((data,i) => {
+                      {JSON.parse(parsed_data['services']).map((data,j) => {
                         return (
-                          <div id="service" key={i}>{data['service']}</div>
+                          <div id="service" key={j}>{data['service']}</div>
                         );
                       })}
                     </td>
@@ -486,7 +435,7 @@ export class TableMain extends Component {
                         
                         <thead>
 
-                          {this.state.rowA.map(()=>{
+                          {this.state.row.map(()=>{
                             return ( <th style={{borderTop:"1px solid #f5f5f5",
                                   borderLeft:"1px solid #f5f5f5",
                                   borderRight:"1px solid #f5f5f5",
@@ -498,14 +447,16 @@ export class TableMain extends Component {
                         
                         <tbody>
                           <tr>
-                            {this.state.a0}{this.state.a1}{this.state.a2}
+                            {this.state.graph_rowA[i]}
+                            {/*{this.state.a0}{this.state.a1}{this.state.a2}
                             {this.state.a3}{this.state.a4}{this.state.a5}
-                            {this.state.a6}{this.state.a7}{this.state.a8}
+                            {this.state.a6}{this.state.a7}{this.state.a8}*/}
                           </tr>
                           <tr>
-                            {this.state.b0}{this.state.b1}{this.state.b2}
+                            {this.state.graph_rowB[i]}
+                            {/*this.state.b0}{this.state.b1}{this.state.b2}
                             {this.state.b3}{this.state.b4}{this.state.b5}
-                            {this.state.b6}{this.state.b7}{this.state.b8}
+                            {this.state.b6}{this.state.b7}{this.state.b8*/}
                           </tr>
                           <tr>
                             {this.state.c0}{this.state.c1}{this.state.c2}
@@ -621,8 +572,6 @@ class FormSend extends Component {
       }
     }"}
   */
-  //might want to read the documentation of how that FileReader works.
-  //
   render() {
     return (
       <Well className="FormSend">

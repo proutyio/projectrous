@@ -207,7 +207,7 @@ def check_waiting():
 	except:
 		pass
 	finally:
-		del wait_nodes[:]
+		# del wait_nodes[:]
 		mutex.release()
 
 #
