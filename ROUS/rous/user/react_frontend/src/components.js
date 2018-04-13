@@ -22,8 +22,6 @@ import {
   ButtonToolbar,
 } from "react-bootstrap";
 
-const Timestamp = require('react-timestamp');
-
 
 /*#######################################*/
 export const NavBarTop = (
@@ -95,7 +93,6 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
-      rowA: [2,2,2,1,1,1,1,1,1],
       graphdata:[],
       trust:'',
       check:false,
@@ -123,7 +120,7 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },551);
+    },1);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -132,6 +129,9 @@ export class TableMain extends Component {
     this.state.socket.on("discover_nodes", (nodes)=> this.setState({ data: nodes }));
     this.state.socket.on("update_service", (color) => this.setState({style:color}));
     
+    //NOTE: this is verbose logic because I tried to use sprintf type functions
+    //  with no success, so I went the hardcoded way. its because of
+    //  how setState works
     var track_rows = [1,1,1,1,1,1,1,1,1];
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== []){
@@ -152,10 +152,6 @@ export class TableMain extends Component {
             track_rows = [2,1,1,1,1,1,1,1,1]
           }
           else if(data===1 && check===false){
-            
-            //NOTE: this is dumb logic but I tried to use sprintf type functions
-            //  with no success, so I went the hardcoded way. its because of
-            //  how setState works
             if(i===0){
               this.setState({a0:<td style={{backgroundColor:color}}></td>})
               this.setState({a1:<td style={{backgroundColor:""}}></td>})
@@ -250,10 +246,6 @@ export class TableMain extends Component {
             track_rows = [2,1,1,1,1,1,1,1,1]
           }
           else if(data===1 && check===false){
-            
-            //NOTE: this is dumb logic but I tried to use sprintf type functions
-            //  with no success, so I went the hardcoded way. its because of
-            //  how setState works
             if(i===0){
               this.setState({b0:<td style={{backgroundColor:color}}></td>})
               this.setState({b1:<td style={{backgroundColor:""}}></td>})
@@ -347,9 +339,6 @@ export class TableMain extends Component {
             track_rows = [2,1,1,1,1,1,1,1,1]
           }
           else if(data===1 && check===false){
-            //NOTE: this is dumb logic but I tried to use sprintf type functions
-            //  with no success, so I went the hardcoded way. its because of
-            //  how setState works
             if(i===0){
               this.setState({c0:<td style={{backgroundColor:color}}></td>})
               this.setState({c1:<td style={{backgroundColor:""}}></td>})
