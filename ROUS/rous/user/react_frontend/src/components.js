@@ -12,6 +12,7 @@ import {
   FormGroup,
   // FormControl,
   Col,
+  Row,
   // ControlLabel,
   PageHeader,
   Radio,
@@ -113,16 +114,8 @@ export class TableMain extends Component {
       just_blue:"blue",
       just_green:"green",
       just_red:"red",
-      a0:<td/>,a1:<td/>,a2:<td/>,a3:<td/>,a4:<td/>,a5:<td/>,a6:<td/>,a7:<td/>,a8:<td/>,a9:<td/>,
-      b0:<td/>,b1:<td/>,b2:<td/>,b3:<td/>,b4:<td/>,b5:<td/>,b6:<td/>,b7:<td/>,b8:<td/>,b9:<td/>,
-      c0:<td/>,c1:<td/>,c2:<td/>,c3:<td/>,c4:<td/>,c5:<td/>,c6:<td/>,c7:<td/>,c8:<td/>,c9:<td/>,
     };
-    // setInterval(
-    //   () =>
-    //     this.setState({
-    //       graphdata:this.state.graphdata.concat([graph_func()])
-    // }),500);
-  
+
     setInterval(() => {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
@@ -160,30 +153,31 @@ export class TableMain extends Component {
     // var track_rows = [1,1,1,1,1,1,1,1,1];
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== 0){
+
         var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
         if(IP==='192.168.0.100'){
-          
           var color = "green";
           var check = false;
           this.state.track_rowA[0].map((data,i)=>{
             if(i===8 && data===2 && check===false){
-              console.log(this.state.track_rowA[0])
-              this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
-              this.state.track_rowA[0][0] = 2
+              this.updateGraph(this.state.graph_rowA[0],this.state.track_rowA[0],i,true);
+              // console.log(this.state.track_rowA[0])
+              // this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
+              // this.state.track_rowA[0][0] = 2
               
-              this.state.track_rowA[0].map((r,j) => {
-                if(j !== 0){
-                  this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-                  this.state.track_rowA[0][j] = 1
-                }
-              });
+              // this.state.track_rowA[0].map((r,j) => {
+              //   if(j !== 0){
+              //     this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
+              //     this.state.track_rowA[0][j] = 1
+              //   }
+              // });
               check = true;
               console.log(this.state.track_rowA[0])
             }
             else if(data===1 && check===false){
               console.log(this.state.track_rowA[0])
-              if(i===0){
-                this.updateGraph(this.state.graph_rowA[i],this.state.track_rowA[i],i);
+              // if(i===0){
+              this.updateGraph(this.state.graph_rowA[0],this.state.track_rowA[0],i,false);
                 // this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
                 // this.state.track_rowA[0][0] = 2
               
@@ -192,22 +186,22 @@ export class TableMain extends Component {
                 //     this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
                 //   }
                 // });
-              }
-              else if(i===1){
-                this.state.graph_rowA[0][1] = <td style={{backgroundColor:"blue"}}/>
-                this.state.track_rowA[0].map((r,j) => {
-                  if(j!==0&&j!==1)
-                    this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-                });
-              }
-              else if(i===2){
+              // }
+              // else if(i===1){
+              //   this.state.graph_rowA[0][1] = <td style={{backgroundColor:"blue"}}/>
+              //   this.state.track_rowA[0].map((r,j) => {
+              //     if(j!==0&&j!==1)
+              //       this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
+              //   });
+              // }
+              // else if(i===2){
 
-                this.state.graph_rowA[0][2] = <td style={{backgroundColor:"blue"}}/>
-                this.state.track_rowA[0].map((r,j) => {
-                  if(j!==0&&j!==1&&j!==2)
-                    this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-                });
-              }
+              //   this.state.graph_rowA[0][2] = <td style={{backgroundColor:"blue"}}/>
+              //   this.state.track_rowA[0].map((r,j) => {
+              //     if(j!==0&&j!==1&&j!==2)
+              //       this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
+              //   });
+              // }
               
               check = true;
               this.state.track_rowA[0][i] = 2;
@@ -218,15 +212,6 @@ export class TableMain extends Component {
 
          }); // this.state.graph_rowA[0][3] = <td style={{backgroundColor:"blue"}}/>
         }
-       
-
-
-
-        // if(JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'')==='192.168.0.101')
-        //   this.state.graph_rowB[1][3] = <td style={{backgroundColor:"red"}}/>
-        
-        console.log(nodes)
-
         this.setState({style_wait:this.state.style_blue});
         this.setState({style_graph:this.state.just_blue});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -236,90 +221,6 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
-        // var color = "red"
-        // var check = false;
-        // track_rows.map((data,i)=>{  
-        //   if(i===8 && data===2 && check===false){
-        //     this.setState({b0:<td style={{backgroundColor:color}}></td>});
-        //     this.setState({b1:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b2:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b3:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b4:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b5:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //     this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     check = true;
-        //     track_rows = [2,1,1,1,1,1,1,1,1]
-        //   }
-        //   else if(data===1 && check===false){
-        //     if(i===0){
-        //       this.setState({b0:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b1:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b2:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b3:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===1){
-        //       this.setState({b1:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b2:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b3:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===2){
-        //       this.setState({b2:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b3:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===3){
-        //       this.setState({b3:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b4:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===4){
-        //       this.setState({b4:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b5:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===5){
-        //       this.setState({b5:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b6:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===6){
-        //       this.setState({b6:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b7:<td style={{backgroundColor:""}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===7){
-        //       this.setState({b7:<td style={{backgroundColor:color}}></td>})
-        //       this.setState({b8:<td style={{backgroundColor:""}}></td>})
-        //     }
-        //     else if(i===8){
-        //       this.setState({b8:<td style={{backgroundColor:color}}></td>})
-        //     }
-        //     check = true;
-        //     track_rows[i] = 2;
-        //   }
-        // });
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
         this.setState({style_graph:this.state.just_red});
@@ -343,15 +244,17 @@ export class TableMain extends Component {
     clearInterval();
   }
 
-  updateGraph = (data,track,x) => {
+  updateGraph = (data,track,x,b) => {
+    var bool = b;
     data[x] = <td style={{backgroundColor:"blue"}}/>
     track[x] = 2
     data.map((r,j) => {
       if(j > x){
         data[j] = <td style={{backgroundColor:""}}/>
+        if(bool===true)
+          track[j] = 1
       }
     });
-
   }
   // parseIP = (nodes) => {
   //   var lst = new Array(nodes.length*2);
@@ -414,9 +317,9 @@ export class TableMain extends Component {
   }
 
   render() {
-    this.state.graphdata
     return (
       <div>
+      <Col xs={9} md={9}>
         <Well className="TableMain">
           <Table>
             <thead>
@@ -459,9 +362,7 @@ export class TableMain extends Component {
                    
                     <td style={{verticalAlign:"middle"}}>
                       <Table id="GraphTable" striped bordered condensed hover>
-                        
                         <thead>
-
                           {this.state.row.map(()=>{
                             return ( <th style={{borderTop:"1px solid #f5f5f5",
                                   borderLeft:"1px solid #f5f5f5",
@@ -471,76 +372,74 @@ export class TableMain extends Component {
                             })
                           }
                         </thead>
-                        
                         <tbody>
                           <tr>
                             {this.state.graph_rowA[i]}
-                            {/*{this.state.a0}{this.state.a1}{this.state.a2}
-                            {this.state.a3}{this.state.a4}{this.state.a5}
-                            {this.state.a6}{this.state.a7}{this.state.a8}*/}
                           </tr>
                           <tr>
                             {this.state.graph_rowB[i]}
-                            {/*this.state.b0}{this.state.b1}{this.state.b2}
-                            {this.state.b3}{this.state.b4}{this.state.b5}
-                            {this.state.b6}{this.state.b7}{this.state.b8*/}
                           </tr>
                           <tr>
-                            {this.state.c0}{this.state.c1}{this.state.c2}
-                            {this.state.c3}{this.state.c4}{this.state.c5}
-                            {this.state.c6}{this.state.c7}{this.state.c8}
+                            {this.state.graph_rowC[i]}
                           </tr>
                         </tbody>
                       </Table>;
                     </td>
+
                   </tr>
                 );
               })}
             </tbody>
           </Table>
         </Well>
-        
-        <Col xs={4} md={6}>
-          <FormSend/>
         </Col>
+        
 
-        <Col xs={4} md={6}>
+        <Col xs={3} md={3}>
+          <FormSend/>
+
           <Well className="FormTrust">
-            <h3 className="text-center">Manage Trust</h3>
+            <h4 className="text-center">Manage Trust</h4>
             <Form horizontal onSubmit={this.removeTrust}>
-              <FormGroup>
-              <div style={{textAlign:"center"}}> 
-                  <Radio name="radioGroup"
-                         value="0"
-                         onChange={this.changeTrust}>
-                    Reset
-                  </Radio>{' '}
-              </div>
-              {this.state.data.map((data,i) =>{
-                var d = JSON.parse(data);
-                return (
-                  <div style={{textAlign:"center"}}>     
-                    <Radio name="radioGroup" 
-                           inline 
-                           value={d['address']}
-                           onChange={this.changeTrust}>
-                      {d['address']}
-                    </Radio>{' '}
-                  </div>
-                );
-              })}
-              </FormGroup>
               
-              <FormGroup>
-                <Col smOffset={4} sm={10}>
-                  <div style={{textAlign:"left", margin:"0 auto"}}> 
-                    <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
-                            type="submit">remove trust</Button>
+              <Row sm={1}>
+                <FormGroup style={{marginLeft:"20px"}}>
+                  <div> 
+                      <Radio name="radioGroup"
+                             value="0"
+                             onChange={this.changeTrust}>
+                        Reset
+                      </Radio>{' '}
                   </div>
-                </Col>
-              </FormGroup>
-            </Form> 
-          </Well>
+                  {this.state.data.map((data,i) =>{
+                    var d = JSON.parse(data);
+                    return (
+                      <div>     
+                        <Radio name="radioGroup" 
+                               inline 
+                               value={d['address']}
+                               onChange={this.changeTrust}>
+                          {d['address']}
+                        </Radio>{' '}
+                      </div>
+                    );
+                  })}
+                </FormGroup>
+              </Row>
+              
+              <Row sm={4}>
+                <FormGroup>
+                  <Col smOffset={4} sm={20}>
+                    <div style={{textAlign:"left", margin:"0 auto"}}> 
+                      <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+                              type="submit">remove trust</Button>
+                    </div>
+                  </Col>
+                </FormGroup>
+              </Row>
+              
+              </Form> 
+            </Well>
         </Col>
       </div>
     );
@@ -614,35 +513,35 @@ class FormSend extends Component {
                  onChange={this.messageChange}/>
             </Col>
           </FormGroup>*/}
-        <h3 className="text-center">Select Service</h3>
+        <h4 className="text-center">Select Service</h4>
         <ButtonToolbar>
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical block>
-            <ToggleButton style={{padding:"15px",color:"green"}}
+            <ToggleButton style={{padding:"6px",color:"green"}}
                           value={this.state.g_on} onChange={this.messageChange}>
                           Green ON</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"green"}}
+            <ToggleButton style={{padding:"5px",color:"green"}}
                           value={this.state.g_off} onChange={this.messageChange}>
                           Green OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"red"}}
+            <ToggleButton style={{padding:"5px",color:"red"}}
                           value={this.state.r_on} onChange={this.messageChange}>
                           Red ON</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"red"}}
+            <ToggleButton style={{padding:"5px",color:"red"}}
                           value={this.state.r_off} onChange={this.messageChange}>
                           Red OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"blue"}}
+            <ToggleButton style={{padding:"5px",color:"blue"}}
                           value={this.state.b_on} onChange={this.messageChange}>
                           Blue ON</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"blue"}}
+            <ToggleButton style={{padding:"5px",color:"blue"}}
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px"}}
+            <ToggleButton style={{padding:"5px"}}
                           value={this.state.print} type="text" onChange={this.messageChange} >
                           Print File {/*<input type="file" id="theFile" name="theFile" />*/}
             </ToggleButton>
           </ToggleButtonGroup>
         </ButtonToolbar>
    
-         <FormGroup className="text-center" style={{marginTop:"10px"}}>
+         <FormGroup className="text-center" style={{marginTop:"5px"}}>
             <Col>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                       type="submit">send to node network</Button>
