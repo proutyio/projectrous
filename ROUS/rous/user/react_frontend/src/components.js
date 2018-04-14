@@ -120,7 +120,7 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },200);
+    },1);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -172,6 +172,15 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_bidding", (nodes) => {
       if(nodes !== []){
+        var color = "red"
+        var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
+        if(IP==='192.168.0.100'){
+          this.graphLogic(this.state.graph_rowB[0],0,this.state.track_rowB[0],color)
+        }
+        if(IP==='192.168.0.101'){
+          this.graphLogic(this.state.graph_rowB[1],1,this.state.track_rowB[1],color)
+        }
+
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
         this.setState({style_graph:this.state.just_red});
@@ -181,7 +190,15 @@ export class TableMain extends Component {
     
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
-        
+        var color = "green"
+        var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
+        if(IP==='192.168.0.100'){
+          this.graphLogic(this.state.graph_rowC[0],0,this.state.track_rowC[0],color)
+        }
+        if(IP==='192.168.0.101'){
+          this.graphLogic(this.state.graph_rowC[1],1,this.state.track_rowC[1],color)
+        }
+
         this.setState({check:false});
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -196,8 +213,8 @@ export class TableMain extends Component {
   }
 
   //I need to explain this logic. I will forget, its complicated
-  updateGraph = (data,track,x) => {
-    data[x] = <td style={{backgroundColor:"blue"}}/>
+  updateGraph = (data,track,x,color) => {
+    data[x] = <td style={{backgroundColor:color}}/>
     track[x] = 2
     data.map((r,j) => {
       if(j > x){
@@ -220,7 +237,7 @@ export class TableMain extends Component {
         check = true;
       }
       else if(data===1 && check===false){
-        this.updateGraph(graph,track,i);     
+        this.updateGraph(graph,track,i,color);     
         check = true;
         track[i] = 2;
       }
