@@ -101,18 +101,19 @@ export class TableMain extends Component {
       track_rowA:[],
       track_rowB:[],
       track_rowC:[],
+      style_A:[],
       trust:'',
       check:false,
       row:[1,1,1,1,1,1,1,1,1],
       // style_graph:"#1c8cdc",
       style_wait:{color:"blue"},
       style_bid:{color:"red"},
-      style_win:{color:"green"},
+      style_win:{color:"#ff1493"},
       style_blue:{color:"blue", borderStyle:"solid",borderColor:"blue",borderWidth:"4px"},
-      style_green:{color:"green", borderStyle:"solid",borderColor:"green",borderWidth:"4px"},
+      style_green:{color:"#ff1493", borderStyle:"solid",borderColor:"#ff1493",borderWidth:"4px"},
       style_red:{color:"red", borderStyle:"solid",borderColor:"red",borderWidth:"4px"},
       just_blue:"blue",
-      just_green:"green",
+      just_green:"#ff1493",
       just_red:"red",
     };
 
@@ -141,6 +142,9 @@ export class TableMain extends Component {
         this.setState({graph_rowC:this.createArr()});
         this.setState({track_rowC:this.trackArr()});
       }
+      if(this.state.style_A.length===0){
+        this.setState({style_A:this.styleArr("#ff1493")});
+      }
     });
     
     this.state.socket.on("update_service", (color) => {
@@ -160,7 +164,6 @@ export class TableMain extends Component {
         }
 
         this.setState({style_wait:this.state.style_blue});
-        this.setState({style_graph:this.state.just_blue});
         this.setState({style_bid:{color:this.state.just_red}});
         this.setState({style_win:{color:this.state.just_green}});
       }
@@ -179,17 +182,17 @@ export class TableMain extends Component {
 
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
-        // this.setState({style_graph:this.state.just_red});
         this.setState({style_win:{color:this.state.just_green}});
       }
     });
     
     this.state.socket.on("check_winning", (nodes) => {
       if(nodes !== []){
-        var color = "green"
+        var color = "#ff1493"
         var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
         if(IP==='192.168.0.100'){
           this.graphLogic(this.state.graph_rowC[0],0,this.state.track_rowC[0],color)
+          this.state.style_A[0] = {color:this.state.style_green};
         }
         if(IP==='192.168.0.101'){
           this.graphLogic(this.state.graph_rowC[1],1,this.state.track_rowC[1],color)
@@ -199,7 +202,6 @@ export class TableMain extends Component {
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:{color:this.state.just_red}});
         this.setState({style_win:this.state.style_green});
-        this.setState({style_graph:this.state.just_green});
       }
     });
   }
@@ -271,6 +273,14 @@ export class TableMain extends Component {
     return arr;
   }
 
+  styleArr = (color) => {
+    var arr = new Array(this.state.data.length);
+    this.state.data.map((data,i)=>{
+      arr[i] = {color:color};
+    });
+    return arr;
+  }
+
   render() {
     return (
       <div>
@@ -317,7 +327,7 @@ export class TableMain extends Component {
                     <td style={{verticalAlign:"middle"}}>
                       <p style={this.state.style_wait}>WAITING</p>
                       <p style={this.state.style_bid}>BIDDING</p>
-                      <p style={this.state.style_win}>SERVICE</p>
+                      <p style={this.state.style_A[i]}>SERVICE</p>
                     </td>
                    
                     <td style={{verticalAlign:"middle"}}>
@@ -348,52 +358,46 @@ export class TableMain extends Component {
         </Col>
 
         <Col xs={3} md={3}>
-
           <div style={{}}>
             <FormSend/>
           </div>
 
           <Well className="FormTrust">
-            <h4 className="text-center">Manage Trust</h4>
+            <h4 className="text-center">
+              Manage Trust
+            </h4>
             <Form horizontal onSubmit={this.removeTrust}>
-              <Row>
-                <Col sm={7}>
-                  <FormGroup style={{marginLeft:"20px"}}>
-                    <div> 
-                        <Radio name="radioGroup"
-                               value="0"
-                               onChange={this.changeTrust}>
-                          Reset
-                        </Radio>{' '}
+              <FormGroup style={{marginLeft:"20%"}}>
+                <div> 
+                    <Radio name="radioGroup"
+                           value="0"
+                           onChange={this.changeTrust}>
+                      Reset
+                    </Radio>{' '}
+                </div>
+                {this.state.data.map((data,i) =>{
+                  var d = JSON.parse(data);
+                  return (
+                    <div>     
+                      <Radio name="radioGroup" 
+                             inline 
+                             value={d['address']}
+                             onChange={this.changeTrust}>
+                        {d['address']}
+                      </Radio>{' '}
                     </div>
-                    {this.state.data.map((data,i) =>{
-                      var d = JSON.parse(data);
-                      return (
-                        <div>     
-                          <Radio name="radioGroup" 
-                                 inline 
-                                 value={d['address']}
-                                 onChange={this.changeTrust}>
-                            {d['address']}
-                          </Radio>{' '}
-                        </div>
-                      );
-                    })}
-                  </FormGroup>
-                </Col>
-                
-                <Col sm={1}>
-                  <FormGroup style={{marginTop:"40px"}}>
-                    <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
-                            type="submit">remove trust
-                    </Button>
-                  </FormGroup>
-                </Col>
-              </Row>
+                  );
+                })}
+              </FormGroup>
+              <FormGroup className="text-center" style={{marginTop:"0px"}}>
+                <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+                        type="submit">remove trust
+                </Button>
+              </FormGroup>
             </Form> 
           </Well>
-        
         </Col>
+
       </div>
     );
   }
@@ -552,7 +556,7 @@ export class ConsoleLog extends Component {
 
   render() {
     return (
-      <Well>
+      <Well style={{marginTop:"20px"}}>
       <ListGroup>
         <h4 id="Console_h4" className="text-center">
           Console Log
