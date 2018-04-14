@@ -80,11 +80,32 @@ def thread_tcp_server():
 	    	data = conn.recv(1024)
 	    	if(data == "stop"): 
 	    		break
-	    	update_key(data, host)
+			elif (data == "key"):
+				update_key(data, host)
+				break
+			elif (data == "print"):
+				receive_print(data, conn)
 	    finally:
 	    	conn.close()
 
 	
+#
+def receive_print(data, conn):
+	try:
+		msg = data.split(",")
+		byteAmount = msg[1]
+		conn.send("received initial amount")
+		fileContents = conn.recv(byteAmount)
+		fileObject = open("rous/utils/m.txt", "w")
+		fileObject.write(str(fileContents))
+		fileObject.close()
+		services.print_file(conn)
+	except:
+		print "failed to receive/print"
+
+
+
+
 #
 def update_key(data, host):
 	try:
