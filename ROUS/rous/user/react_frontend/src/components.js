@@ -393,7 +393,6 @@ export class TableMain extends Component {
           </Table>
         </Well>
         </Col>
-        
 
         <Col xs={3} md={3}>
           <FormSend/>
@@ -401,45 +400,43 @@ export class TableMain extends Component {
           <Well className="FormTrust">
             <h4 className="text-center">Manage Trust</h4>
             <Form horizontal onSubmit={this.removeTrust}>
-              
-              <Row sm={1}>
-                <FormGroup style={{marginLeft:"20px"}}>
-                  <div> 
-                      <Radio name="radioGroup"
-                             value="0"
-                             onChange={this.changeTrust}>
-                        Reset
-                      </Radio>{' '}
-                  </div>
-                  {this.state.data.map((data,i) =>{
-                    var d = JSON.parse(data);
-                    return (
-                      <div>     
-                        <Radio name="radioGroup" 
-                               inline 
-                               value={d['address']}
+              <Row>
+                <Col sm={7}>
+                  <FormGroup style={{marginLeft:"20px"}}>
+                    <div> 
+                        <Radio name="radioGroup"
+                               value="0"
                                onChange={this.changeTrust}>
-                          {d['address']}
+                          Reset
                         </Radio>{' '}
-                      </div>
-                    );
-                  })}
-                </FormGroup>
-              </Row>
-              
-              <Row sm={4}>
-                <FormGroup>
-                  <Col smOffset={4} sm={20}>
-                    <div style={{textAlign:"left", margin:"0 auto"}}> 
-                      <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
-                              type="submit">remove trust</Button>
                     </div>
-                  </Col>
-                </FormGroup>
+                    {this.state.data.map((data,i) =>{
+                      var d = JSON.parse(data);
+                      return (
+                        <div>     
+                          <Radio name="radioGroup" 
+                                 inline 
+                                 value={d['address']}
+                                 onChange={this.changeTrust}>
+                            {d['address']}
+                          </Radio>{' '}
+                        </div>
+                      );
+                    })}
+                  </FormGroup>
+                </Col>
+                
+                <Col sm={1}>
+                  <FormGroup style={{marginTop:"40px"}}>
+                    <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+                            type="submit">remove trust
+                    </Button>
+                  </FormGroup>
+                </Col>
               </Row>
-              
-              </Form> 
-            </Well>
+            </Form> 
+          </Well>
+        
         </Col>
       </div>
     );
@@ -500,7 +497,7 @@ class FormSend extends Component {
   */
   render() {
     return (
-      <Well className="FormSend">
+      <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
         <Form horizontal onSubmit={this.send}>
          {/* <FormGroup controlId="">
             <Col componentClass={ControlLabel} sm={9}>
@@ -514,9 +511,9 @@ class FormSend extends Component {
             </Col>
           </FormGroup>*/}
         <h4 className="text-center">Select Service</h4>
-        <ButtonToolbar>
-          <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical block>
-            <ToggleButton style={{padding:"6px",color:"green"}}
+        <ButtonToolbar className="text-center">
+          <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
+            <ToggleButton style={{padding:"5px 100px 5px 100px",color:"green"}}
                           value={this.state.g_on} onChange={this.messageChange}>
                           Green ON</ToggleButton>
             <ToggleButton style={{padding:"5px",color:"green"}}
@@ -541,7 +538,7 @@ class FormSend extends Component {
           </ToggleButtonGroup>
         </ButtonToolbar>
    
-         <FormGroup className="text-center" style={{marginTop:"5px"}}>
+         <FormGroup className="text-center" style={{marginTop:"20px"}}>
             <Col>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                       type="submit">send to node network</Button>

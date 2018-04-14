@@ -16,26 +16,26 @@ const App = () => (
       {NavBarTop}
       <Well id="TopWell"></Well>
 
-      <Col xs={1} md={2}/>
-      <Col xs={10} md={8}>
+      <Col xs={1} md={1}/>
+      <Col xs={10} md={10}>
         
         <div className="text-center">{PageTitle}</div>
         <TableMain />
       
       </Col>
-      <Col xs={1} md={2}/>
+      <Col xs={1} md={1}/>
     </Row>
 
 
 
     <Row className="show-grid">
-      <Col xs={1} md={3}/>
-      <Col xs={10} md={6}>
+      <Col xs={3} md={3}/>
+      <Col xs={6} md={6}>
 
         <ConsoleLog/>
         
       </Col>
-      <Col xs={1} md={3}/>
+      <Col xs={3} md={3}/>
     </Row>
   </div>
 
