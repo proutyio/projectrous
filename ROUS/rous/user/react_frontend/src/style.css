@@ -65,22 +65,27 @@ svg {
 	
 }
 
-#Console_h4 {
-	/*color: black;
-	font-weight: bold;
-	font-size: 20px;*/
+#Console_div p {
+	display: inline;
+	margin-left: 10px;
+}
+
+#Console_div h4{
+    display: inline;
+    font-size: 13px;
 }
 
 #Console_p {
 	/*color: #D73F09;*/
 	/*font-weight: regular;*/
-	font-size: 20px;
-	margin: 0px 80px 0px 80px
+	font-size: 14px;
+	margin: 0px 0px 0px 0px
 }
 
 #GraphTable {
 
 }
+
 #GraphTable td {
 	padding:20px;
 }

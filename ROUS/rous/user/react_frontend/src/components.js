@@ -104,7 +104,7 @@ export class TableMain extends Component {
       trust:'',
       check:false,
       row:[1,1,1,1,1,1,1,1,1],
-      style_graph:"#1c8cdc",
+      // style_graph:"#1c8cdc",
       style_wait:{color:"blue"},
       style_bid:{color:"red"},
       style_win:{color:"green"},
@@ -120,7 +120,7 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },1);
+    },1000);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -147,10 +147,6 @@ export class TableMain extends Component {
       this.setState({style:color})
     });
     
-    //NOTE: this is verbose logic because I tried to use sprintf type functions
-    //  with no success, so I went the hardcoded way. its because of
-    //  how setState works
-    // var track_rows = [1,1,1,1,1,1,1,1,1];
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== 0){
         var color = "blue"
@@ -183,7 +179,7 @@ export class TableMain extends Component {
 
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:this.state.style_red});
-        this.setState({style_graph:this.state.just_red});
+        // this.setState({style_graph:this.state.just_red});
         this.setState({style_win:{color:this.state.just_green}});
       }
     });
@@ -278,7 +274,12 @@ export class TableMain extends Component {
   render() {
     return (
       <div>
-      <Col xs={9} md={9}>
+
+      <Col xs={2} md={2}>
+        <ConsoleLog/>
+      </Col>
+
+      <Col xs={7} md={7}>
         <Well className="TableMain">
           <Table>
             <thead>
@@ -347,7 +348,10 @@ export class TableMain extends Component {
         </Col>
 
         <Col xs={3} md={3}>
-          <FormSend/>
+
+          <div style={{}}>
+            <FormSend/>
+          </div>
 
           <Well className="FormTrust">
             <h4 className="text-center">Manage Trust</h4>
@@ -504,9 +508,6 @@ class FormSend extends Component {
 }
 
 
-
-
-
 /*#######################################*/
 export class ConsoleLog extends Component {
   constructor() {
@@ -552,25 +553,26 @@ export class ConsoleLog extends Component {
   render() {
     return (
       <Well>
-      <ListGroup >
-        <h3 id="Console_h4" className="text-center">
+      <ListGroup>
+        <h4 id="Console_h4" className="text-center">
           Console Log
-        </h3>
+        </h4>
         <div style={{paddingBottom:"100px"}}>
           {this.state.data.map((data,i) =>{
               if(i >=100){
                 this.setState({data:[]});
               }
               return (
-                <ListGroupItem bsStyle="warning" id="Console_p" className="text-center">
+                <div id="Console_p" className="text-center">
+                  <div id="Console_div">
                   <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
                     {this.filter_address(data)}
                   </h4>
-                  <div>
-                       {this.filter_tag(data)}
-                       {JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}
+                  {this.filter_tag(data)}
+                  {JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}
+                  
                   </div>
-                </ListGroupItem>
+                </div>
               );
           })}
         </div>
@@ -579,10 +581,6 @@ export class ConsoleLog extends Component {
     );
   }
 }
-
-
-
-
 
 
 
