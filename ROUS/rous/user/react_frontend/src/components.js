@@ -120,7 +120,7 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },500);
+    },200);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -130,16 +130,16 @@ export class TableMain extends Component {
       this.setState({ data: nodes });
       
       if(this.state.graph_rowA.length===0){
-        this.setState({graph_rowA:this.create_arr()});
-        this.setState({track_rowA:this.track_arr()});
+        this.setState({graph_rowA:this.createArr()});
+        this.setState({track_rowA:this.trackArr()});
       }
       if(this.state.graph_rowB.length===0){
-        this.setState({graph_rowB:this.create_arr()});
-        this.setState({track_rowB:this.track_arr()});
+        this.setState({graph_rowB:this.createArr()});
+        this.setState({track_rowB:this.trackArr()});
       }
       if(this.state.graph_rowC.length===0){
-        this.setState({graph_rowC:this.create_arr()});
-        this.setState({track_rowC:this.track_arr()});
+        this.setState({graph_rowC:this.createArr()});
+        this.setState({track_rowC:this.trackArr()});
       }
     });
     
@@ -153,65 +153,16 @@ export class TableMain extends Component {
     // var track_rows = [1,1,1,1,1,1,1,1,1];
     this.state.socket.on("check_waiting", (nodes) => {
       if(nodes !== 0){
-
+        var color = "blue"
         var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
         if(IP==='192.168.0.100'){
-          var color = "green";
-          var check = false;
-          this.state.track_rowA[0].map((data,i)=>{
-            if(i===8 && data===2 && check===false){
-              this.updateGraph(this.state.graph_rowA[0],this.state.track_rowA[0],i,true);
-              // console.log(this.state.track_rowA[0])
-              // this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
-              // this.state.track_rowA[0][0] = 2
-              
-              // this.state.track_rowA[0].map((r,j) => {
-              //   if(j !== 0){
-              //     this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-              //     this.state.track_rowA[0][j] = 1
-              //   }
-              // });
-              check = true;
-              console.log(this.state.track_rowA[0])
-            }
-            else if(data===1 && check===false){
-              console.log(this.state.track_rowA[0])
-              // if(i===0){
-              this.updateGraph(this.state.graph_rowA[0],this.state.track_rowA[0],i,false);
-                // this.state.graph_rowA[0][0] = <td style={{backgroundColor:"blue"}}/>
-                // this.state.track_rowA[0][0] = 2
-              
-                // this.state.track_rowA[0].map((r,j) => {
-                //   if(j !== 0){
-                //     this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-                //   }
-                // });
-              // }
-              // else if(i===1){
-              //   this.state.graph_rowA[0][1] = <td style={{backgroundColor:"blue"}}/>
-              //   this.state.track_rowA[0].map((r,j) => {
-              //     if(j!==0&&j!==1)
-              //       this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-              //   });
-              // }
-              // else if(i===2){
-
-              //   this.state.graph_rowA[0][2] = <td style={{backgroundColor:"blue"}}/>
-              //   this.state.track_rowA[0].map((r,j) => {
-              //     if(j!==0&&j!==1&&j!==2)
-              //       this.state.graph_rowA[0][j] = <td style={{backgroundColor:""}}/>
-              //   });
-              // }
-              
-              check = true;
-              this.state.track_rowA[0][i] = 2;
-              console.log(this.state.track_rowA[0])
-            }
-
-
-
-         }); // this.state.graph_rowA[0][3] = <td style={{backgroundColor:"blue"}}/>
+          this.graphLogic(this.state.graph_rowA[0],0,this.state.track_rowA[0],color)
         }
+        
+        if(IP==='192.168.0.101'){
+          this.graphLogic(this.state.graph_rowA[1],1,this.state.track_rowA[1],color)
+        }
+
         this.setState({style_wait:this.state.style_blue});
         this.setState({style_graph:this.state.just_blue});
         this.setState({style_bid:{color:this.state.just_red}});
@@ -244,46 +195,37 @@ export class TableMain extends Component {
     clearInterval();
   }
 
-  updateGraph = (data,track,x,b) => {
-    var bool = b;
+  //I need to explain this logic. I will forget, its complicated
+  updateGraph = (data,track,x) => {
     data[x] = <td style={{backgroundColor:"blue"}}/>
     track[x] = 2
     data.map((r,j) => {
       if(j > x){
         data[j] = <td style={{backgroundColor:""}}/>
-        if(bool===true)
-          track[j] = 1
       }
     });
   }
-  // parseIP = (nodes) => {
-  //   var lst = new Array(nodes.length*2);
-  //   console.log(lst.length)
-  //   console.log(nodes)
-    
-  //   nodes.map((n,i)=>{
-  //     if(lst.length===0)
-  //       lst[i] = JSON.parse(n).toString().split(":")[2].replace(/}|"/g,'');
-  //     else{
-  //       var ip = JSON.parse(n).toString().split(":")[2].replace(/}|"/g,'');
-  //       var check = false;
-  //       lst.map((l,j)=>{
-  //         if(l === ip)
-  //           check = true;
-  //           console.log(l)
-  //           console.log(ip) 
-  //       });
-  //       if(check === false)
-  //         lst[i] = ip
-  //     }
 
-  //     // console.log(n);
-  //     // var waitdata = JSON.parse(n);
-  //     // waitdata = waitdata.toString().split(":")[2].replace(/}|"/g,'');
-  //     // console.log(waitdata);
-  //   });
-  //   console.log(lst);
-  // }
+  graphLogic = (graph,x,track,color) => {
+    var check = false;
+    track.map((data,i)=>{
+      if(i===8 && data===2 && check===false){
+        graph[x] = <td style={{backgroundColor:color}}/>
+        track.map((r,j) => {
+          if(j !== 0){
+            graph[j] = <td style={{backgroundColor:""}}/>
+            track[j] = 1
+          }
+        });
+        check = true;
+      }
+      else if(data===1 && check===false){
+        this.updateGraph(graph,track,i);     
+        check = true;
+        track[i] = 2;
+      }
+   });
+  }
 
   removeTrust = (e) => {
     e.preventDefault();
@@ -300,7 +242,7 @@ export class TableMain extends Component {
     this.setState({trust: e.currentTarget.value});
   }
 
-  create_arr = (e) => {
+  createArr = (e) => {
     var arr = new Array(this.state.data.length);
     this.state.data.map((data,i)=>{
       arr[i] = [<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>];
@@ -308,7 +250,7 @@ export class TableMain extends Component {
     return arr;
   }
 
-  track_arr = (e) => {
+  trackArr = (e) => {
     var arr = new Array(this.state.data.length);
     this.state.data.map((data,i)=>{
       arr[i] = [1,1,1,1,1,1,1,1,1];
@@ -373,19 +315,12 @@ export class TableMain extends Component {
                           }
                         </thead>
                         <tbody>
-                          <tr>
-                            {this.state.graph_rowA[i]}
-                          </tr>
-                          <tr>
-                            {this.state.graph_rowB[i]}
-                          </tr>
-                          <tr>
-                            {this.state.graph_rowC[i]}
-                          </tr>
+                          <tr>{this.state.graph_rowA[i]}</tr>
+                          <tr>{this.state.graph_rowB[i]}</tr>
+                          <tr>{this.state.graph_rowC[i]}</tr>
                         </tbody>
                       </Table>;
                     </td>
-
                   </tr>
                 );
               })}
@@ -510,7 +445,7 @@ class FormSend extends Component {
                  onChange={this.messageChange}/>
             </Col>
           </FormGroup>*/}
-        <h4 className="text-center">Select Service</h4>
+        <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
         <ButtonToolbar className="text-center">
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
             <ToggleButton style={{padding:"5px 100px 5px 100px",color:"green"}}
