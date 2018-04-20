@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
+import SocketIOFileClient from 'socket.io-file-client';
 import './style.css';
 // import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 import {
@@ -399,6 +400,33 @@ export class TableMain extends Component {
   }
 }
 
+var fileSocket = socketIOClient('http://127.0.0.1:4242');
+var uploader = new SocketIOFileClient(fileSocket);
+
+uploader.on('ready', function() {
+	console.log('SocketIOFile ready to go!');
+});
+uploader.on('loadstart', function() {
+	console.log('Loading file to browser before sending...');
+});
+uploader.on('progress', function(progress) {
+	console.log('Loaded ' + progress.loaded + ' / ' + progress.total);
+});
+uploader.on('start', (fileInfo) => {
+	console.log('Start uploading', fileInfo);
+});
+uploader.on('stream', (fileInfo) => {
+	console.log('Streaming... sent ' + fileInfo.sent + ' bytes.');
+});
+uploader.on('complete', (fileInfo) => {
+	console.log('Upload Complete', fileInfo);
+});
+uploader.on('error', (err) => {
+	console.log('Error!', err);
+});
+uploader.on('abort', (fileInfo) => {
+	console.log('Aborted: ', fileInfo);
+});
 
 
 /*#######################################*/
@@ -431,6 +459,20 @@ class FormSend extends Component {
 
   };
 
+
+  
+  handleChange(selectorFiles: FileList)
+    {
+      var uploadIds = uploader.upload(FileList);
+    }
+
+  // handleFileUpload({ file }) {
+  //   const file = files[0];
+  //   this.props.actions.uploadRequest({
+  //      file,
+  //      name: 'Awesome Cat Pic'
+  //   })
+  // }
   // fileInput = (e) => {
   //   var file = document.getElementById('theFile').theFile[0];
   //    if (file) {
@@ -451,6 +493,7 @@ class FormSend extends Component {
       }
     }"}
   */
+ 
   render() {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
@@ -487,11 +530,10 @@ class FormSend extends Component {
             <ToggleButton style={{padding:"5px",color:"blue"}}
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
-            <ToggleButton style={{padding:"5px"}}
-                          value={this.state.print}  type="file" onChange={this.messageChange} >
-                          Print File {<input style={{visibility:"hidden", height:0, width: 0}} type="file" id="theFile" name="theFile" />}
-                          
-            </ToggleButton>
+            <div> Print File
+              <input type="file" onChange={ (e) => this.handleChange(e.target.files) } />
+            </div>
+            
           </ToggleButtonGroup>
         </ButtonToolbar>
    
