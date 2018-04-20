@@ -337,7 +337,7 @@ export class TableMain extends Component {
                           <tr>{this.state.graph_rowB[i]}</tr>
                           <tr>{this.state.graph_rowC[i]}</tr>
                         </tbody>
-                      </Table>;
+                      </Table>
                     </td>
                   </tr>
                 );
@@ -488,8 +488,9 @@ class FormSend extends Component {
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
             <ToggleButton style={{padding:"5px"}}
-                          value={this.state.print} type="text" onChange={this.messageChange} >
-                          Print File {/*<input type="file" id="theFile" name="theFile" />*/}
+                          value={this.state.print}  type="file" onChange={this.messageChange} >
+                          Print File {<input style={{visibility:"hidden", height:0, width: 0}} type="file" id="theFile" name="theFile" />}
+                          
             </ToggleButton>
           </ToggleButtonGroup>
         </ButtonToolbar>
