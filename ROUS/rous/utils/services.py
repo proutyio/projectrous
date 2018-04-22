@@ -47,7 +47,6 @@ def blue_on(sender_address):
 def blue_off(sender_address):
 	rpi.off("blue")
 
-
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")
 

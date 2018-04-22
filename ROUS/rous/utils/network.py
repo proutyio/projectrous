@@ -75,18 +75,18 @@ def thread_tcp_server():
 	sock.bind(server_address)
 	sock.listen(1)
 	while True:
-	    conn, address = sock.accept()
-	    try:
-	    	data = conn.recv(1024)
-	    	if(data == "stop"): 
-	    		break
-		elif (data == "key"):
+		conn, address = sock.accept()
+		try:
+			data = conn.recv(1024)
+			if(data == "stop"): 
+				break
+			elif (data == "key"):
 				update_key(data, host)
 				break
-		elif (data == "print"):
+			elif (data == "print"):
 				receive_print(data, conn)
-	    finally:
-	    	conn.close()
+		finally:
+			conn.close()
 
 	
 #
