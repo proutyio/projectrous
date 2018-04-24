@@ -436,14 +436,15 @@ class FormSend extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       message: '',
+      file_contents: "no content",
       g_on:'{"tag":"service","service":"green_on"}',
       g_off: '{"tag":"service","service":"green_off"}',
       r_on: '{"tag":"service","service":"red_on"}',
       r_off: '{"tag":"service","service":"red_off"}',
       b_on: '{"tag":"service","service":"blue_on"}',
       b_off: '{"tag":"service","service":"blue_off"}',
-      print: '{"tag":"service","service":"print_file"}',
-      // print: '{"tag":"service","service":"print_file","file":"' + this.fileInput + '"}',
+      //print: '{"tag":"service","service":"print_file"}',
+      print: '{"tag":"service","service":"print_file","file":"' + this.file_contents + '"}',
     };
   }
 
@@ -461,11 +462,14 @@ class FormSend extends Component {
 
 
   
-  handleChange(selectorFiles: FileList)
-    {
-      var uploadIds = uploader.upload(FileList);
-    }
-
+  handleChange = (e) => {
+    
+    var contents = document.getElementById("myFile").value;
+    this.setState({file_contents: contents})
+    
+    this.setState({message: e.target.value});
+  };
+    
   // handleFileUpload({ file }) {
   //   const file = files[0];
   //   this.props.actions.uploadRequest({
@@ -473,14 +477,19 @@ class FormSend extends Component {
   //      name: 'Awesome Cat Pic'
   //   })
   // }
-  // fileInput = (e) => {
-  //   var file = document.getElementById('theFile').theFile[0];
-  //    if (file) {
-  //      var reader = new FileReader();
-  //      reader.readAsText(file);
-  //      return reader;
-  //    }
-  // }
+  fileInput = (e) => {
+
+    
+    if (document.getElementById("myFile").value) {
+      var file = document.getElementById("myFile").value;
+      var reader = new FileReader();
+      reader.readAsText(file);
+       return reader;
+    }
+    else{
+       return e;
+    }
+  }
   //
   //here is the string sent to the nodes:
   /*
@@ -530,9 +539,13 @@ class FormSend extends Component {
             <ToggleButton style={{padding:"5px",color:"blue"}}
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
-            <div> Print File
-              <input type="file" onChange={ (e) => this.handleChange(e.target.files) } />
-            </div>
+            <ToggleButton style={{padding:"5px"}}
+                          value={this.state.print} onChange={this.handleChange} >
+                          <div> Print File
+                            <input type="file" id="myFile" />
+                          </div>
+            </ToggleButton>
+            
             
           </ToggleButtonGroup>
         </ButtonToolbar>

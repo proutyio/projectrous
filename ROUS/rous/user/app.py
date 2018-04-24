@@ -134,30 +134,7 @@ def remove_trust(block_ip):
 #
 
 
-@io.on('ready')
-def send_ready():
-	tcp_print
 
-@io.on('loadstart')
-def loadstart():
-
-@io.on('progress')
-def progress():
-
-@io.on('start')
-def send_start():
-
-@io.on('stream')
-def send_stream():
-
-@io.on('complete')
-def send_complete():
-
-@io.on('error')
-def error():
-
-@io.on('abort')
-def send_abort():
 
 
 
