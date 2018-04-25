@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
+import SocketIOFileClient from 'socket.io-file-client';
 import './style.css';
 // import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 import {
@@ -350,7 +351,7 @@ export class TableMain extends Component {
                           <tr>{this.state.graph_rowB[i]}</tr>
                           <tr>{this.state.graph_rowC[i]}</tr>
                         </tbody>
-                      </Table>;
+                      </Table>
                     </td>
                   </tr>
                 );
@@ -406,6 +407,33 @@ export class TableMain extends Component {
   }
 }
 
+var fileSocket = socketIOClient('http://127.0.0.1:4242');
+var uploader = new SocketIOFileClient(fileSocket);
+
+uploader.on('ready', function() {
+	console.log('SocketIOFile ready to go!');
+});
+uploader.on('loadstart', function() {
+	console.log('Loading file to browser before sending...');
+});
+uploader.on('progress', function(progress) {
+	console.log('Loaded ' + progress.loaded + ' / ' + progress.total);
+});
+uploader.on('start', (fileInfo) => {
+	console.log('Start uploading', fileInfo);
+});
+uploader.on('stream', (fileInfo) => {
+	console.log('Streaming... sent ' + fileInfo.sent + ' bytes.');
+});
+uploader.on('complete', (fileInfo) => {
+	console.log('Upload Complete', fileInfo);
+});
+uploader.on('error', (err) => {
+	console.log('Error!', err);
+});
+uploader.on('abort', (fileInfo) => {
+	console.log('Aborted: ', fileInfo);
+});
 
 
 /*#######################################*/
@@ -415,14 +443,15 @@ class FormSend extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       message: '',
+      file_contents: "no content",
       g_on:'{"tag":"service","service":"green_on"}',
       g_off: '{"tag":"service","service":"green_off"}',
       r_on: '{"tag":"service","service":"red_on"}',
       r_off: '{"tag":"service","service":"red_off"}',
       b_on: '{"tag":"service","service":"blue_on"}',
       b_off: '{"tag":"service","service":"blue_off"}',
-      print: '{"tag":"service","service":"print_file"}',
-      // print: '{"tag":"service","service":"print_file","file":"' + this.fileInput + '"}',
+      //print: '{"tag":"service","service":"print_file"}',
+      print: '{"tag":"service","service":"print_file","file":"' + this.file_contents + '"}',
     };
   }
 
@@ -438,14 +467,36 @@ class FormSend extends Component {
 
   };
 
-  // fileInput = (e) => {
-  //   var file = document.getElementById('theFile').theFile[0];
-  //    if (file) {
-  //      var reader = new FileReader();
-  //      reader.readAsText(file);
-  //      return reader;
-  //    }
+
+  
+  handleChange = (e) => {
+    
+    var contents = document.getElementById("myFile").value;
+    this.setState({file_contents: contents})
+    
+    this.setState({message: e.target.value});
+  };
+    
+  // handleFileUpload({ file }) {
+  //   const file = files[0];
+  //   this.props.actions.uploadRequest({
+  //      file,
+  //      name: 'Awesome Cat Pic'
+  //   })
   // }
+  fileInput = (e) => {
+
+    
+    if (document.getElementById("myFile").value) {
+      var file = document.getElementById("myFile").value;
+      var reader = new FileReader();
+      reader.readAsText(file);
+       return reader;
+    }
+    else{
+       return e;
+    }
+  }
   //
   //here is the string sent to the nodes:
   /*
@@ -458,6 +509,7 @@ class FormSend extends Component {
       }
     }"}
   */
+ 
   render() {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
@@ -495,9 +547,13 @@ class FormSend extends Component {
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
             <ToggleButton style={{padding:"5px"}}
-                          value={this.state.print} type="text" onChange={this.messageChange} >
-                          Print File {/*<input type="file" id="theFile" name="theFile" />*/}
+                          value={this.state.print} onChange={this.handleChange} >
+                          <div> Print File
+                            <input type="file" id="myFile" />
+                          </div>
             </ToggleButton>
+            
+            
           </ToggleButtonGroup>
         </ButtonToolbar>
    

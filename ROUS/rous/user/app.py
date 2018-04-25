@@ -133,6 +133,12 @@ def remove_trust(block_ip):
 
 
 #
+
+
+
+
+
+
 def thread_listener(sock, address):
 	while True:
 		message, (host,port) = sock.recvfrom(1024)
