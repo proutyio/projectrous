@@ -28,6 +28,7 @@ removed = []
 wait_nodes = []
 bid_nodes = []
 win_nodes = []
+check_nodes = []
 mutex = Lock()
 
 
@@ -190,6 +191,10 @@ def find_nodes():
 		# print nodes
 		del data[:]
 		mutex.release()
+
+
+#
+# def
 
 
 

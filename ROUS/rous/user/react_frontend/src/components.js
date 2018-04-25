@@ -121,7 +121,7 @@ export class TableMain extends Component {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },1000);
+    },20);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -201,7 +201,7 @@ export class TableMain extends Component {
         this.setState({check:false});
         this.setState({style_wait:{color:this.state.just_blue}});
         this.setState({style_bid:{color:this.state.just_red}});
-        this.setState({style_win:this.state.style_green});
+        // this.setState({style_win:this.state.style_green});
       }
     });
   }
@@ -258,7 +258,8 @@ export class TableMain extends Component {
   }
 
   createArr = (e) => {
-    var arr = new Array(this.state.data.length);
+    // var arr = new Array(this.state.data.length);
+    var arr = new Array(100); //bug with getting length so hardcoded for now
     this.state.data.map((data,i)=>{
       arr[i] = [<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>];
     });
@@ -266,7 +267,8 @@ export class TableMain extends Component {
   }
 
   trackArr = (e) => {
-    var arr = new Array(this.state.data.length);
+    // var arr = new Array(this.state.data.length);
+    var arr = new Array(100);
     this.state.data.map((data,i)=>{
       arr[i] = [1,1,1,1,1,1,1,1,1];
     });
@@ -274,7 +276,8 @@ export class TableMain extends Component {
   }
 
   styleArr = (color) => {
-    var arr = new Array(this.state.data.length);
+    // var arr = new Array(this.state.data.length);
+    var arr = new Array(100);
     this.state.data.map((data,i)=>{
       arr[i] = {color:color};
     });
@@ -563,18 +566,20 @@ export class ConsoleLog extends Component {
         </h4>
         <div style={{paddingBottom:"100px"}}>
           {this.state.data.map((data,i) =>{
-              if(i >=100){
+              if(i >=200){
                 this.setState({data:[]});
               }
               return (
-                <div id="Console_p" className="text-center">
-                  <div id="Console_div">
-                  <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
-                    {this.filter_address(data)}
-                  </h4>
-                  {this.filter_tag(data)}
-                  {JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}
-                  
+                <div className="text-center">
+                  <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
+                    <div id="Console_div">
+                    <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
+                      {this.filter_address(data)}
+                    </h4>
+                    {this.filter_tag(data)}
+                    {JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}
+                    
+                    </div>
                   </div>
                 </div>
               );
