@@ -99,7 +99,7 @@ export class TableMain extends Component {
       graph_rowA:[],
       graph_rowB:[],
       graph_rowC:[],
-      track_rowA:[],
+      track_row:[],
       track_rowB:[],
       track_rowC:[],
       style_A:[],
@@ -116,13 +116,14 @@ export class TableMain extends Component {
       just_blue:"blue",
       just_green:"#ff1493",
       just_red:"red",
+      IP:['192.168.0.101','192.168.0.102'],
     };
 
     setInterval(() => {
       this.state.socket.emit("check_wait")
       this.state.socket.emit("check_bid")
       this.state.socket.emit("check_win")
-    },20);
+    },5);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -133,15 +134,15 @@ export class TableMain extends Component {
       
       if(this.state.graph_rowA.length===0){
         this.setState({graph_rowA:this.createArr()});
-        this.setState({track_rowA:this.trackArr()});
+        this.setState({track_row:this.trackArr()});
       }
       if(this.state.graph_rowB.length===0){
         this.setState({graph_rowB:this.createArr()});
-        this.setState({track_rowB:this.trackArr()});
+        // this.setState({track_rowB:this.trackArr()});
       }
       if(this.state.graph_rowC.length===0){
         this.setState({graph_rowC:this.createArr()});
-        this.setState({track_rowC:this.trackArr()});
+        // this.setState({track_rowC:this.trackArr()});
       }
       if(this.state.style_A.length===0){
         this.setState({style_A:this.styleArr("#ff1493")});
@@ -156,17 +157,18 @@ export class TableMain extends Component {
       if(nodes !== 0){
         var color = "blue"
         var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
-        if(IP==='192.168.0.100'){
-          this.graphLogic(this.state.graph_rowA[0],0,this.state.track_rowA[0],color)
+        
+        if(IP===this.state.IP[0]){
+          this.graphLogic(this.state.graph_rowA[0],0,this.state.track_row[0],color)
         }
         
-        if(IP==='192.168.0.101'){
-          this.graphLogic(this.state.graph_rowA[1],1,this.state.track_rowA[1],color)
+        if(IP===this.state.IP[1]){
+          this.graphLogic(this.state.graph_rowA[1],1,this.state.track_row[1],color)
         }
 
-        this.setState({style_wait:this.state.style_blue});
-        this.setState({style_bid:{color:this.state.just_red}});
-        this.setState({style_win:{color:this.state.just_green}});
+        // this.setState({style_wait:this.state.style_blue});
+        // this.setState({style_bid:{color:this.state.just_red}});
+        // this.setState({style_win:{color:this.state.just_green}});
       }
     });
     
@@ -174,16 +176,18 @@ export class TableMain extends Component {
       if(nodes !== []){
         var color = "red"
         var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
-        if(IP==='192.168.0.100'){
-          this.graphLogic(this.state.graph_rowB[0],0,this.state.track_rowB[0],color)
+
+        if(IP===this.state.IP[0]){
+          this.graphLogic(this.state.graph_rowB[0],0,this.state.track_row[0],color)
         }
-        if(IP==='192.168.0.101'){
-          this.graphLogic(this.state.graph_rowB[1],1,this.state.track_rowB[1],color)
+        
+        if(IP===this.state.IP[1]){
+          this.graphLogic(this.state.graph_rowB[1],1,this.state.track_row[1],color)
         }
 
-        this.setState({style_wait:{color:this.state.just_blue}});
-        this.setState({style_bid:this.state.style_red});
-        this.setState({style_win:{color:this.state.just_green}});
+        // this.setState({style_wait:{color:this.state.just_blue}});
+        // this.setState({style_bid:this.state.style_red});
+        // this.setState({style_win:{color:this.state.just_green}});
       }
     });
     
@@ -191,17 +195,18 @@ export class TableMain extends Component {
       if(nodes !== []){
         var color = "#ff1493"
         var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
-        if(IP==='192.168.0.100'){
-          this.graphLogic(this.state.graph_rowC[0],0,this.state.track_rowC[0],color)
-          this.state.style_A[0] = {color:this.state.style_green};
+        
+        if(IP===this.state.IP[0]){
+          this.graphLogic(this.state.graph_rowC[0],0,this.state.track_row[0],color)
         }
-        if(IP==='192.168.0.101'){
-          this.graphLogic(this.state.graph_rowC[1],1,this.state.track_rowC[1],color)
+        
+        if(IP===this.state.IP[1]){
+          this.graphLogic(this.state.graph_rowC[1],1,this.state.track_row[1],color)
         }
 
-        this.setState({check:false});
-        this.setState({style_wait:{color:this.state.just_blue}});
-        this.setState({style_bid:{color:this.state.just_red}});
+        // this.setState({check:false});
+        // this.setState({style_wait:{color:this.state.just_blue}});
+        // this.setState({style_bid:{color:this.state.just_red}});
         // this.setState({style_win:this.state.style_green});
       }
     });
@@ -212,35 +217,38 @@ export class TableMain extends Component {
   }
 
   //I need to explain this logic. I will forget, its complicated
-  updateGraph = (data,track,x,color) => {
-    data[x] = <td style={{backgroundColor:color}}/>
-    track[x] = 2
+  updateGraph = (data,track,i,color) => {
+    data[i] = <td style={{backgroundColor:color}}/>
+    track[i] = 2
+    console.log(track);
     data.map((r,j) => {
-      if(j > x){
+      if(j > i){
         data[j] = <td style={{backgroundColor:""}}/>
       }
     });
   }
 
   graphLogic = (graph,x,track,color) => {
-    var check = false;
-    track.map((data,i)=>{
-      if(i===8 && data===2 && check===false){
-        graph[x] = <td style={{backgroundColor:color}}/>
-        track.map((r,j) => {
-          if(j !== 0){
-            graph[j] = <td style={{backgroundColor:""}}/>
-            track[j] = 1
-          }
-        });
-        check = true;
-      }
-      else if(data===1 && check===false){
-        this.updateGraph(graph,track,i,color);     
-        check = true;
-        track[i] = 2;
-      }
-   });
+    try{
+      var check = false;
+      track.map((data,i)=>{
+        if(i===8 && data===2 && check===false){
+          graph[i] = <td style={{backgroundColor:color}}/>
+          track.map((r,j) => {
+            if(j !== 0){
+              graph[j] = <td style={{backgroundColor:""}}/>
+              track[j] = 1
+            }
+          });
+          check = true;
+        }
+        else if(data===1 && check===false){
+          this.updateGraph(graph,track,i,color);     
+          check = true;
+          track[i] = 2;
+        }
+     });
+    }finally{}
   }
 
   removeTrust = (e) => {
