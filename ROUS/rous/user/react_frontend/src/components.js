@@ -22,6 +22,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   ButtonToolbar,
+  Modal,
 } from "react-bootstrap";
 
 
@@ -457,6 +458,7 @@ class FormSend extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       message: '',
+      show: false,
       file_contents: "no content",
       g_on:'{"tag":"service","service":"green_on"}',
       g_off: '{"tag":"service","service":"green_off"}',
@@ -478,18 +480,21 @@ class FormSend extends Component {
 
   messageChange = (e) => {
     this.setState({message: e.target.value});
-
   };
 
-
-  
-  handleChange = (e) => {
-    
+  handleChange = (e) => {    
     var contents = document.getElementById("myFile").value;
     this.setState({file_contents: contents})
-    
     this.setState({message: e.target.value});
   };
+
+  handleClose = (e) => {
+    this.setState({ show: false });
+  }
+
+  handleShow = (e) => {
+    this.setState({ show: true });
+  }
     
   // handleFileUpload({ file }) {
   //   const file = files[0];
@@ -526,34 +531,33 @@ class FormSend extends Component {
             </Col>
           </FormGroup>*/}
         <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
-        <ButtonToolbar className="text-center">
+        <ButtonToolbar className="text-center" style={{margin:"10px"}}>
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-            <ToggleButton style={{padding:"5px 100px 5px 100px",color:"green"}}
+            <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
                           value={this.state.g_on} onChange={this.messageChange}>
                           Green ON</ToggleButton>
-            <ToggleButton style={{padding:"5px",color:"green"}}
+            <ToggleButton style={{padding:"15px",color:"green"}}
                           value={this.state.g_off} onChange={this.messageChange}>
                           Green OFF</ToggleButton>
-            <ToggleButton style={{padding:"5px",color:"red"}}
+            <ToggleButton style={{padding:"15px",color:"red"}}
                           value={this.state.r_on} onChange={this.messageChange}>
                           Red ON</ToggleButton>
-            <ToggleButton style={{padding:"5px",color:"red"}}
+            <ToggleButton style={{padding:"15px",color:"red"}}
                           value={this.state.r_off} onChange={this.messageChange}>
                           Red OFF</ToggleButton>
-            <ToggleButton style={{padding:"5px",color:"blue"}}
+            <ToggleButton style={{padding:"15px",color:"blue"}}
                           value={this.state.b_on} onChange={this.messageChange}>
                           Blue ON</ToggleButton>
-            <ToggleButton style={{padding:"5px",color:"blue"}}
+            <ToggleButton style={{padding:"15px",color:"blue"}}
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
-            <ToggleButton style={{padding:"5px"}}
-                          value={this.state.print} onChange={this.handleChange} >
-                          <div> Print File
-                            <input type="file" id="myFile" />
-                          </div>
-            </ToggleButton>
-            
-            
+            <ToggleButton style={{padding:"15px"}} onChange={this.handleShow}>
+                          Complex Jobs</ToggleButton>
+            <ToggleButton style={{padding:"15px"}}
+                          value={this.state.print} onChange={this.handleChange}>
+                          Print File
+                          <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
+                          </ToggleButton>
           </ToggleButtonGroup>
         </ButtonToolbar>
    
@@ -564,6 +568,55 @@ class FormSend extends Component {
             </Col>
           </FormGroup>
         </Form> 
+
+
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+              <Modal.Title>Complex Jobs</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <div className="text-center">
+                <Form horizontal onSubmit={this.send}>
+                  <h4>Select Services</h4>
+                  <ToggleButtonGroup type="checkbox" value={this.state.value} vertical>
+                    
+                    <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
+                            value={this.state.g_on} onChange={this.messageChange}>
+                            Green ON</ToggleButton>
+                    <ToggleButton style={{padding:"15px",color:"green"}}
+                                  value={this.state.g_off} onChange={this.messageChange}>
+                                  Green OFF</ToggleButton>
+                    <ToggleButton style={{padding:"15px",color:"red"}}
+                                  value={this.state.r_on} onChange={this.messageChange}>
+                                  Red ON</ToggleButton>
+                    <ToggleButton style={{padding:"15px",color:"red"}}
+                                  value={this.state.r_off} onChange={this.messageChange}>
+                                  Red OFF</ToggleButton>
+                    <ToggleButton style={{padding:"15px",color:"blue"}}
+                                  value={this.state.b_on} onChange={this.messageChange}>
+                                  Blue ON</ToggleButton>
+                    <ToggleButton style={{padding:"15px",color:"blue"}}
+                                  value={this.state.b_off} onChange={this.messageChange}>
+                                  Blue OFF</ToggleButton>
+                    <ToggleButton style={{padding:"15px"}}
+                                  value={this.state.print} onChange={this.handleChange}>
+                                  Print File
+                                  <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
+                                  </ToggleButton>
+                  </ToggleButtonGroup>
+                  <FormGroup className="text-center" style={{marginTop:"20px"}}>
+                    <Col>
+                      <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+                              type="submit">send to node network</Button>
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </div>
+          </Modal.Body>
+          <Modal.Footer>
+              <Button onClick={this.handleClose}>Close</Button>
+          </Modal.Footer>
+        </Modal>
 
       </Well>
     );
@@ -622,7 +675,7 @@ export class ConsoleLog extends Component {
         </h4>
         <div style={{paddingBottom:"100px"}}>
           {this.state.data.map((data,i) =>{
-              if(i >=200){
+              if(i >=18){
                 this.setState({data:[]});
               }
               return (
