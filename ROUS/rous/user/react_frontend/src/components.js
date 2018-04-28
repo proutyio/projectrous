@@ -533,6 +533,8 @@ class FormSend extends Component {
         <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
         <ButtonToolbar className="text-center" style={{margin:"10px"}}>
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
+            <ToggleButton style={{padding:"15px",fontWeight:"bold"}} onChange={this.handleShow}>
+                          Complex Job</ToggleButton>
             <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
                           value={this.state.g_on} onChange={this.messageChange}>
                           Green ON</ToggleButton>
@@ -551,8 +553,6 @@ class FormSend extends Component {
             <ToggleButton style={{padding:"15px",color:"blue"}}
                           value={this.state.b_off} onChange={this.messageChange}>
                           Blue OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px"}} onChange={this.handleShow}>
-                          Complex Jobs</ToggleButton>
             <ToggleButton style={{padding:"15px"}}
                           value={this.state.print} onChange={this.handleChange}>
                           Print File
@@ -607,7 +607,9 @@ class FormSend extends Component {
                   <FormGroup className="text-center" style={{marginTop:"20px"}}>
                     <Col>
                       <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
-                              type="submit">send to node network</Button>
+                              onClick={this.handleClose}
+                              type="submit">send to node network
+                      </Button>
                     </Col>
                   </FormGroup>
                 </Form>

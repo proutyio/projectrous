@@ -208,54 +208,6 @@ def find_nodes():
 
 
 
-#
-# def check_waiting():
-# 	mutex.acquire()
-# 	try:
-# 		if data:
-# 			for d in data:
-# 				d = json.loads(d)
-# 				print d
-# 				if d['tag'] == "waiting":
-# 					wait_nodes.append(json.dumps(d))
-# 	except:
-# 		pass
-# 	finally:
-# 		del wait_nodes[:]
-# 		mutex.release()
-
-# #
-# def check_winning():
-# 	mutex.acquire()
-# 	try:
-# 		if data:
-# 			for d in data:
-# 				d = json.loads(d)
-# 				print d
-# 				if d['tag'] == "winner":
-# 					win_nodes.append(json.dumps(d))
-# 	except:
-# 		pass
-# 	finally:
-# 		del win_nodes[:]
-# 		mutex.release()
-
-
-# #
-# def check_bidding():
-# 	mutex.acquire()
-# 	try:
-# 		if data:
-# 			for d in data:
-# 				d = json.loads(d)
-# 				print d
-# 				if d['tag'] == "bidding":
-# 					bid_nodes.append(json.dumps(d))
-# 	except:
-# 		pass
-# 	finally:
-# 		del bid_nodes[:]
-# 		mutex.release()
 
 
 #
