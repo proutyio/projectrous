@@ -119,11 +119,11 @@ export class TableMain extends Component {
       IP:['192.168.0.101','192.168.0.102'],
     };
 
-    setInterval(() => {
-      this.state.socket.emit("check_wait")
-      this.state.socket.emit("check_bid")
-      this.state.socket.emit("check_win")
-    },5);
+    // setInterval(() => {
+    //   this.state.socket.emit("check_wait")
+    //   this.state.socket.emit("check_bid")
+    //   this.state.socket.emit("check_win")
+    // },500);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -132,84 +132,84 @@ export class TableMain extends Component {
     this.state.socket.on("discover_nodes", (nodes)=> {
       this.setState({ data: nodes });
       
-      if(this.state.graph_rowA.length===0){
-        this.setState({graph_rowA:this.createArr()});
-        this.setState({track_row:this.trackArr()});
-      }
-      if(this.state.graph_rowB.length===0){
-        this.setState({graph_rowB:this.createArr()});
-        // this.setState({track_rowB:this.trackArr()});
-      }
-      if(this.state.graph_rowC.length===0){
-        this.setState({graph_rowC:this.createArr()});
-        // this.setState({track_rowC:this.trackArr()});
-      }
-      if(this.state.style_A.length===0){
-        this.setState({style_A:this.styleArr("#ff1493")});
-      }
+      // if(this.state.graph_rowA.length===0){
+      //   this.setState({graph_rowA:this.createArr()});
+      //   this.setState({track_row:this.trackArr()});
+      // }
+      // if(this.state.graph_rowB.length===0){
+      //   this.setState({graph_rowB:this.createArr()});
+      //   // this.setState({track_rowB:this.trackArr()});
+      // }
+      // if(this.state.graph_rowC.length===0){
+      //   this.setState({graph_rowC:this.createArr()});
+      //   // this.setState({track_rowC:this.trackArr()});
+      // }
+      // if(this.state.style_A.length===0){
+      //   this.setState({style_A:this.styleArr("#ff1493")});
+      // }
     });
     
     this.state.socket.on("update_service", (color) => {
       this.setState({style:color})
     });
     
-    this.state.socket.on("check_waiting", (nodes) => {
-      if(nodes !== 0){
-        var color = "blue"
-        var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
+    // this.state.socket.on("check_waiting", (nodes) => {
+    //   if(nodes !== 0){
+    //     var color = "blue"
+    //     var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
         
-        if(IP===this.state.IP[0]){
-          this.graphLogic(this.state.graph_rowA[0],0,this.state.track_row[0],color)
-        }
+    //     if(IP===this.state.IP[0]){
+    //       this.graphLogic(this.state.graph_rowA[0],0,this.state.track_row[0],color)
+    //     }
         
-        if(IP===this.state.IP[1]){
-          this.graphLogic(this.state.graph_rowA[1],1,this.state.track_row[1],color)
-        }
+    //     if(IP===this.state.IP[1]){
+    //       this.graphLogic(this.state.graph_rowA[1],1,this.state.track_row[1],color)
+    //     }
 
-        // this.setState({style_wait:this.state.style_blue});
-        // this.setState({style_bid:{color:this.state.just_red}});
-        // this.setState({style_win:{color:this.state.just_green}});
-      }
-    });
+    //     // this.setState({style_wait:this.state.style_blue});
+    //     // this.setState({style_bid:{color:this.state.just_red}});
+    //     // this.setState({style_win:{color:this.state.just_green}});
+    //   }
+    // });
     
-    this.state.socket.on("check_bidding", (nodes) => {
-      if(nodes !== []){
-        var color = "red"
-        var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
+    // this.state.socket.on("check_bidding", (nodes) => {
+    //   if(nodes !== []){
+    //     var color = "red"
+    //     var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
 
-        if(IP===this.state.IP[0]){
-          this.graphLogic(this.state.graph_rowB[0],0,this.state.track_row[0],color)
-        }
+    //     if(IP===this.state.IP[0]){
+    //       this.graphLogic(this.state.graph_rowB[0],0,this.state.track_row[0],color)
+    //     }
         
-        if(IP===this.state.IP[1]){
-          this.graphLogic(this.state.graph_rowB[1],1,this.state.track_row[1],color)
-        }
+    //     if(IP===this.state.IP[1]){
+    //       this.graphLogic(this.state.graph_rowB[1],1,this.state.track_row[1],color)
+    //     }
 
-        // this.setState({style_wait:{color:this.state.just_blue}});
-        // this.setState({style_bid:this.state.style_red});
-        // this.setState({style_win:{color:this.state.just_green}});
-      }
-    });
+    //     // this.setState({style_wait:{color:this.state.just_blue}});
+    //     // this.setState({style_bid:this.state.style_red});
+    //     // this.setState({style_win:{color:this.state.just_green}});
+    //   }
+    // });
     
-    this.state.socket.on("check_winning", (nodes) => {
-      if(nodes !== []){
-        var color = "#ff1493"
-        var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
+    // this.state.socket.on("check_winning", (nodes) => {
+    //   if(nodes !== []){
+    //     var color = "#ff1493"
+    //     var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
         
-        if(IP===this.state.IP[0]){
-          this.graphLogic(this.state.graph_rowC[0],0,this.state.track_row[0],color)
-        }
+    //     if(IP===this.state.IP[0]){
+    //       this.graphLogic(this.state.graph_rowC[0],0,this.state.track_row[0],color)
+    //     }
         
-        if(IP===this.state.IP[1]){
-          this.graphLogic(this.state.graph_rowC[1],1,this.state.track_row[1],color)
-        }
+    //     if(IP===this.state.IP[1]){
+    //       this.graphLogic(this.state.graph_rowC[1],1,this.state.track_row[1],color)
+    //     }
 
-        // this.setState({check:false});
-        // this.setState({style_wait:{color:this.state.just_blue}});
-        // this.setState({style_bid:{color:this.state.just_red}});
-        // this.setState({style_win:this.state.style_green});
-      }
-    });
+    //     // this.setState({check:false});
+    //     // this.setState({style_wait:{color:this.state.just_blue}});
+    //     // this.setState({style_bid:{color:this.state.just_red}});
+    //     // this.setState({style_win:this.state.style_green});
+    //   }
+    // });
   }
 
   componentWillUnmount() {
@@ -217,39 +217,40 @@ export class TableMain extends Component {
   }
 
   //I need to explain this logic. I will forget, its complicated
-  updateGraph = (data,track,i,color) => {
-    data[i] = <td style={{backgroundColor:color}}/>
-    track[i] = 2
-    console.log(track);
-    data.map((r,j) => {
-      if(j > i){
-        data[j] = <td style={{backgroundColor:""}}/>
-      }
-    });
-  }
+  // updateGraph = (data,track,i,color) => {
+  //   data[i] = <td style={{backgroundColor:color}}/>;
+  //   track[i] = 2;
+  //   console.log(track);
+  //   data.map((r,j) => {
+  //     if(j > i){
+  //       data[j] = <td style={{backgroundColor:""}}/>
+        
+  //     }
+  //   });
+  // }
 
-  graphLogic = (graph,x,track,color) => {
-    try{
-      var check = false;
-      track.map((data,i)=>{
-        if(i===8 && data===2 && check===false){
-          graph[i] = <td style={{backgroundColor:color}}/>
-          track.map((r,j) => {
-            if(j !== 0){
-              graph[j] = <td style={{backgroundColor:""}}/>
-              track[j] = 1
-            }
-          });
-          check = true;
-        }
-        else if(data===1 && check===false){
-          this.updateGraph(graph,track,i,color);     
-          check = true;
-          track[i] = 2;
-        }
-     });
-    }finally{}
-  }
+  // graphLogic = (graph,x,track,color) => {
+  //   try{
+  //     var check = false;
+  //     track.map((data,i)=>{
+  //       if(i===8 && data===2 && check===false){
+  //         graph[i] = <td style={{backgroundColor:color}}/>
+  //         track.map((r,j) => {
+  //           if(j !== 0){
+  //             graph[j] = <td style={{backgroundColor:""}}/>
+  //             track[j] = 1
+  //           }
+  //         });
+  //         check = true;
+  //       }
+  //       else if(data===1 && check===false){
+  //         this.updateGraph(graph,track,i,color);     
+  //         check = true;
+  //         track[i] = 2;
+  //       }
+  //    });
+  //   }finally{}
+  // }
 
   removeTrust = (e) => {
     e.preventDefault();
@@ -266,42 +267,42 @@ export class TableMain extends Component {
     this.setState({trust: e.currentTarget.value});
   }
 
-  createArr = (e) => {
-    // var arr = new Array(this.state.data.length);
-    var arr = new Array(100); //bug with getting length so hardcoded for now
-    this.state.data.map((data,i)=>{
-      arr[i] = [<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>];
-    });
-    return arr;
-  }
+  // createArr = (e) => {
+  //   // var arr = new Array(this.state.data.length);
+  //   var arr = new Array(100); //bug with getting length so hardcoded for now
+  //   this.state.data.map((data,i)=>{
+  //     arr[i] = [<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>];
+  //   });
+  //   return arr;
+  // }
 
-  trackArr = (e) => {
-    // var arr = new Array(this.state.data.length);
-    var arr = new Array(100);
-    this.state.data.map((data,i)=>{
-      arr[i] = [1,1,1,1,1,1,1,1,1];
-    });
-    return arr;
-  }
+  // trackArr = (e) => {
+  //   // var arr = new Array(this.state.data.length);
+  //   var arr = new Array(100);
+  //   this.state.data.map((data,i)=>{
+  //     arr[i] = [1,1,1,1,1,1,1,1,1];
+  //   });
+  //   return arr;
+  // }
 
-  styleArr = (color) => {
-    // var arr = new Array(this.state.data.length);
-    var arr = new Array(100);
-    this.state.data.map((data,i)=>{
-      arr[i] = {color:color};
-    });
-    return arr;
-  }
+  // styleArr = (color) => {
+  //   // var arr = new Array(this.state.data.length);
+  //   var arr = new Array(100);
+  //   this.state.data.map((data,i)=>{
+  //     arr[i] = {color:color};
+  //   });
+  //   return arr;
+  // }
 
   render() {
     return (
       <div>
 
-      <Col xs={2} md={2}>
+      <Col xs={3} md={3}>
         <ConsoleLog/>
       </Col>
 
-      <Col xs={7} md={7}>
+      <Col xs={6} md={6}>
         <Well className="TableMain">
           <Table>
             <thead>
@@ -309,8 +310,10 @@ export class TableMain extends Component {
                 <th>Node</th>
                 <th>Address</th>
                 <th>Services</th>
+              {/*}
                 <th>Current Step</th>
                 <th>Graph</th>
+              */}
               </tr>
             </thead>
             
@@ -336,11 +339,13 @@ export class TableMain extends Component {
                       })}
                     </td>
 
+                  {/*}
                     <td style={{verticalAlign:"middle"}}>
                       <p style={this.state.style_wait}>WAITING</p>
                       <p style={this.state.style_bid}>BIDDING</p>
                       <p style={this.state.style_A[i]}>SERVICE</p>
                     </td>
+                   
                    
                     <td style={{verticalAlign:"middle"}}>
                       <Table id="GraphTable" striped bordered condensed hover>
@@ -361,6 +366,7 @@ export class TableMain extends Component {
                         </tbody>
                       </Table>
                     </td>
+                  */}
                   </tr>
                 );
               })}
@@ -493,8 +499,6 @@ class FormSend extends Component {
   //   })
   // }
   fileInput = (e) => {
-
-    
     if (document.getElementById("myFile").value) {
       var file = document.getElementById("myFile").value;
       var reader = new FileReader();
@@ -505,18 +509,6 @@ class FormSend extends Component {
        return e;
     }
   }
-  //
-  //here is the string sent to the nodes:
-  /*
-    {"tag":"service","service":"print_file","file":"function (e) {
-      var file = document.getElementById('theFile').theFile[0];
-      if (file) {
-        var reader = new FileReader();
-        reader.readAsText(file);
-        return reader;
-      }
-    }"}
-  */
  
   render() {
     return (
@@ -641,7 +633,7 @@ export class ConsoleLog extends Component {
                       {this.filter_address(data)}
                     </h4>
                     {this.filter_tag(data)}
-                    {JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}
+                    {/*{JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}*/}
                     
                     </div>
                   </div>

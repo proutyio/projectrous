@@ -23,6 +23,7 @@ ukey = str(configuration.settings("frontend_key"))
 
 
 data = []
+console_data = []
 nodes = []
 removed = []
 wait_nodes = []
@@ -55,27 +56,27 @@ def discover_nodes():
 
 
 #
-@io.on('check_wait')
-def check_wait():
-	# check_waiting()
-	if wait_nodes:
-		emit("check_waiting", wait_nodes)
+# @io.on('check_wait')
+# def check_wait():
+# 	# check_waiting()
+# 	if wait_nodes:
+# 		emit("check_waiting", wait_nodes)
 
 
-#
-@io.on('check_bid')
-def check_bid():
-	# check_bidding()
-	if bid_nodes:
-		emit("check_bidding", bid_nodes)
+# #
+# @io.on('check_bid')
+# def check_bid():
+# 	# check_bidding()
+# 	if bid_nodes:
+# 		emit("check_bidding", bid_nodes)
 
 
-#
-@io.on('check_win')
-def check_win():
-	# check_winning()
-	if win_nodes:
-		emit("check_winning", win_nodes)
+# #
+# @io.on('check_win')
+# def check_win():
+# 	# check_winning()
+# 	if win_nodes:
+# 		emit("check_winning", win_nodes)
 
 #
 @io.on('send')
@@ -89,7 +90,7 @@ def send_message(message):
 def update_console():
 	mutex.acquire()
 	try:
-		emit("update_console", data)
+		emit("update_console", console_data)
 	finally:
 		mutex.release()
 
@@ -100,6 +101,7 @@ def erase_data():
 	mutex.acquire()
 	try:
 		del data[:]
+		del console_data[:]
 	finally:
 		mutex.release()
 
@@ -117,8 +119,7 @@ def remove_trust(block_ip):
 			for r in removed:
 				if r != str(0):
 					network.send_tcp_message(r,"key,ukey,"+newkey)
-		except:
-			pass
+		except: pass
 		if nodes:
 			for n in nodes:
 				node_ip = json.loads(n)['address']
@@ -133,25 +134,31 @@ def remove_trust(block_ip):
 
 
 #
-
-
 def thread_listener(sock, address):
 	while True:
 		message, (host,port) = sock.recvfrom(1024)
 		if message:
 			msg = encryption.decrypt(message, ukey)
 			try:
-				del wait_nodes[:]
-				del bid_nodes[:]
-				del win_nodes[:]
+				# del wait_nodes[:]
+				# del bid_nodes[:]
+				# del win_nodes[:]
 				if json.loads(msg)['tag'] == "stop": break
-				if json.loads(msg)['tag'] == "waiting": wait_nodes.append(json.dumps(msg))
-				if json.loads(msg)['tag'] == "bidding": bid_nodes.append(json.dumps(msg))
-				if json.loads(msg)['tag'] == "winner": win_nodes.append(json.dumps(msg))
+				# if json.loads(msg)['tag'] == "waiting": wait_nodes.append(json.dumps(msg))
+				# if json.loads(msg)['tag'] == "bidding": bid_nodes.append(json.dumps(msg))
+				# if json.loads(msg)['tag'] == "winner": win_nodes.append(json.dumps(msg))
 			except: pass
 			mutex.acquire()
 			try:
-				data.append(msg)
+				data.append(msg) #capture all messages
+				if json.loads(msg)['tag']!="whois" and json.loads(msg)['message']!="whois":
+					console_data.append(msg) 
+			except: 
+				try:
+					if json.loads(msg)['tag']!="whois":
+						console_data.append(msg)
+					print "fucked up"
+				except: pass
 			finally:
 				mutex.release()
 
@@ -192,6 +199,7 @@ def find_nodes():
 	finally:
 		# print nodes
 		del data[:]
+		del console_data[:]
 		mutex.release()
 
 
@@ -201,56 +209,53 @@ def find_nodes():
 
 
 #
-def check_waiting():
-	mutex.acquire()
-	try:
-		if data:
-			for d in data:
-				d = json.loads(d)
-				print d
-				if d['tag'] == "waiting":
-					wait_nodes.append(json.dumps(d))
+# def check_waiting():
+# 	mutex.acquire()
+# 	try:
+# 		if data:
+# 			for d in data:
+# 				d = json.loads(d)
+# 				print d
+# 				if d['tag'] == "waiting":
+# 					wait_nodes.append(json.dumps(d))
+# 	except:
+# 		pass
+# 	finally:
+# 		del wait_nodes[:]
+# 		mutex.release()
 
-	except:
-		pass
-	finally:
-		del wait_nodes[:]
-		mutex.release()
-
-#
-def check_winning():
-	mutex.acquire()
-	try:
-		if data:
-			for d in data:
-				d = json.loads(d)
-				print d
-				if d['tag'] == "winner":
-					win_nodes.append(json.dumps(d))
-
-	except:
-		pass
-	finally:
-		del win_nodes[:]
-		mutex.release()
+# #
+# def check_winning():
+# 	mutex.acquire()
+# 	try:
+# 		if data:
+# 			for d in data:
+# 				d = json.loads(d)
+# 				print d
+# 				if d['tag'] == "winner":
+# 					win_nodes.append(json.dumps(d))
+# 	except:
+# 		pass
+# 	finally:
+# 		del win_nodes[:]
+# 		mutex.release()
 
 
-#
-def check_bidding():
-	mutex.acquire()
-	try:
-		if data:
-			for d in data:
-				d = json.loads(d)
-				print d
-				if d['tag'] == "bidding":
-					bid_nodes.append(json.dumps(d))
-
-	except:
-		pass
-	finally:
-		del bid_nodes[:]
-		mutex.release()
+# #
+# def check_bidding():
+# 	mutex.acquire()
+# 	try:
+# 		if data:
+# 			for d in data:
+# 				d = json.loads(d)
+# 				print d
+# 				if d['tag'] == "bidding":
+# 					bid_nodes.append(json.dumps(d))
+# 	except:
+# 		pass
+# 	finally:
+# 		del bid_nodes[:]
+# 		mutex.release()
 
 
 #

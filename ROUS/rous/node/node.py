@@ -57,7 +57,6 @@ def wait_for_message(sock):
                     print json.loads(msg)
                 except:
                     print
-                    print "no good"
                     print msg
                 choose_path(msg, sock)
             except:
@@ -185,9 +184,6 @@ def finish_bidding(my_bid,msg):
             network.send_multicast_message(
                 '{"tag":"winner","address":"'+self_ip+'"}',ukey,self_ip)
             services.run_service(msg['service'],self_ip)
-            time.sleep(1)
-            network.send_multicast_message(
-            '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
         else:
             print "\tLOST" 
     except:
