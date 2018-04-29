@@ -178,7 +178,8 @@ def finish_bidding(my_bid,msg):
         if bids and (str(my_bid) >= max(bids)):
             print "\tWON"
             network.send_multicast_message(
-                '{"tag":"winner","address":"'+self_ip+'"}',ukey,self_ip)
+                '{"tag":"winner","address":"'+self_ip+'","service":"'+
+                msg['service']+'"}',ukey,self_ip)
             services.run_service(msg,ukey,self_ip)
         else:
             print "\tLOST" 

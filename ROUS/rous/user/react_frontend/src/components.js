@@ -426,7 +426,12 @@ export class ConsoleLog extends Component {
 
   filterTag = (data) => {
     if(JSON.parse(data)['tag']==="winner")
-      return <p style={{color:"green",fontWeight:"bold"}}>WINNER</p> 
+      return  <p style={{color:"green",fontWeight:"bold"}}>
+                WINNER
+                <p style={{fontWeight:"bold",color:"black"}}>
+                  {JSON.parse(data)['service']}
+                </p>
+              </p>
     else if(JSON.parse(data)['tag']==="bidding")
       return <p style={{color:"red",fontWeight:"bold"}}>BIDDING</p>
     else if(JSON.parse(data)['tag']==="waiting")
@@ -446,7 +451,7 @@ export class ConsoleLog extends Component {
                       Clear
               </Button>
             </h4>
-          <div style={{paddingBottom:"100px"}}>
+          <div style={{paddingBottom:"10px"}}>
             {this.state.data.map((data,i) =>{
                 if(i >= this.state.console_length){this.setState({data:[]});}
                 return (
