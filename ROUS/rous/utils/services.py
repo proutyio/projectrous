@@ -5,6 +5,7 @@ import time
 import rous.utils.config as config
 import rous.utils.printer as printer
 import rous.utils.rpi_control as rpi
+import rous.utils.network as network
 
 
 
@@ -12,17 +13,15 @@ import rous.utils.rpi_control as rpi
 def all_services():
 	jstr = '['
 	svc = config.all_services()
-	x=1
 	for s in svc:
 		jstr+='{"service":'+'"'+s+'"},'
-		x+=1
 	jstr = jstr[:-1]+']'
 	return jstr
 
 
-def run_service(msg, sender_address):
+def run_service(msg, ukey, sender_address):
 	if msg['service'] == "complex":
-		complex(msg)
+		complex(msg, ukey, sender_address)
 	elif not config.call_service(msg['service'], sender_address):
 		print "run service failed"
 		# log.info("%s Error - Failed to call serivce", sender_address)
@@ -52,8 +51,11 @@ def blue_off(sender_address):
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")
 
-def complex(msg):
-	print
-	print msg
-	print
-
+def complex(msg, ukey, sender_address):
+	services = msg['services'][1:-1].split("}")
+	for s in services:
+		s+="}"
+		if s[0] == ",":
+			s = s[1:]
+		network.send_multicast_message(s,ukey,sender_address)
+		time.sleep(1000);

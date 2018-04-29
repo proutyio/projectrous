@@ -49,46 +49,6 @@ export const PageTitle = (
 );
 
 
-
-/*#######################################*/
-// var check = false;
-// function graph_func(n = 40) {
-//   if(check === false){
-//     check = true;
-//     return .2;
-//   }
-//   else {
-//     check = false;
-//     return .1;
-//   }
-// }
-
-// class SparkGraph extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = { data: [] };
-//     setInterval(
-//       () =>
-//         this.setState({
-//           data:this.state.data.concat([graph_func()])
-//         }),
-//       500
-//     );
-//   }
-//   render() {
-//     return (
-//       <Col xs="2" md="4">
-//       <Sparklines data={this.state.data} limit={25}>
-//         <SparklinesLine color="#1c8cdc" />
-//         <SparklinesSpots/>
-//       </Sparklines>
-//       </Col>
-//     );
-//   }
-// };
-
-
-
 /*#######################################*/
 export class TableMain extends Component {
   constructor() {
@@ -170,33 +130,6 @@ export class TableMain extends Component {
     this.setState({trust: e.currentTarget.value});
   }
 
-  // createArr = (e) => {
-  //   // var arr = new Array(this.state.data.length);
-  //   var arr = new Array(100); //bug with getting length so hardcoded for now
-  //   this.state.data.map((data,i)=>{
-  //     arr[i] = [<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>,<td/>];
-  //   });
-  //   return arr;
-  // }
-
-  // trackArr = (e) => {
-  //   // var arr = new Array(this.state.data.length);
-  //   var arr = new Array(100);
-  //   this.state.data.map((data,i)=>{
-  //     arr[i] = [1,1,1,1,1,1,1,1,1];
-  //   });
-  //   return arr;
-  // }
-
-  // styleArr = (color) => {
-  //   // var arr = new Array(this.state.data.length);
-  //   var arr = new Array(100);
-  //   this.state.data.map((data,i)=>{
-  //     arr[i] = {color:color};
-  //   });
-  //   return arr;
-  // }
-
   render() {
     return (
       <div>
@@ -241,35 +174,6 @@ export class TableMain extends Component {
                         );
                       })}
                     </td>
-
-                  {/*}
-                    <td style={{verticalAlign:"middle"}}>
-                      <p style={this.state.style_wait}>WAITING</p>
-                      <p style={this.state.style_bid}>BIDDING</p>
-                      <p style={this.state.style_A[i]}>SERVICE</p>
-                    </td>
-                   
-                   
-                    <td style={{verticalAlign:"middle"}}>
-                      <Table id="GraphTable" striped bordered condensed hover>
-                        <thead>
-                          {this.state.row.map(()=>{
-                            return ( <th style={{borderTop:"1px solid #f5f5f5",
-                                  borderLeft:"1px solid #f5f5f5",
-                                  borderRight:"1px solid #f5f5f5",
-                                  backgroundColor:"#f5f5f5",
-                                  padding:"20px"}}></th>);
-                            })
-                          }
-                        </thead>
-                        <tbody>
-                          <tr>{this.state.graph_rowA[i]}</tr>
-                          <tr>{this.state.graph_rowB[i]}</tr>
-                          <tr>{this.state.graph_rowC[i]}</tr>
-                        </tbody>
-                      </Table>
-                    </td>
-                  */}
                   </tr>
                 );
               })}
@@ -384,7 +288,7 @@ class FormSend extends Component {
 
   complexSend = (e) => {
     e.preventDefault()
-    console.log(this.state.complex_values);
+    // console.log(this.state.complex_values);
     this.state.socket.emit('complex_send',this.state.complex_values); 
   };
 

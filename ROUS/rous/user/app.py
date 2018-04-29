@@ -64,8 +64,6 @@ def send_message(message):
 @io.on('complex_send')
 def complex_send(msg_lst):
 	message = build_complex(msg_lst)
-	print message
-	# print json.loads(msg_lst[0])
 	network.send_multicast_message(message,ukey,self_ip)
 
 #
@@ -115,14 +113,17 @@ def remove_trust(block_ip):
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
 
+
 #
 def build_complex(msg_lst):
 	msg = '['
 	for m in msg_lst:
-		msg+='{"service":'+'"'+m+'"},'
+		msg+=''+m+','
 	msg = msg[:-1]+']'
-	msg = '{"tag":"service","service":"complex","services":"'+msg+'"}'
+	msg = '{"tag":"service","service":"complex","services":'+json.dumps(msg)+'}'
+	print msg
 	return msg
+
 
 #
 def thread_listener(sock, address):
@@ -200,3 +201,5 @@ listener()
 network.start_tcp_server(self_ip)
 signal.signal(signal.SIGINT, partial(handle_ctrl_c))
 ###############################################
+
+

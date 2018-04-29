@@ -54,7 +54,6 @@ def wait_for_message(sock):
                 try:
                     print json.loads(msg)
                 except:
-                    print
                     print msg
                 choose_path(msg, sock)
             except:
@@ -180,7 +179,7 @@ def finish_bidding(my_bid,msg):
             print "\tWON"
             network.send_multicast_message(
                 '{"tag":"winner","address":"'+self_ip+'"}',ukey,self_ip)
-            services.run_service(msg,self_ip)
+            services.run_service(msg,ukey,self_ip)
         else:
             print "\tLOST" 
     except:
