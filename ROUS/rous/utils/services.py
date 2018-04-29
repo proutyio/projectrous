@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import threading
 # import logging as log
 import rous.utils.config as config
 import rous.utils.printer as printer
@@ -48,14 +49,21 @@ def blue_on(sender_address):
 def blue_off(sender_address):
 	rpi.off("blue")
 
+
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")
 
-def complex(msg, ukey, sender_address):
-	services = msg['services'][1:-1].split("}")
+
+def thread_complex(services,ukey,sender_address):
 	for s in services:
 		s+="}"
 		if s[0] == ",":
 			s = s[1:]
 		network.send_multicast_message(s,ukey,sender_address)
-		time.sleep(1000);
+		time.sleep(3);
+
+
+def complex(msg, ukey, sender_address):
+	services = msg['services'][1:-1].split("}")
+	t = threading.Thread(target=thread_complex,args=[services,ukey,sender_address])
+	t.start()

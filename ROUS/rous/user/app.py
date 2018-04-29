@@ -121,7 +121,6 @@ def build_complex(msg_lst):
 		msg+=''+m+','
 	msg = msg[:-1]+']'
 	msg = '{"tag":"service","service":"complex","services":'+json.dumps(msg)+'}'
-	print msg
 	return msg
 
 

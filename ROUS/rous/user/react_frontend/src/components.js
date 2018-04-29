@@ -170,7 +170,7 @@ export class TableMain extends Component {
                     <td style={{verticalAlign:"middle"}}>                  
                       {JSON.parse(parsed_data['services']).map((data,j) => {
                         return (
-                          <div id="service" key={j}>{data['service']}</div>
+                          <h4 id="service" key={j}>{data['service']}</h4>
                         );
                       })}
                     </td>
@@ -452,7 +452,7 @@ export class ConsoleLog extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       data: [],
-      console_length: 50,
+      console_length: 100,
     };
     
     setInterval(() => {
