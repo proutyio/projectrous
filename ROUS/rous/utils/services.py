@@ -20,8 +20,10 @@ def all_services():
 	return jstr
 
 
-def run_service(service, sender_address):
-	if not config.call_service(service, sender_address):
+def run_service(msg, sender_address):
+	if msg['service'] == "complex":
+		complex(msg)
+	elif not config.call_service(msg['service'], sender_address):
 		print "run service failed"
 		# log.info("%s Error - Failed to call serivce", sender_address)
 
@@ -49,4 +51,9 @@ def blue_off(sender_address):
 
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")
+
+def complex(msg):
+	print
+	print msg
+	print
 

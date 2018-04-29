@@ -44,8 +44,6 @@ pause_interval = 0
 
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
-    network.send_multicast_message(
-            '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
     while True:
         message, (host,port) = sock.recvfrom(1024)
 
@@ -126,7 +124,6 @@ def info_path(): pass
 def error_path(): pass
 
 
-
 #calls function in services module that returns list of
 #   services in services module. Then loop list and find if
 #   input string is in list.
@@ -183,7 +180,7 @@ def finish_bidding(my_bid,msg):
             print "\tWON"
             network.send_multicast_message(
                 '{"tag":"winner","address":"'+self_ip+'"}',ukey,self_ip)
-            services.run_service(msg['service'],self_ip)
+            services.run_service(msg,self_ip)
         else:
             print "\tLOST" 
     except:

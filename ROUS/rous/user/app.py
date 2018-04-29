@@ -54,36 +54,19 @@ def discover_nodes():
 	sorted_nodes = sorted(nodes, key=lambda n: json.loads(n)['address'], reverse=False)
 	emit("discover_nodes", sorted_nodes)
 
-
-#
-# @io.on('check_wait')
-# def check_wait():
-# 	# check_waiting()
-# 	if wait_nodes:
-# 		emit("check_waiting", wait_nodes)
-
-
-# #
-# @io.on('check_bid')
-# def check_bid():
-# 	# check_bidding()
-# 	if bid_nodes:
-# 		emit("check_bidding", bid_nodes)
-
-
-# #
-# @io.on('check_win')
-# def check_win():
-# 	# check_winning()
-# 	if win_nodes:
-# 		emit("check_winning", win_nodes)
-
 #
 @io.on('send')
 def send_message(message):
 	print message
 	network.send_multicast_message(message,ukey,self_ip)
 
+
+@io.on('complex_send')
+def complex_send(msg_lst):
+	message = build_complex(msg_lst)
+	print message
+	# print json.loads(msg_lst[0])
+	network.send_multicast_message(message,ukey,self_ip)
 
 #
 @io.on('console')
@@ -132,6 +115,14 @@ def remove_trust(block_ip):
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
 
+#
+def build_complex(msg_lst):
+	msg = '['
+	for m in msg_lst:
+		msg+='{"service":'+'"'+m+'"},'
+	msg = msg[:-1]+']'
+	msg = '{"tag":"service","service":"complex","services":"'+msg+'"}'
+	return msg
 
 #
 def thread_listener(sock, address):
@@ -140,24 +131,17 @@ def thread_listener(sock, address):
 		if message:
 			msg = encryption.decrypt(message, ukey)
 			try:
-				# del wait_nodes[:]
-				# del bid_nodes[:]
-				# del win_nodes[:]
 				if json.loads(msg)['tag'] == "stop": break
-				# if json.loads(msg)['tag'] == "waiting": wait_nodes.append(json.dumps(msg))
-				# if json.loads(msg)['tag'] == "bidding": bid_nodes.append(json.dumps(msg))
-				# if json.loads(msg)['tag'] == "winner": win_nodes.append(json.dumps(msg))
 			except: pass
 			mutex.acquire()
 			try:
-				data.append(msg) #capture all messages
+				data.append(msg) 
 				if json.loads(msg)['tag']!="whois" and json.loads(msg)['message']!="whois":
 					console_data.append(msg) 
 			except: 
 				try:
 					if json.loads(msg)['tag']!="whois":
 						console_data.append(msg)
-					print "fucked up"
 				except: pass
 			finally:
 				mutex.release()
@@ -189,24 +173,15 @@ def find_nodes():
 								check = True
 								break
 						if not check:
-							# print json.dumps(d)
 							nodes.append(json.dumps(d))
 					else:
-						# print json.dumps(d)
 						nodes.append(json.dumps(d))
 	except:
 		pass
 	finally:
-		# print nodes
 		del data[:]
 		del console_data[:]
 		mutex.release()
-
-
-#
-# def
-
-
 
 
 

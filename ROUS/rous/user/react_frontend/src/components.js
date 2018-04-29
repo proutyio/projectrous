@@ -96,35 +96,10 @@ export class TableMain extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
-      graphdata:[],
-      graph_rowA:[],
-      graph_rowB:[],
-      graph_rowC:[],
-      track_row:[],
-      track_rowB:[],
-      track_rowC:[],
-      style_A:[],
       trust:'',
-      check:false,
-      row:[1,1,1,1,1,1,1,1,1],
-      // style_graph:"#1c8cdc",
-      style_wait:{color:"blue"},
-      style_bid:{color:"red"},
-      style_win:{color:"#ff1493"},
-      style_blue:{color:"blue", borderStyle:"solid",borderColor:"blue",borderWidth:"4px"},
-      style_green:{color:"#ff1493", borderStyle:"solid",borderColor:"#ff1493",borderWidth:"4px"},
-      style_red:{color:"red", borderStyle:"solid",borderColor:"red",borderWidth:"4px"},
-      just_blue:"blue",
-      just_green:"#ff1493",
-      just_red:"red",
+      check:false,   
       IP:['192.168.0.101','192.168.0.102'],
     };
-
-    // setInterval(() => {
-    //   this.state.socket.emit("check_wait")
-    //   this.state.socket.emit("check_bid")
-    //   this.state.socket.emit("check_win")
-    // },500);
     
     setInterval(() => {
       this.state.socket.emit("whois");
@@ -132,85 +107,12 @@ export class TableMain extends Component {
 
     this.state.socket.on("discover_nodes", (nodes)=> {
       this.setState({ data: nodes });
-      
-      // if(this.state.graph_rowA.length===0){
-      //   this.setState({graph_rowA:this.createArr()});
-      //   this.setState({track_row:this.trackArr()});
-      // }
-      // if(this.state.graph_rowB.length===0){
-      //   this.setState({graph_rowB:this.createArr()});
-      //   // this.setState({track_rowB:this.trackArr()});
-      // }
-      // if(this.state.graph_rowC.length===0){
-      //   this.setState({graph_rowC:this.createArr()});
-      //   // this.setState({track_rowC:this.trackArr()});
-      // }
-      // if(this.state.style_A.length===0){
-      //   this.setState({style_A:this.styleArr("#ff1493")});
-      // }
     });
     
     this.state.socket.on("update_service", (color) => {
       this.setState({style:color})
     });
     
-    // this.state.socket.on("check_waiting", (nodes) => {
-    //   if(nodes !== 0){
-    //     var color = "blue"
-    //     var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
-        
-    //     if(IP===this.state.IP[0]){
-    //       this.graphLogic(this.state.graph_rowA[0],0,this.state.track_row[0],color)
-    //     }
-        
-    //     if(IP===this.state.IP[1]){
-    //       this.graphLogic(this.state.graph_rowA[1],1,this.state.track_row[1],color)
-    //     }
-
-    //     // this.setState({style_wait:this.state.style_blue});
-    //     // this.setState({style_bid:{color:this.state.just_red}});
-    //     // this.setState({style_win:{color:this.state.just_green}});
-    //   }
-    // });
-    
-    // this.state.socket.on("check_bidding", (nodes) => {
-    //   if(nodes !== []){
-    //     var color = "red"
-    //     var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
-
-    //     if(IP===this.state.IP[0]){
-    //       this.graphLogic(this.state.graph_rowB[0],0,this.state.track_row[0],color)
-    //     }
-        
-    //     if(IP===this.state.IP[1]){
-    //       this.graphLogic(this.state.graph_rowB[1],1,this.state.track_row[1],color)
-    //     }
-
-    //     // this.setState({style_wait:{color:this.state.just_blue}});
-    //     // this.setState({style_bid:this.state.style_red});
-    //     // this.setState({style_win:{color:this.state.just_green}});
-    //   }
-    // });
-    
-    // this.state.socket.on("check_winning", (nodes) => {
-    //   if(nodes !== []){
-    //     var color = "#ff1493"
-    //     var IP = JSON.parse(nodes[0]).toString().split(":")[2].replace(/}|"/g,'');
-        
-    //     if(IP===this.state.IP[0]){
-    //       this.graphLogic(this.state.graph_rowC[0],0,this.state.track_row[0],color)
-    //     }
-        
-    //     if(IP===this.state.IP[1]){
-    //       this.graphLogic(this.state.graph_rowC[1],1,this.state.track_row[1],color)
-    //     }
-
-    //     // this.setState({check:false});
-    //     // this.setState({style_wait:{color:this.state.just_blue}});
-    //     // this.setState({style_bid:{color:this.state.just_red}});
-    //     // this.setState({style_win:this.state.style_green});
-    //   }
-    // });
   }
 
   componentWillUnmount() {
@@ -458,7 +360,9 @@ class FormSend extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       message: '',
+      complex_msg: '',
       show: false,
+      complex_values: [],
       file_contents: "no content",
       g_on:'{"tag":"service","service":"green_on"}',
       g_off: '{"tag":"service","service":"green_off"}',
@@ -478,8 +382,18 @@ class FormSend extends Component {
     this.state.socket.emit('send',this.state.message); 
   };
 
+  complexSend = (e) => {
+    e.preventDefault()
+    console.log(this.state.complex_values);
+    this.state.socket.emit('complex_send',this.state.complex_values); 
+  };
+
   messageChange = (e) => {
     this.setState({message: e.target.value});
+  };
+
+  complexChange = (e) => {
+    this.setState({complex_values:e});
   };
 
   handleChange = (e) => {    
@@ -489,13 +403,12 @@ class FormSend extends Component {
   };
 
   handleClose = (e) => {
-    this.setState({ show: false });
-  }
+    this.setState({show:false});
+  };
 
   handleShow = (e) => {
-    this.setState({ show: true });
-  }
-    
+    this.setState({show:true});
+  };
   // handleFileUpload({ file }) {
   //   const file = files[0];
   //   this.props.actions.uploadRequest({
@@ -533,7 +446,8 @@ class FormSend extends Component {
         <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
         <ButtonToolbar className="text-center" style={{margin:"10px"}}>
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-            <ToggleButton style={{padding:"15px",fontWeight:"bold"}} onChange={this.handleShow}>
+            <ToggleButton style={{padding:"15px",fontWeight:"bold"}} 
+                          onChange={this.handleShow}>
                           Complex Job</ToggleButton>
             <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
                           value={this.state.g_on} onChange={this.messageChange}>
@@ -576,30 +490,31 @@ class FormSend extends Component {
           </Modal.Header>
           <Modal.Body>
               <div className="text-center">
-                <Form horizontal onSubmit={this.send}>
+                <Form horizontal onSubmit={this.complexSend}>
                   <h4>Select Services</h4>
-                  <ToggleButtonGroup type="checkbox" value={this.state.value} vertical>
-                    
+                  <ToggleButtonGroup type="checkbox" 
+                                    onChange={this.complexChange}
+                                    vertical>
                     <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
-                            value={this.state.g_on} onChange={this.messageChange}>
-                            Green ON</ToggleButton>
+                                  value={this.state.g_on}>
+                                  Green ON</ToggleButton>
                     <ToggleButton style={{padding:"15px",color:"green"}}
-                                  value={this.state.g_off} onChange={this.messageChange}>
+                                  value={this.state.g_off}>
                                   Green OFF</ToggleButton>
                     <ToggleButton style={{padding:"15px",color:"red"}}
-                                  value={this.state.r_on} onChange={this.messageChange}>
+                                  value={this.state.r_on}>
                                   Red ON</ToggleButton>
                     <ToggleButton style={{padding:"15px",color:"red"}}
-                                  value={this.state.r_off} onChange={this.messageChange}>
+                                  value={this.state.r_off}>
                                   Red OFF</ToggleButton>
                     <ToggleButton style={{padding:"15px",color:"blue"}}
-                                  value={this.state.b_on} onChange={this.messageChange}>
+                                  value={this.state.b_on}>
                                   Blue ON</ToggleButton>
                     <ToggleButton style={{padding:"15px",color:"blue"}}
-                                  value={this.state.b_off} onChange={this.messageChange}>
+                                  value={this.state.b_off}>
                                   Blue OFF</ToggleButton>
                     <ToggleButton style={{padding:"15px"}}
-                                  value={this.state.print} onChange={this.handleChange}>
+                                  value={this.state.print}>
                                   Print File
                                   <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
                                   </ToggleButton>
@@ -608,7 +523,7 @@ class FormSend extends Component {
                     <Col>
                       <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                               onClick={this.handleClose}
-                              type="submit">send to node network
+                              type="submit">submit complex job
                       </Button>
                     </Col>
                   </FormGroup>
@@ -633,11 +548,12 @@ export class ConsoleLog extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       data: [],
+      console_length: 50,
     };
     
     setInterval(() => {
       this.state.socket.emit("console");
-    },1000);
+    },900);
     
     this.state.socket.on("update_console", (data)=> 
       this.setState({ data: this.state.data.concat(data) }));
@@ -677,7 +593,7 @@ export class ConsoleLog extends Component {
         </h4>
         <div style={{paddingBottom:"100px"}}>
           {this.state.data.map((data,i) =>{
-              if(i >=18){
+              if(i >=this.state.console_length){
                 this.setState({data:[]});
               }
               return (
