@@ -124,7 +124,7 @@ def build_complex(msg_lst):
 	return msg
 
 
-#
+# lots of try except so I can allow some cases to be able to fail
 def thread_listener(sock, address):
 	while True:
 		message, (host,port) = sock.recvfrom(1024)

@@ -13,12 +13,12 @@ import {
   FormGroup,
   // FormControl,
   Col,
-  Row,
+  // Row,
   // ControlLabel,
   PageHeader,
   Radio,
   ListGroup,
-  ListGroupItem,
+  // ListGroupItem,
   ToggleButtonGroup,
   ToggleButton,
   ButtonToolbar,
@@ -38,7 +38,6 @@ export const NavBarTop = (
     </Nav>
   </Navbar>
 );
-
 
 
 /*#######################################*/
@@ -79,42 +78,6 @@ export class TableMain extends Component {
     clearInterval();
   }
 
-  //I need to explain this logic. I will forget, its complicated
-  // updateGraph = (data,track,i,color) => {
-  //   data[i] = <td style={{backgroundColor:color}}/>;
-  //   track[i] = 2;
-  //   console.log(track);
-  //   data.map((r,j) => {
-  //     if(j > i){
-  //       data[j] = <td style={{backgroundColor:""}}/>
-        
-  //     }
-  //   });
-  // }
-
-  // graphLogic = (graph,x,track,color) => {
-  //   try{
-  //     var check = false;
-  //     track.map((data,i)=>{
-  //       if(i===8 && data===2 && check===false){
-  //         graph[i] = <td style={{backgroundColor:color}}/>
-  //         track.map((r,j) => {
-  //           if(j !== 0){
-  //             graph[j] = <td style={{backgroundColor:""}}/>
-  //             track[j] = 1
-  //           }
-  //         });
-  //         check = true;
-  //       }
-  //       else if(data===1 && check===false){
-  //         this.updateGraph(graph,track,i,color);     
-  //         check = true;
-  //         track[i] = 2;
-  //       }
-  //    });
-  //   }finally{}
-  // }
-
   removeTrust = (e) => {
     e.preventDefault();
     console.log(this.state.trust);
@@ -146,10 +109,7 @@ export class TableMain extends Component {
                 <th>Node</th>
                 <th>Address</th>
                 <th>Services</th>
-              {/*}
-                <th>Current Step</th>
-                <th>Graph</th>
-              */}
+                <th>Result</th>
               </tr>
             </thead>
             
@@ -220,6 +180,7 @@ export class TableMain extends Component {
                 </Button>
               </FormGroup>
             </Form> 
+
           </Well>
         </Col>
 
@@ -336,17 +297,6 @@ class FormSend extends Component {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
         <Form horizontal onSubmit={this.send}>
-         {/* <FormGroup controlId="">
-            <Col componentClass={ControlLabel} sm={9}>
-              <p>Send a message into the node network. {str}</p>
-            </Col>
-            <Col sm={12}>
-              <FormControl type="text" 
-                 className="form-control" 
-                 value={this.state.message} 
-                 onChange={this.messageChange}/>
-            </Col>
-          </FormGroup>*/}
         <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
         <ButtonToolbar className="text-center" style={{margin:"10px"}}>
           <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
@@ -387,10 +337,9 @@ class FormSend extends Component {
           </FormGroup>
         </Form> 
 
-
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-              <Modal.Title>Complex Jobs</Modal.Title>
+              <Modal.Title>Complex Job</Modal.Title>
           </Modal.Header>
           <Modal.Body>
               <div className="text-center">
@@ -467,56 +416,56 @@ export class ConsoleLog extends Component {
     clearInterval();
   }
 
-  filter_address = (data) => {
+  filterAddress = (data) => {
     if(JSON.parse(data)['address']==='192.168.0.105')
       return ''
     else
       return JSON.parse(data)['address']
 
-  }
+  };
 
-  filter_tag = (data) => {
+  filterTag = (data) => {
     if(JSON.parse(data)['tag']==="winner")
       return <p style={{color:"green",fontWeight:"bold"}}>WINNER</p> 
     else if(JSON.parse(data)['tag']==="bidding")
       return <p style={{color:"red",fontWeight:"bold"}}>BIDDING</p>
     else if(JSON.parse(data)['tag']==="waiting")
       return <p style={{color:"blue",fontWeight:"bold"}}>WAITING</p>
-    else if (JSON.parse(data)['tag']==="timer")
-      return ""
     else
       return ""
-  }
+  };
 
   render() {
     return (
       <Well style={{marginTop:"20px"}}>
-      <ListGroup>
-        <h4 id="Console_h4" className="text-center">
-          Console Log
-        </h4>
-        <div style={{paddingBottom:"100px"}}>
-          {this.state.data.map((data,i) =>{
-              if(i >=this.state.console_length){
-                this.setState({data:[]});
-              }
-              return (
-                <div className="text-center">
-                  <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
-                    <div id="Console_div">
-                    <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
-                      {this.filter_address(data)}
-                    </h4>
-                    {this.filter_tag(data)}
-                    {/*{JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}*/}
-                    
+        <ListGroup>
+            <h4 id="Console_h4" className="text-center">
+              Console Log
+              <Button style={{marginLeft:"5%"}} 
+                      onClick={()=>{this.setState({data:[]});}}>
+                      Clear
+              </Button>
+            </h4>
+          <div style={{paddingBottom:"100px"}}>
+            {this.state.data.map((data,i) =>{
+                if(i >= this.state.console_length){this.setState({data:[]});}
+                return (
+                  <div className="text-center">
+                    <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
+                      <div id="Console_div">
+                      <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
+                        {this.filterAddress(data)}
+                      </h4>
+                      {this.filterTag(data)}
+                      {/*{JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}*/}
+                      
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-          })}
-        </div>
-      </ListGroup>
+                );
+            })}
+          </div>
+        </ListGroup>
       </Well>
     );
   }

@@ -6,7 +6,6 @@ import {
   NavBarTop,
   PageTitle,
   TableMain,
-  ConsoleLog,
 } from "./components";
 
 
