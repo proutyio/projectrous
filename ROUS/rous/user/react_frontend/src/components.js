@@ -440,6 +440,20 @@ export class ConsoleLog extends Component {
       return ""
   };
 
+  printNeeded = (data) => {
+    if ((this.filterTag(data)) === ""){
+      return
+    }
+    else {
+      return ([
+        <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
+          {this.filterAddress(data)}
+        </h4>,
+          this.filterTag(data),
+      ])   
+    }
+  }
+
   render() {
     return (
       <Well style={{marginTop:"20px"}}>
@@ -458,10 +472,8 @@ export class ConsoleLog extends Component {
                   <div className="text-center">
                     <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
                       <div id="Console_div">
-                      <h4 style={{fontWeight:"bold",color:"#D73F09"}}>
-                        {this.filterAddress(data)}
-                      </h4>
-                      {this.filterTag(data)}
+                        
+                        {this.printNeeded(data)}
                       {/*{JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}*/}
                       
                       </div>
