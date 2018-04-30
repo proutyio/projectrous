@@ -56,6 +56,7 @@ export class TableMain extends Component {
       socket:socketIOClient("http://127.0.0.1:4242",{'forceNew': true}),
       data:[],
       trust:'',
+      untrusted:[],
       check:false,   
       IP:['192.168.0.101','192.168.0.102'],
     };
@@ -71,7 +72,6 @@ export class TableMain extends Component {
     this.state.socket.on("update_service", (color) => {
       this.setState({style:color})
     });
-    
   }
 
   componentWillUnmount() {
@@ -81,8 +81,17 @@ export class TableMain extends Component {
   removeTrust = (e) => {
     e.preventDefault();
     console.log(this.state.trust);
-    var t = this.state.trust;
-    this.state.socket.emit("trust", t);
+
+    if(this.state.trust !== '0'){
+      this.setState({untrusted: this.state.untrusted.concat(this.state.trust)});
+      this.state.untrusted.map((data,i)=>{
+        this.state.socket.emit("trust",data);
+      });
+    }
+    else{
+      this.state.socket.emit("trust",this.state.trust);
+      this.setState({untrusted:[]});
+    }
   }
 
   nodeSize = (e) => {
@@ -178,6 +187,12 @@ export class TableMain extends Component {
                 <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                         type="submit">remove trust
                 </Button>
+              </FormGroup>
+              <FormGroup className="text-center">
+                <h5>Untrusted Nodes:</h5>
+                {this.state.untrusted.map((data,i)=>{
+                  return <h4 style={{color:"red"}}>{data}</h4>
+                })}
               </FormGroup>
             </Form> 
 
