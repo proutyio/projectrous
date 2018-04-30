@@ -63,6 +63,7 @@ def send_message(message):
 
 @io.on('complex_send')
 def complex_send(msg_lst):
+	print msg_lst
 	message = build_complex(msg_lst)
 	network.send_multicast_message(message,ukey,self_ip)
 

@@ -274,6 +274,7 @@ class FormSend extends Component {
   complexSend = (e) => {
     e.preventDefault()
     this.state.socket.emit('complex_send',this.state.complex_values); 
+    this.setState({complex_values:[]})
   };
 
   messageChange = (e) => {
@@ -290,7 +291,6 @@ class FormSend extends Component {
 
   handleClose = (e) => {
     this.setState({show:false});
-    this.setState({complex_values:[]})
   };
 
   handleShow = (e) => {
@@ -342,8 +342,6 @@ class FormSend extends Component {
                             value={this.state.print} onChange={this.messageChange}>
                             Print File
                             <input type="file" onChange={(e)=>this.handleChange(e.target.files)}/>
-
-                         
                             </ToggleButton>
             </ToggleButtonGroup>
           </ButtonToolbar>
