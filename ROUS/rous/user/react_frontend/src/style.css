@@ -79,7 +79,7 @@ svg {
 	/*color: #D73F09;*/
 	/*font-weight: regular;*/
 	font-size: 14px;
-	margin: 0px 0px 0px 0px
+	margin: 0px 0px 0px 0px;
 }
 
 #GraphTable {
@@ -90,5 +90,10 @@ svg {
 	padding:20px;
 }
 
-
+#service {
+	text-shadow: .1px .1px;
+	/*font-weight: bold;*/
+	font-size:16px;
+	margin-top: 10%;
+}
 

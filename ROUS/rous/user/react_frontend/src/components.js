@@ -39,7 +39,6 @@ export const NavBarTop = (
   </Navbar>
 );
 
-
 /*#######################################*/
 export const PageTitle = (
   <PageHeader id="PageTitle">
@@ -47,6 +46,14 @@ export const PageTitle = (
   </PageHeader>
 );
 
+/*#######################################*/
+function removeAndCapitalize(str){
+  str = str.charAt(0).toUpperCase()+str.slice(1);
+  str = str.replace('_',' ');
+  return str.replace(/\w\S*/g, (t)=>{
+    return t.charAt(0).toUpperCase()+t.substr(1).toLowerCase();
+  });
+}
 
 /*#######################################*/
 export class TableMain extends Component {
@@ -92,15 +99,15 @@ export class TableMain extends Component {
       this.state.socket.emit("trust",this.state.trust);
       this.setState({untrusted:[]});
     }
-  }
+  };
 
   nodeSize = (e) => {
     return this.state.data.length;
-  }
+  };
 
   changeTrust = (e) => {
     this.setState({trust: e.currentTarget.value});
-  }
+  };
 
   render() {
     return (
@@ -139,7 +146,9 @@ export class TableMain extends Component {
                     <td style={{verticalAlign:"middle"}}>                  
                       {JSON.parse(parsed_data['services']).map((data,j) => {
                         return (
-                          <h4 id="service" key={j}>{data['service']}</h4>
+                          <h4 id="service" key={j}>
+                            {removeAndCapitalize(data['service'])}
+                          </h4>
                         );
                       })}
                     </td>
@@ -275,10 +284,8 @@ class FormSend extends Component {
     this.setState({complex_values:e});
   };
 
-  handleChange = (e) => {    
-    var contents = document.getElementById("myFile").value;
-    this.setState({file_contents: contents})
-    this.setState({message: e.target.value});
+  handleChange = (file) => {   
+    console.log(file[0]);
   };
 
   handleClose = (e) => {
@@ -289,24 +296,19 @@ class FormSend extends Component {
   handleShow = (e) => {
     this.setState({show:true});
   };
-  // handleFileUpload({ file }) {
-  //   const file = files[0];
-  //   this.props.actions.uploadRequest({
-  //      file,
-  //      name: 'Awesome Cat Pic'
-  //   })
+
+  // fileInput = (e) => {
+  //   if (document.getElementById("myFile").value) {
+  //     var file = document.getElementById("myFile").value;
+  //     console.log(file);
+  //     var reader = new FileReader();
+  //     reader.readAsText(file);
+  //      return reader;
+  //   }
+  //   else{
+  //      return e;
+  //   }
   // }
-  fileInput = (e) => {
-    if (document.getElementById("myFile").value) {
-      var file = document.getElementById("myFile").value;
-      var reader = new FileReader();
-      reader.readAsText(file);
-       return reader;
-    }
-    else{
-       return e;
-    }
-  }
  
   render() {
     return (
@@ -337,9 +339,11 @@ class FormSend extends Component {
                             value={this.state.b_off} onChange={this.messageChange}>
                             Blue OFF</ToggleButton>
               <ToggleButton style={{padding:"15px"}}
-                            value={this.state.print} onChange={this.handleChange}>
+                            value={this.state.print} onChange={this.messageChange}>
                             Print File
-                            <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
+                            <input type="file" onChange={(e)=>this.handleChange(e.target.files)}/>
+
+                         
                             </ToggleButton>
             </ToggleButtonGroup>
           </ButtonToolbar>
@@ -390,7 +394,7 @@ class FormSend extends Component {
                   </ToggleButtonGroup>
                   {this.state.complex_values.map((data,i)=>{
                       return <p style={{textAlign:"left",marginLeft:"43%"}}>
-                                {i+1}: {JSON.parse(data)['service']}
+                                {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
                               </p>  
                   })}
                   <FormGroup className="text-center" style={{marginTop:"20px"}}>
@@ -464,7 +468,7 @@ export class ConsoleLog extends Component {
       return ""
   };
 
-  printNeeded = (data) => {
+  consoleOutput = (data) => {
     if ((this.filterTag(data)) === ""){
       return
     }
@@ -496,10 +500,7 @@ export class ConsoleLog extends Component {
                   <div className="text-center">
                     <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
                       <div id="Console_div">
-                        
-                        {this.printNeeded(data)}
-                      {/*{JSON.parse(data)['message']?<p>{JSON.parse(data)['message']}</p>:''}*/}
-                      
+                        {this.consoleOutput(data)}                      
                       </div>
                     </div>
                   </div>
