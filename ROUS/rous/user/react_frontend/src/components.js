@@ -264,7 +264,6 @@ class FormSend extends Component {
 
   complexSend = (e) => {
     e.preventDefault()
-    // console.log(this.state.complex_values);
     this.state.socket.emit('complex_send',this.state.complex_values); 
   };
 
@@ -284,6 +283,7 @@ class FormSend extends Component {
 
   handleClose = (e) => {
     this.setState({show:false});
+    this.setState({complex_values:[]})
   };
 
   handleShow = (e) => {
@@ -312,39 +312,39 @@ class FormSend extends Component {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
         <Form horizontal onSubmit={this.send}>
-        <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
-        <ButtonToolbar className="text-center" style={{margin:"10px"}}>
-          <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-            <ToggleButton style={{padding:"15px",fontWeight:"bold"}} 
-                          onChange={this.handleShow}>
-                          Complex Job</ToggleButton>
-            <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
-                          value={this.state.g_on} onChange={this.messageChange}>
-                          Green ON</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"green"}}
-                          value={this.state.g_off} onChange={this.messageChange}>
-                          Green OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"red"}}
-                          value={this.state.r_on} onChange={this.messageChange}>
-                          Red ON</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"red"}}
-                          value={this.state.r_off} onChange={this.messageChange}>
-                          Red OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"blue"}}
-                          value={this.state.b_on} onChange={this.messageChange}>
-                          Blue ON</ToggleButton>
-            <ToggleButton style={{padding:"15px",color:"blue"}}
-                          value={this.state.b_off} onChange={this.messageChange}>
-                          Blue OFF</ToggleButton>
-            <ToggleButton style={{padding:"15px"}}
-                          value={this.state.print} onChange={this.handleChange}>
-                          Print File
-                          <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
-                          </ToggleButton>
-          </ToggleButtonGroup>
-        </ButtonToolbar>
-   
-         <FormGroup className="text-center" style={{marginTop:"20px"}}>
+          <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
+          <ButtonToolbar className="text-center" style={{margin:"10px",marginBottom:"15px"}}>
+            <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
+              <ToggleButton style={{padding:"15px",fontWeight:"bold"}} 
+                            onChange={this.handleShow}>
+                            Complex Job</ToggleButton>
+              <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
+                            value={this.state.g_on} onChange={this.messageChange}>
+                            Green ON</ToggleButton>
+              <ToggleButton style={{padding:"15px",color:"green"}}
+                            value={this.state.g_off} onChange={this.messageChange}>
+                            Green OFF</ToggleButton>
+              <ToggleButton style={{padding:"15px",color:"red"}}
+                            value={this.state.r_on} onChange={this.messageChange}>
+                            Red ON</ToggleButton>
+              <ToggleButton style={{padding:"15px",color:"red"}}
+                            value={this.state.r_off} onChange={this.messageChange}>
+                            Red OFF</ToggleButton>
+              <ToggleButton style={{padding:"15px",color:"blue"}}
+                            value={this.state.b_on} onChange={this.messageChange}>
+                            Blue ON</ToggleButton>
+              <ToggleButton style={{padding:"15px",color:"blue"}}
+                            value={this.state.b_off} onChange={this.messageChange}>
+                            Blue OFF</ToggleButton>
+              <ToggleButton style={{padding:"15px"}}
+                            value={this.state.print} onChange={this.handleChange}>
+                            Print File
+                            <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
+                            </ToggleButton>
+            </ToggleButtonGroup>
+          </ButtonToolbar>
+          
+          <FormGroup className="text-center" style={{marginTop:"20px"}}>
             <Col>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
                       type="submit">send to node network</Button>
@@ -362,7 +362,8 @@ class FormSend extends Component {
                   <h4>Select Services</h4>
                   <ToggleButtonGroup type="checkbox" 
                                     onChange={this.complexChange}
-                                    vertical>
+                                    vertical
+                                    style={{marginBottom:"15px"}}>
                     <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
                                   value={this.state.g_on}>
                                   Green ON</ToggleButton>
@@ -387,9 +388,17 @@ class FormSend extends Component {
                                   <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
                                   </ToggleButton>
                   </ToggleButtonGroup>
+                  {this.state.complex_values.map((data,i)=>{
+                      return <p style={{textAlign:"left",marginLeft:"43%"}}>
+                                {i+1}: {JSON.parse(data)['service']}
+                              </p>  
+                  })}
                   <FormGroup className="text-center" style={{marginTop:"20px"}}>
                     <Col>
-                      <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+                      <Button style={{backgroundColor:"#D73F09",
+                                      color:"#FFFFFF",
+                                      padding:"10px 120px 10px 120px"
+                                    }} 
                               onClick={this.handleClose}
                               type="submit">submit complex job
                       </Button>
