@@ -63,7 +63,6 @@ def send_message(message):
 
 @io.on('complex_send')
 def complex_send(msg_lst):
-	print msg_lst
 	message = build_complex(msg_lst)
 	network.send_multicast_message(message,ukey,self_ip)
 
@@ -96,7 +95,8 @@ def remove_trust(block_ip):
 	newkey = str(encryption.newkey())
 	removed.append(block_ip)
 	if block_ip == str(0): #restore keys to all
-		network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+		# network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
 			for r in removed:
 				if r != str(0):

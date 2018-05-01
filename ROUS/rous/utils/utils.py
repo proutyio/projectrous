@@ -65,7 +65,6 @@ def write_to_whitelist(lst, address):
 def write_new_key(file, newkey, address):
     erase_text_file(file, address)
     print
-    print "test yes"
     print file
     try:
         f = open(file, "a")

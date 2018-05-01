@@ -87,13 +87,18 @@ svg {
 }
 
 #GraphTable td {
-	padding:20px;
+	/*padding:20px;*/
 }
 
 #service {
-	text-shadow: .1px .1px;
+	/*text-shadow: .1px .1px;*/
 	/*font-weight: bold;*/
-	font-size:16px;
-	margin-top: 10%;
+	font-size:14px;
+	/*margin:0px;*/
+	/*padding: 4px;*/
+	/*border: 0px;*/
+	/*box-shadow: none;*/
+	/*border-color: none;*/
+	/*margin-top: 10%;*/
 }
 

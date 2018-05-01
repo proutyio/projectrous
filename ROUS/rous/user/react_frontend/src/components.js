@@ -18,7 +18,7 @@ import {
   PageHeader,
   Radio,
   ListGroup,
-  // ListGroupItem,
+  ListGroupItem,
   ToggleButtonGroup,
   ToggleButton,
   ButtonToolbar,
@@ -122,10 +122,11 @@ export class TableMain extends Component {
           <Table>
             <thead>
               <tr className="text-center">
+                <th/>
                 <th>Node</th>
                 <th>Address</th>
                 <th>Services</th>
-                <th>Result</th>
+                <th/>
               </tr>
             </thead>
             
@@ -134,16 +135,17 @@ export class TableMain extends Component {
                 var parsed_data = JSON.parse(data);                
                 return (
                   <tr key={i}>
+                    <td/>
                     <td style={{verticalAlign:"middle",
                                 fontSize:"20px",fontWeight:"bold"}}>{i+1}
                     </td>
                     <td style={{verticalAlign:"middle",
-                                marginTop:"20px",
+                                marginTop:"0px",
                                 color:"#D73F09",
                                 fontSize:"26px"}}>{parsed_data['address']}
                     </td>
                     
-                    <td style={{verticalAlign:"middle"}}>                  
+                    <td style={{verticalAlign:"middle"}}>   
                       {JSON.parse(parsed_data['services']).map((data,j) => {
                         return (
                           <h4 id="service" key={j}>
@@ -152,6 +154,7 @@ export class TableMain extends Component {
                         );
                       })}
                     </td>
+                    <td></td>
                   </tr>
                 );
               })}
@@ -427,7 +430,8 @@ export class ConsoleLog extends Component {
     this.state = { 
       socket:socketIOClient("http://127.0.0.1:4242"),
       data: [],
-      console_length: 100,
+      check:[],
+      console_length: 200,
     };
     
     setInterval(() => {
@@ -441,6 +445,36 @@ export class ConsoleLog extends Component {
   componentWillUnmount() {
     clearInterval();
   }
+
+  checkExist = (tag, data) => {
+    var check = false;
+    // if(this.state.check === []){
+    //   this.setState({check:this.state.check.concat(data)});
+    // }
+    // else{
+    this.state.check.map((d,i)=>{
+      var m = JSON.parse(d);
+      if(m['tag'] === tag){
+        if(m['address'] === JSON.parse(data['address'])){
+          check = true;
+        }
+      }
+    });
+    // }
+    if(check===false)
+      this.setState({check:this.state.check.concat(data)})
+  };
+
+  filterMessages = (data) => {
+    // if(this.state.check === []){
+    //   this.setState({check:this.state.check.concat(data)});
+    // }
+    // else{
+      this.checkExist("bidding",data);
+      this.checkExist("waiting",data);
+      this.checkExist("winner",data);
+    // }
+  };
 
   filterAddress = (data) => {
     if(JSON.parse(data)['address']==='192.168.0.105')
@@ -498,7 +532,11 @@ export class ConsoleLog extends Component {
                   <div className="text-center">
                     <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
                       <div id="Console_div">
-                        {this.consoleOutput(data)}                      
+                        {/*
+                        {this.filterMessages(data)}
+                        {console.log(this.state.check)}*/}
+                        {/**/}
+                        {this.consoleOutput(data)}
                       </div>
                     </div>
                   </div>
