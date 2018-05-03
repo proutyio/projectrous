@@ -49,6 +49,23 @@ def blue_on(sender_address):
 def blue_off(sender_address):
 	rpi.off("blue")
 
+def red_blue_green_on(sender_address):
+	rpi.on("red")
+	rpi.on("blue")
+	rpi.on("green")
+
+def red_blue_on(sender_address):
+	rpi.on("red")
+	rpi.on("blue")
+
+def red_green_on(sender_address):
+	rpi.on("red")
+	rpi.on("green")
+
+def blue_green_on(sender_address):
+	rpi.on("blue")
+	rpi.on("green")
+
 
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")
@@ -66,7 +83,7 @@ def thread_complex(services,ukey,sender_address):
 		if s[0] == ",":
 			s = s[1:]
 		network.send_multicast_message(s,ukey,sender_address)
-		time.sleep(3);
+		time.sleep(3)
 
 
 def complex(msg, ukey, sender_address):
