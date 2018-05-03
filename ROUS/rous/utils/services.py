@@ -53,6 +53,12 @@ def blue_off(sender_address):
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")
 
+def print_bw(sender_address):
+	printer.print_file("rous/utils/m.txt")
+
+def print_color(sender_address):
+	printer.print_file("rous/utils/m.txt")
+
 
 def thread_complex(services,ukey,sender_address):
 	for s in services:

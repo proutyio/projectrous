@@ -98,9 +98,12 @@ def remove_trust(block_ip):
 		# network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
-			for r in removed:
-				if r != str(0):
-					network.send_tcp_message(r,"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey)
+			# for r in removed:
+			# 	if r != str(0):
+			# 		network.send_tcp_message(r,"key,ukey,"+newkey)
 		except: pass
 		if nodes:
 			for n in nodes:
@@ -111,8 +114,10 @@ def remove_trust(block_ip):
 			network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		for n in nodes: #issue new keys to all nodes but untrusted
 			node_ip = json.loads(n)['address']
+			print node_ip
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+				utils.write_new_key(utils.ukey(),newkey,self_ip)
 
 
 #

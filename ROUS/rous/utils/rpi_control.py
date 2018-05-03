@@ -26,9 +26,12 @@ def thread_on(str_pin):
 	print "ON"
 	(pin, threads) = find_pin(str_pin)
 	for t in threads:
+		start = time.time()
 		while getattr(t, "exit", True):
 			rpi.output(pin,rpi.HIGH)
-			time.sleep(.1)
+			# time.sleep(.1)
+			if(abs(start-time.time()) > 10):
+				off(str_pin)
 
 
 def off(str_pin):

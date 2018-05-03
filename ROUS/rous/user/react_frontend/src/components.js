@@ -87,7 +87,7 @@ export class TableMain extends Component {
 
   removeTrust = (e) => {
     e.preventDefault();
-    console.log(this.state.trust);
+    // console.log(this.state.trust);
 
     if(this.state.trust !== '0'){
       this.setState({untrusted: this.state.untrusted.concat(this.state.trust)});
@@ -96,7 +96,8 @@ export class TableMain extends Component {
       });
     }
     else{
-      this.state.socket.emit("trust",this.state.trust);
+      var t = this.state.trust
+      this.state.socket.emit("trust",t);
       this.setState({untrusted:[]});
     }
   };
@@ -200,12 +201,14 @@ export class TableMain extends Component {
                         type="submit">remove trust
                 </Button>
               </FormGroup>
+              {/*}*/}
               <FormGroup className="text-center">
                 <h5>Untrusted Nodes:</h5>
                 {this.state.untrusted.map((data,i)=>{
                   return <h4 style={{color:"red"}}>{data}</h4>
                 })}
               </FormGroup>
+            
             </Form> 
 
           </Well>
@@ -255,15 +258,16 @@ class FormSend extends Component {
       complex_msg: '',
       show: false,
       complex_values: [],
-      file_contents: "no content",
+      bw_files: [],
+      color_files:[],
       g_on:'{"tag":"service","service":"green_on"}',
       g_off: '{"tag":"service","service":"green_off"}',
       r_on: '{"tag":"service","service":"red_on"}',
       r_off: '{"tag":"service","service":"red_off"}',
       b_on: '{"tag":"service","service":"blue_on"}',
       b_off: '{"tag":"service","service":"blue_off"}',
-      //print: '{"tag":"service","service":"print_file"}',
-      print: '{"tag":"service","service":"print_file","file":"' + this.file_contents + '"}',
+      print_bw: '{"tag":"service","service":"print_bw"}',
+      print_color: '{"tag":"service","service":"print_color"}',
     };
   }
 
@@ -275,9 +279,27 @@ class FormSend extends Component {
   };
 
   complexSend = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    // console.log(this.state.bw_files);
+    var tmp = [];
+    if(this.state.bw_files.length !== 0){
+      console.log("in");
+      for(var x=0;x<this.state.bw_files[0].length;x++){
+        console.log(x);
+        tmp[x] = (this.state.print_bw);
+      }
+    }
+    this.state.complex_values.map((data,i)=>{
+      console.log(tmp);
+      console.log(data);
+      tmp.concat(data);
+    });
+    // tmp += this.state.complex_values
+    console.log(tmp);
+    // this.state.complex_values = tmp;
+    console.log(this.state.complex_values);
     this.state.socket.emit('complex_send',this.state.complex_values); 
-    this.setState({complex_values:[]})
+    this.setState({complex_values:[]});
   };
 
   messageChange = (e) => {
@@ -289,7 +311,8 @@ class FormSend extends Component {
   };
 
   handleChange = (file) => {   
-    console.log(file[0]);
+    console.log(file);
+    this.setState({bw_files:this.state.bw_files.concat(file)});
   };
 
   handleClose = (e) => {
@@ -323,27 +346,34 @@ class FormSend extends Component {
               <ToggleButton style={{padding:"15px",fontWeight:"bold"}} 
                             onChange={this.handleShow}>
                             Complex Job</ToggleButton>
-              <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
+              <ToggleButton style={{padding:"10px 100px 15px 100px",color:"green"}}
                             value={this.state.g_on} onChange={this.messageChange}>
                             Green ON</ToggleButton>
-              <ToggleButton style={{padding:"15px",color:"green"}}
+              {/*<ToggleButton style={{padding:"10px",color:"green"}}
                             value={this.state.g_off} onChange={this.messageChange}>
-                            Green OFF</ToggleButton>
-              <ToggleButton style={{padding:"15px",color:"red"}}
+                            Green OFF</ToggleButton>*/}
+              <ToggleButton style={{padding:"10px",color:"red"}}
                             value={this.state.r_on} onChange={this.messageChange}>
                             Red ON</ToggleButton>
-              <ToggleButton style={{padding:"15px",color:"red"}}
+              {/*<ToggleButton style={{padding:"10px",color:"red"}}
                             value={this.state.r_off} onChange={this.messageChange}>
-                            Red OFF</ToggleButton>
-              <ToggleButton style={{padding:"15px",color:"blue"}}
+                            Red OFF</ToggleButton>*/}
+              <ToggleButton style={{padding:"10px",color:"blue"}}
                             value={this.state.b_on} onChange={this.messageChange}>
                             Blue ON</ToggleButton>
-              <ToggleButton style={{padding:"15px",color:"blue"}}
+              {/*<ToggleButton style={{padding:"10px",color:"blue"}}
                             value={this.state.b_off} onChange={this.messageChange}>
-                            Blue OFF</ToggleButton>
-              <ToggleButton style={{padding:"15px"}}
-                            value={this.state.print} onChange={this.messageChange}>
-                            Print File
+                            Blue OFF</ToggleButton>*/}
+              <ToggleButton style={{padding:"10px"}}
+                            onChange={this.messageChange}
+                            value={this.state.print_bw}>
+                            Print <p>(Black and White)</p>
+                            <input type="file" onChange={(e)=>this.handleChange(e.target.files)}/>
+                            </ToggleButton>
+              <ToggleButton style={{padding:"10px"}}
+                            onChange={this.messageChange}
+                            value={this.state.print_color}>
+                            Print <p>(Color)</p>
                             <input type="file" onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
             </ToggleButtonGroup>
@@ -369,28 +399,39 @@ class FormSend extends Component {
                                     onChange={this.complexChange}
                                     vertical
                                     style={{marginBottom:"15px"}}>
-                    <ToggleButton style={{padding:"15px 100px 15px 100px",color:"green"}}
+                    <ToggleButton style={{padding:"10px 100px 15px 100px",color:"green"}}
                                   value={this.state.g_on}>
                                   Green ON</ToggleButton>
-                    <ToggleButton style={{padding:"15px",color:"green"}}
+                    {/*<ToggleButton style={{padding:"10px",color:"green"}}
                                   value={this.state.g_off}>
-                                  Green OFF</ToggleButton>
-                    <ToggleButton style={{padding:"15px",color:"red"}}
+                                  Green OFF</ToggleButton>*/}
+                    <ToggleButton style={{padding:"10px",color:"red"}}
                                   value={this.state.r_on}>
                                   Red ON</ToggleButton>
-                    <ToggleButton style={{padding:"15px",color:"red"}}
+                    {/*<ToggleButton style={{padding:"10px",color:"red"}}
                                   value={this.state.r_off}>
-                                  Red OFF</ToggleButton>
-                    <ToggleButton style={{padding:"15px",color:"blue"}}
+                                  Red OFF</ToggleButton>*/}
+                    <ToggleButton style={{padding:"10px",color:"blue"}}
                                   value={this.state.b_on}>
                                   Blue ON</ToggleButton>
-                    <ToggleButton style={{padding:"15px",color:"blue"}}
+                    {/*<ToggleButton style={{padding:"10px",color:"blue"}}
                                   value={this.state.b_off}>
-                                  Blue OFF</ToggleButton>
+                                  Blue OFF</ToggleButton>*/}
+                    <ToggleButton style={{padding:"10px"}}
+                                  value={this.state.print_bw}>
+                                  Print <p>(Black and White)</p>
+                                  <input type="file" id="myFile" 
+                                    multiple="multiple"
+                                    onChange={(e)=>this.handleChange(e.target.files)}
+                                    style={{marginLeft:"10%"}} />
+                                  </ToggleButton>
                     <ToggleButton style={{padding:"15px"}}
-                                  value={this.state.print}>
-                                  Print File
-                                  <input type="file" id="myFile" style={{marginLeft:"10%"}}/>
+                                  value={this.state.print_color}>
+                                  Print <p>(Color)</p>
+                                  <input type="file" id="myFile"
+                                    multiple="multiple"
+                                    onChange={(e)=>this.handleChange(e.target.files)} 
+                                    style={{marginLeft:"10%"}} />
                                   </ToggleButton>
                   </ToggleButtonGroup>
                   {this.state.complex_values.map((data,i)=>{
