@@ -77,7 +77,7 @@ def thread_complex(services,ukey,sender_address):
 		if s[0] == ",":
 			s = s[1:]
 		network.send_multicast_message(s,ukey,sender_address)
-		time.sleep(3);
+		time.sleep(3)
 
 
 def complex(msg, ukey, sender_address):
