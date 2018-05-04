@@ -139,8 +139,26 @@ export class TableMain extends Component {
   changeTrust = (e) => {
     this.setState({trust: e.currentTarget.value});
   };
-
+  
    //I need to explain all the graph logic below. I will forget, little complicated
+  graphLogic = (graph,x,track,color) => {
+    try{
+      var check = false;
+      track.map((data,i)=>{
+        if(i===this.state.row.length-1 && data===2 && check===false){
+          graph[i] = <td style={{backgroundColor:color}}/>
+          this.clearGraph(track,x)
+          check = true;
+        }
+        else if(data===1 && check===false){
+          this.updateGraph(graph,track,i,color);     
+          check = true;
+          track[i] = 2;
+        }
+     });
+    }finally{}
+  };
+
   updateGraph = (data,track,i,color) => {
     data[i] = <td style={{backgroundColor:color}}/>;
     track[i] = 2;
@@ -151,27 +169,23 @@ export class TableMain extends Component {
     });
   };
 
-  graphLogic = (graph,x,track,color) => {
-    try{
-      var check = false;
-      track.map((data,i)=>{
-        if(i===this.state.row.length && data===2 && check===false){
-          graph[i] = <td style={{backgroundColor:color}}/>
-          track.map((r,j) => {
-            if(j !== 0){
-              graph[j] = <td style={{backgroundColor:""}}/>
-              track[j] = 1
-            }
-          });
-          check = true;
-        }
-        else if(data===1 && check===false){
-          this.updateGraph(graph,track,i,color);     
-          check = true;
-          track[i] = 2;
-        }
-     });
-    }finally{}
+  clearGraph = (track, x) => {
+    this.state.track[x].map((t,i)=>{
+      this.state.row_A[x][i] = <td style={{backgroundColor:""}}/>
+      this.state.row_B[x][i] = <td style={{backgroundColor:""}}/>
+      this.state.row_C[x][i] = <td style={{backgroundColor:""}}/>
+      track[i] = 1
+    });
+  };
+
+  updateGraph = (data,track,i,color) => {
+    data[i] = <td style={{backgroundColor:color}}/>;
+    track[i] = 2;
+    console.log(track);
+    data.map((r,j) => {
+      if(j > i)
+        data[j] = <td style={{backgroundColor:""}}/>
+    });
   };
 
   createRows = (e) =>{
@@ -206,19 +220,21 @@ export class TableMain extends Component {
     return (
       <div>
 
-      <Col xs={3} md={3}>
+      <Col xs={3} md={2}>
         <ConsoleLog/>
       </Col>
 
-      <Col xs={6} md={6}>
+      <Col xs={7} md={7}>
         <Well className="TableMain">
           <Table>
             <thead>
               <tr className="text-center">
+                <th/>
                 <th>Node</th>
                 <th>Address</th>
-                <th>Services</th>
                 <th>Graph</th>
+                <th>Services</th>
+                <th/>
               </tr>
             </thead>
             
@@ -227,6 +243,7 @@ export class TableMain extends Component {
                 var parsed_data = JSON.parse(data);                
                 return (
                   <tr key={i}>
+                    <td/>
                     <td style={{verticalAlign:"middle",
                                 fontSize:"20px",fontWeight:"bold"}}>{i+1}
                     </td>
@@ -236,16 +253,7 @@ export class TableMain extends Component {
                                 fontSize:"26px"}}>{parsed_data['address']}
                     </td>
                     
-                    <td style={{verticalAlign:"middle"}}>   
-                      {JSON.parse(parsed_data['services']).map((data,j) => {
-                        return (
-                          <h4 id="service" key={j}>
-                            {removeAndCapitalize(data['service'])}
-                          </h4>
-                        );
-                      })}
-                    </td>
-                    <td style={{verticalAlign:"middle",paddingLeft:"2%"}}>
+                    <td style={{verticalAlign:"middle",paddingLeft:"2%",paddingRight:"2%"}}>
                       <Table id="GraphTable" striped bordered condensed hover>
                         <thead>
                           {this.state.row.map(()=>{
@@ -264,6 +272,17 @@ export class TableMain extends Component {
                         </tbody>
                       </Table>
                     </td>
+
+                    <td style={{verticalAlign:"middle"}}>   
+                      {JSON.parse(parsed_data['services']).map((data,j) => {
+                        return (
+                          <h4 id="service" key={j}>
+                            {removeAndCapitalize(data['service'])}
+                          </h4>
+                        );
+                      })}
+                    </td>
+                    <td/>
                   </tr>
                 );
               })}
@@ -278,16 +297,16 @@ export class TableMain extends Component {
           </div>
 
           <Well className="FormTrust">
-            <h4 className="text-center">
+            <h3 className="text-center">
               Manage Trust
-            </h4>
+            </h3>
             <Form horizontal onSubmit={this.removeTrust}>
               <FormGroup style={{marginLeft:"20%"}}>
                 <div> 
                     <Radio name="radioGroup"
                            value="0"
                            onChange={this.changeTrust}>
-                      Reset
+                      <p>Reset</p>
                     </Radio>{' '}
                 </div>
                 {this.state.data.map((data,i) =>{
@@ -298,7 +317,7 @@ export class TableMain extends Component {
                              inline 
                              value={d['address']}
                              onChange={this.changeTrust}>
-                        {d['address']}
+                        <p>{d['address']}</p>
                       </Radio>{' '}
                     </div>
                   );
@@ -309,7 +328,6 @@ export class TableMain extends Component {
                         type="submit">remove trust
                 </Button>
               </FormGroup>
-              {/*}*/}
               <FormGroup className="text-center">
                 <h5>Untrusted Nodes:</h5>
                 {this.state.untrusted.map((data,i)=>{
@@ -448,13 +466,13 @@ class FormSend extends Component {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
         <Form horizontal onSubmit={this.send}>
-          <h4 className="text-center" style={{marginTop:"20px"}}>Select Service</h4>
+          <h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>
           <ButtonToolbar className="text-center" style={{margin:"10px",marginBottom:"15px"}}>
             <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-              <ToggleButton style={{padding:"15px",fontWeight:"bold"}} 
+              <ToggleButton style={{padding:"13px",fontWeight:"bold",marginBottom:"5%"}} 
                             onChange={this.handleShow}>
                             Complex Job</ToggleButton>
-              <ToggleButton style={{padding:"10px 100px 15px 100px",color:"green"}}
+              <ToggleButton style={{padding:"10px",color:"green"}}
                             value={this.state.g_on} onChange={this.messageChange}>
                             Green ON</ToggleButton>
               {/*<ToggleButton style={{padding:"10px",color:"green"}}
@@ -472,17 +490,21 @@ class FormSend extends Component {
               {/*<ToggleButton style={{padding:"10px",color:"blue"}}
                             value={this.state.b_off} onChange={this.messageChange}>
                             Blue OFF</ToggleButton>*/}
-              <ToggleButton style={{padding:"10px"}}
+              <ToggleButton style={{padding:"18px",marginTop:"5%"}}
                             onChange={this.messageChange}
                             value={this.state.print_bw}>
-                            Print <p>(Black and White)</p>
-                            <input type="file" onChange={(e)=>this.handleChange(e.target.files)}/>
+                            <p>Print (Black and White)</p>
+                            <input type="file" 
+                                   style={{marginLeft:"15%"}}
+                                   onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
-              <ToggleButton style={{padding:"10px"}}
+              <ToggleButton style={{padding:"18px"}}
                             onChange={this.messageChange}
                             value={this.state.print_color}>
-                            Print <p>(Color)</p>
-                            <input type="file" onChange={(e)=>this.handleChange(e.target.files)}/>
+                            <p>Print (Color)</p>
+                            <input type="file"
+                                   style={{marginLeft:"15%"}} 
+                                   onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
             </ToggleButtonGroup>
           </ButtonToolbar>
@@ -594,10 +616,6 @@ export class ConsoleLog extends Component {
 
   checkExist = (tag, data) => {
     var check = false;
-    // if(this.state.check === []){
-    //   this.setState({check:this.state.check.concat(data)});
-    // }
-    // else{
     this.state.check.map((d,i)=>{
       var m = JSON.parse(d);
       if(m['tag'] === tag){
@@ -606,20 +624,8 @@ export class ConsoleLog extends Component {
         }
       }
     });
-    // }
     if(check===false)
       this.setState({check:this.state.check.concat(data)})
-  };
-
-  filterMessages = (data) => {
-    // if(this.state.check === []){
-    //   this.setState({check:this.state.check.concat(data)});
-    // }
-    // else{
-      this.checkExist("bidding",data);
-      this.checkExist("waiting",data);
-      this.checkExist("winner",data);
-    // }
   };
 
   filterAddress = (data) => {
@@ -627,7 +633,6 @@ export class ConsoleLog extends Component {
       return ''
     else
       return JSON.parse(data)['address']
-
   };
 
   filterTag = (data) => {
@@ -635,7 +640,8 @@ export class ConsoleLog extends Component {
       return  <p style={{color:"green",fontWeight:"bold"}}>
                 WINNER
                 <p style={{fontWeight:"bold",color:"black"}}>
-                  {JSON.parse(data)['service']}
+                  <div className="text-center" style={{marginLeft:"8%"}}>
+                    {JSON.parse(data)['service']}</div>
                 </p>
               </p>
     else if(JSON.parse(data)['tag']==="bidding")
@@ -664,24 +670,20 @@ export class ConsoleLog extends Component {
     return (
       <Well style={{marginTop:"20px"}}>
         <ListGroup>
-            <h4 id="Console_h4" className="text-center">
+            <h3 id="Console_h4" className="text-center">
               Console Log
               <Button style={{marginLeft:"5%"}} 
                       onClick={()=>{this.setState({data:[]});}}>
                       Clear
               </Button>
-            </h4>
-          <div style={{paddingBottom:"10px"}}>
+            </h3>
+          <div style={{paddingBottom:"10px",paddingTop:"5px"}}>
             {this.state.data.map((data,i) =>{
                 if(i >= this.state.console_length){this.setState({data:[]});}
                 return (
                   <div className="text-center">
-                    <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
+                    <div id="Console_p" style={{textAlign:'left',marginLeft:"5%"}}>
                       <div id="Console_div">
-                        {/*
-                        {this.filterMessages(data)}
-                        {console.log(this.state.check)}*/}
-                        {/**/}
                         {this.consoleOutput(data)}
                       </div>
                     </div>

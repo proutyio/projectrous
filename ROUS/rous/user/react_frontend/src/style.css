@@ -7,6 +7,8 @@ body, ul {
 
 }
 
+body { padding: 40px; }
+
 th,th,tr {
 	text-align: center;
 }
@@ -46,12 +48,13 @@ svg {
 .TableMain {
 	margin-top: 20px;
 	margin-bottom: 50px;
-	/*background-color: #ffb380;*/
 }
 
 .FormSend {
 	/*background-color: #fff0e6;*/
 }
+
+
 
 #TopWell {
 	margin: 0;
@@ -67,18 +70,18 @@ svg {
 
 #Console_div p {
 	display: inline;
-	margin-left: 10px;
+	margin-left: 5%;
 }
 
 #Console_div h4{
     display: inline;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 #Console_p {
 	/*color: #D73F09;*/
 	/*font-weight: regular;*/
-	font-size: 14px;
+	font-size: 16px;
 	margin: 0px 0px 0px 0px;
 }
 
@@ -87,18 +90,10 @@ svg {
 }
 
 #GraphTable td {
-	padding:15px;
+	padding: 18px;
 }
 
 #service {
-	/*text-shadow: .1px .1px;*/
-	/*font-weight: bold;*/
-	font-size:14px;
-	/*margin:0px;*/
-	/*padding: 4px;*/
-	/*border: 0px;*/
-	/*box-shadow: none;*/
-	/*border-color: none;*/
-	/*margin-top: 10%;*/
+	font-size:16px;
 }
 

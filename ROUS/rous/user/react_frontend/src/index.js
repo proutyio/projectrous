@@ -16,7 +16,7 @@ const App = () => (
       <Well id="TopWell"></Well>
 
       <Col xs={1} md={1}></Col>
-      <Col xs={10} md={10}>
+      <Col xs={12} md={12}>
         
         <div className="text-center">{PageTitle}</div>
         <TableMain />
@@ -24,17 +24,6 @@ const App = () => (
       </Col>
       <Col xs={1} md={1}></Col>
     </Row>
-
-
-    {/*}
-    <Row className="show-grid">
-      <Col xs={3} md={3}/>
-      <Col xs={6} md={6}>
-        <ConsoleLog/>
-      </Col>
-      <Col xs={3} md={3}/>
-    </Row>
-    */}
   </div>
 
 );
