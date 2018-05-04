@@ -64,8 +64,13 @@ export class TableMain extends Component {
       data:[],
       trust:'',
       untrusted:[],
-      check:false,   
-      IP:['192.168.0.101','192.168.0.102'],
+      check:false,
+      row:[1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
+      row_A:[],
+      row_B:[],
+      row_C:[],
+      track:[],
+      IP:["192.168.0.101","192.168.0.103"],  
     };
     
     setInterval(() => {
@@ -74,12 +79,38 @@ export class TableMain extends Component {
 
     this.state.socket.on("discover_nodes", (nodes)=> {
       this.setState({ data: nodes });
+      if(this.state.row_A.length===0){
+        this.setState({row_A:this.createArr()});
+        this.setState({track:this.trackArr()});
+      }
+      if(this.state.row_B.length===0)
+        this.setState({row_B:this.createArr()});
+      if(this.state.row_C.length===0)
+        this.setState({row_C:this.createArr()});
     });
-    
-    this.state.socket.on("update_service", (color) => {
-      this.setState({style:color})
+
+    this.state.socket.on("update_console", (data) => {
+      data.map((d,i)=>{
+        var m = JSON.parse(d);
+        if(m["tag"] == "winner")
+          this.state.IP.map((ip,i)=>{
+            if(m["address"] == ip)
+              this.graphLogic(this.state.row_A[i],i,this.state.track[i],"green")
+          })
+        if(m["tag"] == "bidding")
+          this.state.IP.map((ip,i)=>{
+            if(m["address"] == ip)
+              this.graphLogic(this.state.row_B[i],i,this.state.track[i],"red")
+          })
+        if(m["tag"] == "waiting")
+          this.state.IP.map((ip,i)=>{
+            if(m["address"] == ip)
+              this.graphLogic(this.state.row_C[i],i,this.state.track[i],"blue")
+          })
+      });
     });
   }
+
 
   componentWillUnmount() {
     clearInterval();
@@ -110,6 +141,66 @@ export class TableMain extends Component {
     this.setState({trust: e.currentTarget.value});
   };
 
+   //I need to explain this logic. I will forget, its complicated
+  updateGraph = (data,track,i,color) => {
+    data[i] = <td style={{backgroundColor:color}}/>;
+    track[i] = 2;
+    console.log(track);
+    data.map((r,j) => {
+      if(j > i){
+        data[j] = <td style={{backgroundColor:""}}/>
+        
+      }
+    });
+  };
+
+  graphLogic = (graph,x,track,color) => {
+    try{
+      var check = false;
+      track.map((data,i)=>{
+        if(i===8 && data===2 && check===false){
+          graph[i] = <td style={{backgroundColor:color}}/>
+          track.map((r,j) => {
+            if(j !== 0){
+              graph[j] = <td style={{backgroundColor:""}}/>
+              track[j] = 1
+            }
+          });
+          check = true;
+        }
+        else if(data===1 && check===false){
+          this.updateGraph(graph,track,i,color);     
+          check = true;
+          track[i] = 2;
+        }
+     });
+    }finally{}
+  };
+
+  createRows = (e) =>{
+    var tmp = []
+    this.state.row.map((data,i)=>{
+      tmp[i] = <td/>
+    });
+    return tmp;
+  };
+
+  createArr = (e) => {
+    var arr = new Array(100); //bug with getting length so hardcoded for now
+    this.state.data.map((data,i)=>{
+      arr[i] = this.createRows();
+    });
+    return arr;
+  };
+
+  trackArr = (e) => {
+    var arr = new Array(100);
+    this.state.data.map((data,i)=>{
+      arr[i] = this.state.row;
+    });
+    return arr;
+  };
+
   render() {
     return (
       <div>
@@ -123,11 +214,10 @@ export class TableMain extends Component {
           <Table>
             <thead>
               <tr className="text-center">
-                <th/>
                 <th>Node</th>
                 <th>Address</th>
                 <th>Services</th>
-                <th/>
+                <th>Graph</th>
               </tr>
             </thead>
             
@@ -136,7 +226,6 @@ export class TableMain extends Component {
                 var parsed_data = JSON.parse(data);                
                 return (
                   <tr key={i}>
-                    <td/>
                     <td style={{verticalAlign:"middle",
                                 fontSize:"20px",fontWeight:"bold"}}>{i+1}
                     </td>
@@ -155,7 +244,25 @@ export class TableMain extends Component {
                         );
                       })}
                     </td>
-                    <td></td>
+                    <td style={{verticalAlign:"middle"}}>
+                      <Table id="GraphTable" striped bordered condensed hover>
+                        <thead>
+                          {this.state.row.map(()=>{
+                            return ( <th style={{borderTop:"1px solid #f5f5f5",
+                                  borderLeft:"1px solid #f5f5f5",
+                                  borderRight:"1px solid #f5f5f5",
+                                  backgroundColor:"#f5f5f5",
+                                  padding:"0px"}}></th>);
+                            })
+                          }
+                        </thead>
+                        <tbody>
+                          <tr>{this.state.row_A[i]}</tr>
+                          <tr>{this.state.row_B[i]}</tr>
+                          <tr>{this.state.row_C[i]}</tr>
+                        </tbody>
+                      </Table>
+                    </td>
                   </tr>
                 );
               })}
