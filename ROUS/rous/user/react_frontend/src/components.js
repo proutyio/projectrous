@@ -65,7 +65,7 @@ export class TableMain extends Component {
       trust:'',
       untrusted:[],
       check:false,
-      row:[1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
+      row:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
       row_A:[],
       row_B:[],
       row_C:[],
@@ -111,7 +111,6 @@ export class TableMain extends Component {
     });
   }
 
-
   componentWillUnmount() {
     clearInterval();
   }
@@ -141,16 +140,14 @@ export class TableMain extends Component {
     this.setState({trust: e.currentTarget.value});
   };
 
-   //I need to explain this logic. I will forget, its complicated
+   //I need to explain all the graph logic below. I will forget, little complicated
   updateGraph = (data,track,i,color) => {
     data[i] = <td style={{backgroundColor:color}}/>;
     track[i] = 2;
     console.log(track);
     data.map((r,j) => {
-      if(j > i){
+      if(j > i)
         data[j] = <td style={{backgroundColor:""}}/>
-        
-      }
     });
   };
 
@@ -158,7 +155,7 @@ export class TableMain extends Component {
     try{
       var check = false;
       track.map((data,i)=>{
-        if(i===8 && data===2 && check===false){
+        if(i===this.state.row.length && data===2 && check===false){
           graph[i] = <td style={{backgroundColor:color}}/>
           track.map((r,j) => {
             if(j !== 0){
@@ -178,11 +175,9 @@ export class TableMain extends Component {
   };
 
   createRows = (e) =>{
-    var tmp = []
-    this.state.row.map((data,i)=>{
-      tmp[i] = <td/>
-    });
-    return tmp;
+    var r = []
+    this.state.row.map((data,i)=>{r[i] = <td/>});
+    return r;
   };
 
   createArr = (e) => {
@@ -193,10 +188,16 @@ export class TableMain extends Component {
     return arr;
   };
 
+  createTrack = (e) => {
+    var t = []
+    this.state.row.map((data,i)=>{t[i] = 1});
+    return t;
+  };
+
   trackArr = (e) => {
     var arr = new Array(100);
     this.state.data.map((data,i)=>{
-      arr[i] = this.state.row;
+      arr[i] = this.createTrack();
     });
     return arr;
   };
@@ -244,7 +245,7 @@ export class TableMain extends Component {
                         );
                       })}
                     </td>
-                    <td style={{verticalAlign:"middle"}}>
+                    <td style={{verticalAlign:"middle",paddingLeft:"2%"}}>
                       <Table id="GraphTable" striped bordered condensed hover>
                         <thead>
                           {this.state.row.map(()=>{
@@ -252,7 +253,7 @@ export class TableMain extends Component {
                                   borderLeft:"1px solid #f5f5f5",
                                   borderRight:"1px solid #f5f5f5",
                                   backgroundColor:"#f5f5f5",
-                                  padding:"0px"}}></th>);
+                                  paddingTop:"30px"}}></th>);
                             })
                           }
                         </thead>
