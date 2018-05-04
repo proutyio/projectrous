@@ -178,6 +178,17 @@ export class TableMain extends Component {
     });
   };
 
+  clearAll = () => {
+    this.state.IP.map((d,i)=>{
+      this.state.row.map((e,j)=>{
+        this.state.row_A[i][j] = <td style={{backgroundColor:""}}/>
+        this.state.row_B[i][j] = <td style={{backgroundColor:""}}/>
+        this.state.row_C[i][j] = <td style={{backgroundColor:""}}/>
+        this.state.track[i][j] = 1
+      });
+    });
+  };
+
   updateGraph = (data,track,i,color) => {
     data[i] = <td style={{backgroundColor:color}}/>;
     track[i] = 2;
@@ -232,7 +243,12 @@ export class TableMain extends Component {
                 <th/>
                 <th>Node</th>
                 <th>Address</th>
-                <th>Graph</th>
+                <th>Graph
+                    <Button style={{marginLeft:"5%"}} 
+                      onClick={()=>{this.clearAll()}}>
+                      Clear Graph
+                    </Button>
+                </th>
                 <th>Services</th>
                 <th/>
               </tr>
@@ -529,35 +545,35 @@ class FormSend extends Component {
                                     onChange={this.complexChange}
                                     vertical
                                     style={{marginBottom:"15px"}}>
-                    <ToggleButton style={{padding:"10px 100px 15px 100px",color:"green"}}
+                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:"green"}}
                                   value={this.state.g_on}>
                                   Green ON</ToggleButton>
                     {/*<ToggleButton style={{padding:"10px",color:"green"}}
                                   value={this.state.g_off}>
                                   Green OFF</ToggleButton>*/}
-                    <ToggleButton style={{padding:"10px",color:"red"}}
+                    <ToggleButton style={{padding:"12px",color:"red"}}
                                   value={this.state.r_on}>
                                   Red ON</ToggleButton>
                     {/*<ToggleButton style={{padding:"10px",color:"red"}}
                                   value={this.state.r_off}>
                                   Red OFF</ToggleButton>*/}
-                    <ToggleButton style={{padding:"10px",color:"blue"}}
+                    <ToggleButton style={{padding:"12px",color:"blue"}}
                                   value={this.state.b_on}>
                                   Blue ON</ToggleButton>
                     {/*<ToggleButton style={{padding:"10px",color:"blue"}}
                                   value={this.state.b_off}>
                                   Blue OFF</ToggleButton>*/}
-                    <ToggleButton style={{padding:"10px"}}
+                    <ToggleButton style={{padding:"18px",marginTop:"5%"}}
                                   value={this.state.print_bw}>
-                                  Print <p>(Black and White)</p>
+                                  <p>Print (Black and White)</p>
                                   <input type="file" id="myFile" 
                                     multiple="multiple"
                                     onChange={(e)=>this.handleChange(e.target.files)}
                                     style={{marginLeft:"10%"}} />
                                   </ToggleButton>
-                    <ToggleButton style={{padding:"15px"}}
+                    <ToggleButton style={{padding:"18px"}}
                                   value={this.state.print_color}>
-                                  Print <p>(Color)</p>
+                                  <p>Print (Color)</p>
                                   <input type="file" id="myFile"
                                     multiple="multiple"
                                     onChange={(e)=>this.handleChange(e.target.files)} 
@@ -682,7 +698,7 @@ export class ConsoleLog extends Component {
                 if(i >= this.state.console_length){this.setState({data:[]});}
                 return (
                   <div className="text-center">
-                    <div id="Console_p" style={{textAlign:'left',marginLeft:"5%"}}>
+                    <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
                       <div id="Console_div">
                         {this.consoleOutput(data)}
                       </div>
