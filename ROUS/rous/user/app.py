@@ -67,13 +67,17 @@ def complex_send(msg_lst):
 	network.send_multicast_message(message,ukey,self_ip)
 
 #
-@io.on('console')
-def update_console():
-	mutex.acquire()
-	try:
-		emit("update_console", console_data)
-	finally:
-		mutex.release()
+# @io.on('console')
+# def update_console():
+# 	print 
+# 	print "YES"
+# 	emit("update_console", console_data)
+# 	print
+# 	mutex.acquire()
+# 	try:
+# 		emit("update_console", console_data)
+# 	finally:
+# 		mutex.release()
 
 
 #
@@ -137,18 +141,18 @@ def thread_listener(sock, address):
 		if message:
 			msg = encryption.decrypt(message, ukey)
 			try:
-				if json.loads(msg)['tag'] == "stop": break
+				if json.loads(msg)['tag'] == "stop": 
+					break
+				if (json.loads(msg)['tag'] == "winner" or 
+					json.loads(msg)['tag'] == "bidding" or 
+					json.loads(msg)['tag'] == "waiting"):
+						io.emit("update_console", [msg])
 			except: pass
 			mutex.acquire()
 			try:
 				data.append(msg) 
-				if json.loads(msg)['tag']!="whois" and json.loads(msg)['message']!="whois":
-					console_data.append(msg) 
-			except: 
-				try:
-					if json.loads(msg)['tag']!="whois":
-						console_data.append(msg)
-				except: pass
+			except:
+				pass 
 			finally:
 				mutex.release()
 

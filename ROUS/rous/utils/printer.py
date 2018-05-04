@@ -1,6 +1,7 @@
 import os
 import sys
 import cups
+from subprocess import call
 
 
 def find_printer():
@@ -12,6 +13,9 @@ def find_printer():
 	return (conn, printers.keys()[0])
 
 
+# def print_file(file):
+# 	(conn, printer) = find_printer()
+# 	conn.printFile(printer, file, "", {"cpi": "12", "lpi": "8"})
+
 def print_file(file):
-	(conn, printer) = find_printer()
-	conn.printFile(printer, file, "", {"cpi": "12", "lpi": "8"})
+	os.system("lp ~/ROUS/rous/utils/m.txt")
