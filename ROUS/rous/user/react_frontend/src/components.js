@@ -70,7 +70,7 @@ export class TableMain extends Component {
       row_B:[],
       row_C:[],
       track:[],
-      IP:["192.168.0.101","192.168.0.103"],  
+      IP:["192.168.0.100","192.168.0.101","192.168.0.102"],  
     };
     
     setInterval(() => {
@@ -277,7 +277,7 @@ export class TableMain extends Component {
                                   borderLeft:"1px solid #f5f5f5",
                                   borderRight:"1px solid #f5f5f5",
                                   backgroundColor:"#f5f5f5",
-                                  paddingTop:"30px"}}></th>);
+                                  paddingTop:"25px"}}></th>);
                             })
                           }
                         </thead>
@@ -408,6 +408,9 @@ class FormSend extends Component {
       r_off: '{"tag":"service","service":"red_off"}',
       b_on: '{"tag":"service","service":"blue_on"}',
       b_off: '{"tag":"service","service":"blue_off"}',
+      p_on: '{"tag":"service","service":"pink_on"}',
+      y_on: '{"tag":"service","service":"yellow_on"}',
+      w_on: '{"tag":"service","service":"white_on"}',
       print_bw: '{"tag":"service","service":"print_bw"}',
       print_color: '{"tag":"service","service":"print_color"}',
     };
@@ -485,28 +488,37 @@ class FormSend extends Component {
           <h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>
           <ButtonToolbar className="text-center" style={{margin:"10px",marginBottom:"15px"}}>
             <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-              <ToggleButton style={{padding:"13px",fontWeight:"bold",marginBottom:"5%"}} 
+              <ToggleButton style={{padding:"30px 100px 30px 100px",fontWeight:"bold",marginBottom:"5%"}} 
                             onChange={this.handleShow}>
                             Complex Job</ToggleButton>
-              <ToggleButton style={{padding:"10px",color:"green"}}
+              </ToggleButtonGroup>
+          </ButtonToolbar>
+
+          <ButtonToolbar className="text-center" 
+                         style={{margin:"10px",marginBottom:"15px",marginLeft:"5%"}}>
+            <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical-block>
+              <ToggleButton style={{padding:"30px 40px 30px 40px",color:""}}
                             value={this.state.g_on} onChange={this.messageChange}>
-                            Green ON</ToggleButton>
-              {/*<ToggleButton style={{padding:"10px",color:"green"}}
-                            value={this.state.g_off} onChange={this.messageChange}>
-                            Green OFF</ToggleButton>*/}
-              <ToggleButton style={{padding:"10px",color:"red"}}
+                            <p>Green ON</p>
+              </ToggleButton>
+              <ToggleButton style={{padding:"30px 42px 30px 40px",color:""}}
                             value={this.state.r_on} onChange={this.messageChange}>
-                            Red ON</ToggleButton>
-              {/*<ToggleButton style={{padding:"10px",color:"red"}}
-                            value={this.state.r_off} onChange={this.messageChange}>
-                            Red OFF</ToggleButton>*/}
-              <ToggleButton style={{padding:"10px",color:"blue"}}
+                            <p>Red ON</p></ToggleButton>
+              <ToggleButton style={{padding:"30px 40px 30px 40px",color:""}}
                             value={this.state.b_on} onChange={this.messageChange}>
-                            Blue ON</ToggleButton>
-              {/*<ToggleButton style={{padding:"10px",color:"blue"}}
-                            value={this.state.b_off} onChange={this.messageChange}>
-                            Blue OFF</ToggleButton>*/}
-              <ToggleButton style={{padding:"18px",marginTop:"5%"}}
+                            <p>Blue ON</p></ToggleButton>
+              <ToggleButton style={{padding:"30px 45px 30px 46px",color:""}}
+                            value={this.state.p_on} onChange={this.messageChange}>
+                            <p>Pink ON</p></ToggleButton>
+              <ToggleButton style={{padding:"30px 34px 30px 33px",color:""}}
+                            value={this.state.y_on} onChange={this.messageChange}>
+                            <p>Yellow ON</p></ToggleButton>
+              <ToggleButton style={{padding:"30px 35px 30px 35px",color:""}}
+                            value={this.state.w_on} onChange={this.messageChange}>
+                            <p>White ON</p>
+              </ToggleButton>
+
+              <ToggleButton style={{padding:"18px",marginTop:"5%",marginLeft:"15%"}}
                             onChange={this.messageChange}
                             value={this.state.print_bw}>
                             <p>Print (Black and White)</p>
@@ -514,7 +526,7 @@ class FormSend extends Component {
                                    style={{marginLeft:"15%"}}
                                    onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
-              <ToggleButton style={{padding:"18px"}}
+              <ToggleButton style={{padding:"18px", marginLeft:"15%"}}
                             onChange={this.messageChange}
                             value={this.state.print_color}>
                             <p>Print (Color)</p>
@@ -525,9 +537,9 @@ class FormSend extends Component {
             </ToggleButtonGroup>
           </ButtonToolbar>
           
-          <FormGroup className="text-center" style={{marginTop:"20px"}}>
+          <FormGroup className="text-center" style={{marginTop:"20px",marginLeft:"2%"}}>
             <Col>
-              <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
+              <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",padding:""}} 
                       type="submit">send to node network</Button>
             </Col>
           </FormGroup>
@@ -545,24 +557,24 @@ class FormSend extends Component {
                                     onChange={this.complexChange}
                                     vertical
                                     style={{marginBottom:"15px"}}>
-                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:"green"}}
+                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:""}}
                                   value={this.state.g_on}>
-                                  Green ON</ToggleButton>
-                    {/*<ToggleButton style={{padding:"10px",color:"green"}}
-                                  value={this.state.g_off}>
-                                  Green OFF</ToggleButton>*/}
-                    <ToggleButton style={{padding:"12px",color:"red"}}
+                                  <p>Green ON</p></ToggleButton>
+                    <ToggleButton style={{padding:"12px",color:""}}
                                   value={this.state.r_on}>
-                                  Red ON</ToggleButton>
-                    {/*<ToggleButton style={{padding:"10px",color:"red"}}
-                                  value={this.state.r_off}>
-                                  Red OFF</ToggleButton>*/}
-                    <ToggleButton style={{padding:"12px",color:"blue"}}
+                                  <p>Red ON</p></ToggleButton>
+                    <ToggleButton style={{padding:"12px",color:""}}
                                   value={this.state.b_on}>
-                                  Blue ON</ToggleButton>
-                    {/*<ToggleButton style={{padding:"10px",color:"blue"}}
-                                  value={this.state.b_off}>
-                                  Blue OFF</ToggleButton>*/}
+                                  <p>Blue ON</p></ToggleButton>
+                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:""}}
+                                  value={this.state.p_on}>
+                                  <p>Pink ON</p></ToggleButton>
+                    <ToggleButton style={{padding:"12px",color:""}}
+                                  value={this.state.y_on}>
+                                  <p>Yellow ON</p></ToggleButton>
+                    <ToggleButton style={{padding:"12px",color:""}}
+                                  value={this.state.w_on}>
+                                  <p>White ON</p></ToggleButton>
                     <ToggleButton style={{padding:"18px",marginTop:"5%"}}
                                   value={this.state.print_bw}>
                                   <p>Print (Black and White)</p>

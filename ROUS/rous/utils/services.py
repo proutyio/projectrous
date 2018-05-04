@@ -66,6 +66,14 @@ def blue_green_on(sender_address):
 	rpi.on("blue")
 	rpi.on("green")
 
+def yellow_on(sender_address):
+	rpi.on("yellow")
+
+def white_on(sender_address):
+	rpi.on("white")
+
+def pink_on(sender_address):
+	rpi.on("pink")
 
 def print_file(sender_address):
 	printer.print_file("rous/utils/m.txt")

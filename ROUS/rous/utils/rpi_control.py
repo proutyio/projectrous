@@ -9,10 +9,16 @@ import rous.utils.config as config
 green_threads = []
 red_threads = []
 blue_threads = []
+pink_threads = []
+yellow_threads = []
+white_threads = []
 
 pins = [("green",int(config.settings("green_pin")),green_threads),
 		("red",int(config.settings("red_pin")),red_threads),
-		("blue",int(config.settings("blue_pin")),blue_threads)]
+		("blue",int(config.settings("blue_pin")),blue_threads),
+		("pink",int(config.settings("pink_pin")),pink_threads),
+		("yellow",int(config.settings("yellow_pin")),yellow_threads),
+		("white",int(config.settings("white_pin")),white_threads)]
 
 def setup():
 	rpi.setmode(rpi.BCM)
