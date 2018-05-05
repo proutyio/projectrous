@@ -10,16 +10,16 @@ all:
 	@echo "Option 8: make clean"
 
 
-node: rous/node/node.py
-	python -m rous.node.node
+node: node/node.py
+	python -m node.node
 
 
-user: rous/user/user.py
-	python -m rous.user.user
+user: user/user.py
+	python -m user.user
 
 
-# admin: rous/admin/admin.py
-# 	python -m rous.admin.admin
+# admin: admin/admin.py
+# 	python -m admin.admin
 
 
 test_node: test/test_node.py
@@ -40,12 +40,11 @@ test: test/test.py
 
 clean:
 	rm -f *.pyc
-	rm -f rous/*.pyc
-	rm -f rous/node/*.pyc
-	rm -f rous/user/*.pyc
-	rm -f rous/admin/*.pyc
-	rm -f rous/utils/*.pyc
-	rm -f rous/utils/*.txt
+	rm -f node/*.pyc
+	rm -f user/*.pyc
+	rm -f admin/*.pyc
+	rm -f utils/*.pyc
+	rm -f utils/*.txt
 	rm -f test/*pyc
 	rm -f rous.log
-	rm -rf rous/user/node_modules
+	rm -rf user/node_modules
