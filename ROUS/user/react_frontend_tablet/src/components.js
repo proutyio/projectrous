@@ -368,6 +368,7 @@ export class FormSend extends Component {
       complex_msg: '',
       show: false,
       complex_values: [],
+      display_values:[],
       bw_files: [],
       color_files:[],
       g_on:'{"tag":"service","service":"green_on"}',
@@ -394,24 +395,25 @@ export class FormSend extends Component {
   complexSend = (e) => {
     e.preventDefault();
     // console.log(this.state.bw_files);
-    var tmp = [];
-    if(this.state.bw_files.length !== 0){
-      console.log("in");
-      for(var x=0;x<this.state.bw_files[0].length;x++){
-        console.log(x);
-        tmp[x] = (this.state.print_bw);
-      }
-    }
-    this.state.complex_values.map((data,i)=>{
-      console.log(tmp);
-      console.log(data);
-      tmp.concat(data);
-    });
-    // tmp += this.state.complex_values
-    console.log(tmp);
-    // this.state.complex_values = tmp;
-    console.log(this.state.complex_values);
-    this.state.socket.emit('complex_send',this.state.complex_values); 
+    // var tmp = [];
+    // if(this.state.bw_files.length !== 0){
+    //   console.log("in");
+    //   for(var x=0;x<this.state.bw_files[0].length;x++){
+    //     console.log(x);
+    //     tmp[x] = (this.state.print_bw);
+    //   }
+    // }
+    // this.state.complex_values.map((data,i)=>{
+    //   console.log(tmp);
+    //   console.log(data);
+    //   tmp.concat(data);
+    // });
+    // // tmp += this.state.complex_values
+    // console.log(tmp);
+    // // this.state.complex_values = tmp;
+    // console.log(this.state.complex_values);
+    this.state.socket.emit('complex_send',this.state.complex_values);
+    this.state.display_values = this.state.complex_values; 
     this.setState({complex_values:[]});
   };
 
@@ -430,6 +432,7 @@ export class FormSend extends Component {
 
   handleClose = (e) => {
     this.setState({show:false});
+    window.location.reload(); //quick refresh to clear buttons, happens so fast its not seen
   };
 
   handleShow = (e) => {
@@ -441,7 +444,7 @@ export class FormSend extends Component {
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
           {/*<h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>*/}
           <ButtonToolbar className="text-center" justifed
-                         style={{margin:"10px",marginBottom:"100px",marginLeft:"10%"}}>
+                         style={{margin:"10px",marginBottom:"100px",marginLeft:"14%"}}>
           <div className="btn-group">
             <Form horizontal onSubmit={this.complexSend}>
 
@@ -452,6 +455,8 @@ export class FormSend extends Component {
                                 bsSize="large">
 
                     <ToggleButton style={{backgroundColor:""}}
+                                  // active = "true"
+                                  // disabled
                                   id="TabButtons"
                                   className="btn btn-default"
                                   value={this.state.g_on}>
@@ -460,6 +465,7 @@ export class FormSend extends Component {
 
                     <ToggleButton style={{backgroundColor:""}}
                                   id="TabButtons"
+                                  
                                   className="btn btn-default"
                                   value={this.state.b_on}>
                                   <p>Blue ON</p>
@@ -467,6 +473,7 @@ export class FormSend extends Component {
 
                     <ToggleButton style={{backgroundColor:""}}
                                   id="TabButtons"
+                                  
                                   className="btn btn-default"
                                   value={this.state.r_on}>
                                   <p>Red ON</p>
@@ -475,25 +482,28 @@ export class FormSend extends Component {
                   
                     <ToggleButton style={{backgroundColor:"k"}}
                                   id="TabButtons"
+                                  checked={false} 
                                   className="btn btn-default"
                                   value={this.state.p_on}>
                                   <p>Pink ON</p>
                     </ToggleButton>
                     <ToggleButton style={{backgroundColor:""}}
                                   id="TabButtons"
+                                  checked={false} 
                                   className="btn btn-default"
                                   value={this.state.y_on}>
                                   <p>Yellow ON</p>
                     </ToggleButton>
                     <ToggleButton style={{backgroundColor:""}}
                                   id="TabButtons"
+                                  checked={false} 
                                   className="btn btn-default"
                                   value={this.state.w_on}>
                                   <p>White ON</p>
                     </ToggleButton>
               </ToggleButtonGroup>
               {this.state.complex_values.map((data,i)=>{
-                  return <p style={{textAlign:"left",marginLeft:"43%"}}>
+                  return <p style={{textAlign:"left",marginLeft:"35%"}}>
                             {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
                           </p>  
               })}
@@ -520,8 +530,13 @@ export class FormSend extends Component {
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <h3 className="text-center" style={{color:"#D73F09"}}>
+            <h3 className="text-center" style={{color:"#D73F09",marginBottom:"15px"}}>
               <b>Sent!</b></h3>
+              {this.state.display_values.map((data,i)=>{
+                  return <p style={{textAlign:"left",marginLeft:"43%"}}>
+                            {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
+                          </p>  
+              })}
           </Modal.Header>
           
           <Modal.Footer>
