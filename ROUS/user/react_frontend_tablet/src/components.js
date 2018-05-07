@@ -21,6 +21,7 @@ import {
   ListGroupItem,
   ToggleButtonGroup,
   ToggleButton,
+  ButtonGroup,
   ButtonToolbar,
   Modal,
 } from "react-bootstrap";
@@ -31,7 +32,11 @@ export const NavBarTop = (
   <Navbar className="fixedTop" fixedTop id="NavBarTop">
     <Navbar.Header>
       <Navbar.Brand>
-        <a href="" style={{color:"#FFFFFF"}}>Project ROUS</a>
+        <img src="/static/favicon.ico" weign="40" height="30"/>
+        <a href="" 
+           style={{color:"#FFFFFF",marginLeft:"10px"}}>
+           Project ROUS
+        </a>
       </Navbar.Brand>
     </Navbar.Header>
     <Nav>
@@ -42,7 +47,7 @@ export const NavBarTop = (
 /*#######################################*/
 export const PageTitle = (
   <PageHeader id="PageTitle">
-    Administration: <small>Nodes and Configuration</small>
+    User: <small>Select Services</small>
   </PageHeader>
 );
 
@@ -56,6 +61,7 @@ function removeAndCapitalize(str){
 }
 
 /*#######################################*/
+{/*
 export class TableMain extends Component {
   constructor() {
     super();
@@ -350,38 +356,10 @@ export class TableMain extends Component {
     );
   }
 }
-
-// var fileSocket = socketIOClient('http://127.0.0.1:4242');
-// var uploader = new SocketIOFileClient(fileSocket);
-
-// uploader.on('ready', function() {
-// 	console.log('SocketIOFile ready to go!');
-// });
-// uploader.on('loadstart', function() {
-// 	console.log('Loading file to browser before sending...');
-// });
-// uploader.on('progress', function(progress) {
-// 	console.log('Loaded ' + progress.loaded + ' / ' + progress.total);
-// });
-// uploader.on('start', (fileInfo) => {
-// 	console.log('Start uploading', fileInfo);
-// });
-// uploader.on('stream', (fileInfo) => {
-// 	console.log('Streaming... sent ' + fileInfo.sent + ' bytes.');
-// });
-// uploader.on('complete', (fileInfo) => {
-// 	console.log('Upload Complete', fileInfo);
-// });
-// uploader.on('error', (err) => {
-// 	console.log('Error!', err);
-// });
-// uploader.on('abort', (fileInfo) => {
-// 	console.log('Aborted: ', fileInfo);
-// });
-
+*/}
 
 /*#######################################*/
-class FormSend extends Component {
+export class FormSend extends Component {
   constructor() {
     super();
     this.state = { 
@@ -458,161 +436,112 @@ class FormSend extends Component {
     this.setState({show:true});
   };
 
-  // fileInput = (e) => {
-  //   if (document.getElementById("myFile").value) {
-  //     var file = document.getElementById("myFile").value;
-  //     console.log(file);
-  //     var reader = new FileReader();
-  //     reader.readAsText(file);
-  //      return reader;
-  //   }
-  //   else{
-  //      return e;
-  //   }
-  // }
- 
   render() {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
-        <Form horizontal onSubmit={this.send}>
-          <h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>
-          <ButtonToolbar className="text-center" style={{margin:"10px",marginBottom:"15px"}}>
-            <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-              <ToggleButton style={{padding:"30px 100px 30px 100px",fontWeight:"bold",marginBottom:"5%"}} 
-                            onChange={this.handleShow}>
-                            Complex Job</ToggleButton>
+          {/*<h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>*/}
+          <ButtonToolbar className="text-center" justifed
+                         style={{margin:"10px",marginBottom:"100px",marginLeft:"10%"}}>
+          <div className="btn-group">
+            <Form horizontal onSubmit={this.complexSend}>
+
+              <ToggleButtonGroup type="checkbox" 
+                                onChange={this.complexChange}
+                                justifed
+                                style={{marginBottom:"15px"}}
+                                bsSize="large">
+
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.g_on}>
+                                  <p>Green ON</p>
+                    </ToggleButton>
+
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.b_on}>
+                                  <p>Blue ON</p>
+                    </ToggleButton>
+
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.r_on}>
+                                  <p>Red ON</p>
+                    </ToggleButton>
+                    
+                  
+                    <ToggleButton style={{backgroundColor:"k"}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.p_on}>
+                                  <p>Pink ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.y_on}>
+                                  <p>Yellow ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.w_on}>
+                                  <p>White ON</p>
+                    </ToggleButton>
               </ToggleButtonGroup>
-          </ButtonToolbar>
+              {this.state.complex_values.map((data,i)=>{
+                  return <p style={{textAlign:"left",marginLeft:"43%"}}>
+                            {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
+                          </p>  
+              })}
+              
+            </Form>
+          </div>
+        </ButtonToolbar>
 
-          <ButtonToolbar className="text-center" 
-                         style={{margin:"10px",marginBottom:"15px",marginLeft:"5%"}}>
-            <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical-block>
-              <ToggleButton style={{padding:"30px 40px 30px 40px",color:""}}
-                            value={this.state.g_on} onChange={this.messageChange}>
-                            <p>Green ON</p>
-              </ToggleButton>
-              <ToggleButton style={{padding:"30px 42px 30px 40px",color:""}}
-                            value={this.state.r_on} onChange={this.messageChange}>
-                            <p>Red ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 40px 30px 40px",color:""}}
-                            value={this.state.b_on} onChange={this.messageChange}>
-                            <p>Blue ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 45px 30px 46px",color:""}}
-                            value={this.state.p_on} onChange={this.messageChange}>
-                            <p>Pink ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 34px 30px 33px",color:""}}
-                            value={this.state.y_on} onChange={this.messageChange}>
-                            <p>Yellow ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 35px 30px 35px",color:""}}
-                            value={this.state.w_on} onChange={this.messageChange}>
-                            <p>White ON</p>
-              </ToggleButton>
-
-              <ToggleButton style={{padding:"18px",marginTop:"5%",marginLeft:"15%"}}
-                            onChange={this.messageChange}
-                            value={this.state.print_bw}>
-                            <p>Print (Black and White)</p>
-                            <input type="file" 
-                                   style={{marginLeft:"15%"}}
-                                   onChange={(e)=>this.handleChange(e.target.files)}/>
-                            </ToggleButton>
-              <ToggleButton style={{padding:"18px", marginLeft:"15%"}}
-                            onChange={this.messageChange}
-                            value={this.state.print_color}>
-                            <p>Print (Color)</p>
-                            <input type="file"
-                                   style={{marginLeft:"15%"}} 
-                                   onChange={(e)=>this.handleChange(e.target.files)}/>
-                            </ToggleButton>
-            </ToggleButtonGroup>
-          </ButtonToolbar>
-          
-          <FormGroup className="text-center" style={{marginTop:"20px",marginLeft:"2%"}}>
-            <Col>
-              <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",padding:""}} 
-                      type="submit">send to node network</Button>
-            </Col>
-          </FormGroup>
-        </Form> 
+         <Navbar className="fixedBottom" fixedBottom id="NavBarBottom">
+          <Form horizontal onSubmit={this.complexSend}>
+            <FormGroup className="text-center" style={{marginTop:"2%"}}>
+              <Button style={{backgroundColor:"#FFFFFF",
+                              color:"#D73F09",
+                              padding:"10px 200px 10px 200px"
+                            }} 
+                      onClick={this.handleShow}
+                      type="submit"><h4><b>SEND</b> to Node Network</h4>
+              </Button>
+            </FormGroup>
+          </Form>           
+          <Nav>
+          </Nav>
+        </Navbar>
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-              <Modal.Title>Complex Job</Modal.Title>
+            <h3 className="text-center" style={{color:"#D73F09"}}>
+              <b>Sent!</b></h3>
           </Modal.Header>
-          <Modal.Body>
-              <div className="text-center">
-                <Form horizontal onSubmit={this.complexSend}>
-                  <h4>Select Services</h4>
-                  <ToggleButtonGroup type="checkbox" 
-                                    onChange={this.complexChange}
-                                    vertical
-                                    style={{marginBottom:"15px"}}>
-                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:""}}
-                                  value={this.state.g_on}>
-                                  <p>Green ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
-                                  value={this.state.r_on}>
-                                  <p>Red ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
-                                  value={this.state.b_on}>
-                                  <p>Blue ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:""}}
-                                  value={this.state.p_on}>
-                                  <p>Pink ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
-                                  value={this.state.y_on}>
-                                  <p>Yellow ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
-                                  value={this.state.w_on}>
-                                  <p>White ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"18px",marginTop:"5%"}}
-                                  value={this.state.print_bw}>
-                                  <p>Print (Black and White)</p>
-                                  <input type="file" id="myFile" 
-                                    multiple="multiple"
-                                    onChange={(e)=>this.handleChange(e.target.files)}
-                                    style={{marginLeft:"10%"}} />
-                                  </ToggleButton>
-                    <ToggleButton style={{padding:"18px"}}
-                                  value={this.state.print_color}>
-                                  <p>Print (Color)</p>
-                                  <input type="file" id="myFile"
-                                    multiple="multiple"
-                                    onChange={(e)=>this.handleChange(e.target.files)} 
-                                    style={{marginLeft:"10%"}} />
-                                  </ToggleButton>
-                  </ToggleButtonGroup>
-                  {this.state.complex_values.map((data,i)=>{
-                      return <p style={{textAlign:"left",marginLeft:"43%"}}>
-                                {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
-                              </p>  
-                  })}
-                  <FormGroup className="text-center" style={{marginTop:"20px"}}>
-                    <Col>
-                      <Button style={{backgroundColor:"#D73F09",
-                                      color:"#FFFFFF",
-                                      padding:"10px 120px 10px 120px"
-                                    }} 
-                              onClick={this.handleClose}
-                              type="submit">submit complex job
-                      </Button>
-                    </Col>
-                  </FormGroup>
-                </Form>
-              </div>
-          </Modal.Body>
+          
           <Modal.Footer>
-              <Button onClick={this.handleClose}>Close</Button>
+            <div className="text-center">
+              <Button bsSize="large" block 
+                      onClick={this.handleClose}>
+                      <h4><b>{"<< "}</b>BACK</h4>
+              </Button>
+            </div>
           </Modal.Footer>
         </Modal>
-
       </Well>
+     
     );
   }
 }
 
 
 /*#######################################*/
+{/*
 export class ConsoleLog extends Component {
   constructor() {
     super();
@@ -715,6 +644,7 @@ export class ConsoleLog extends Component {
   }
 }
 
+*/}
 
 
 

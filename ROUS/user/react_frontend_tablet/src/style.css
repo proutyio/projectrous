@@ -1,0 +1,125 @@
+body, ul {
+	margin: 0;
+	padding: 0;
+	background-color: #FFFFFF;
+	/*font-family: "Times New Roman", Times, serif;*/
+	 font-size: 16px;
+
+}
+
+body { padding: 40px; }
+
+th,th,tr {
+	text-align: center;
+}
+
+p {
+	font-weight: bold;
+}
+
+svg {
+    height: 120px;
+}
+
+.navbar.navbar-default {
+    background-color: #99ccff;
+    border: 0;
+    margin:0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.navbar.navbar-default .navbar-collapse {
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+/*.navbar-brand>img {
+  padding: 7px 14px;
+}*/
+
+#NavBarTop {
+	margin: 0;
+	padding: 0px;
+	background-color: #D73F09;
+}
+
+#NavBarBottom {
+	margin: 0;
+	padding: 0px;
+	background-color: #D73F09;
+}
+
+#PageTitle {
+	margin-top: 25px;
+}
+
+.TableMain {
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+
+.FormSend {
+	/*background-color: #fff0e6;*/
+}
+
+
+
+#TopWell {
+	margin: 0;
+	padding: 0;
+	margin-top: -18px;
+	background-color: #000000;
+}
+
+#ConsoleLog {
+	background-color: #dcdcdc;
+	
+}
+
+#Console_div p {
+	display: inline;
+	margin-left: 5%;
+}
+
+#Console_div h4{
+    display: inline;
+    font-size: 15px;
+}
+
+#Console_p {
+	/*color: #D73F09;*/
+	/*font-weight: regular;*/
+	font-size: 16px;
+	margin: 0px 0px 0px 0px;
+}
+
+#GraphTable {
+
+}
+
+#GraphTable td {
+	padding: 18px;
+}
+
+#service {
+	font-size:16px;
+}
+
+
+#TabButtons {
+	/*padding:50px;*/
+	margin-left: 1%;
+	margin-bottom: .5%;
+	width: 300px;
+	height: 100px;
+}
+
+#TabButtons p{
+	margin-top:10%;
+}
