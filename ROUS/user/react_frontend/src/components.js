@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import SocketIOFileClient from 'socket.io-file-client';
 import './style.css';
-// import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 import {
   Table,
   Well,
@@ -11,10 +10,7 @@ import {
   Navbar,
   Form,
   FormGroup,
-  // FormControl,
   Col,
-  // Row,
-  // ControlLabel,
   PageHeader,
   Radio,
   ListGroup,
@@ -31,7 +27,13 @@ export const NavBarTop = (
   <Navbar className="fixedTop" fixedTop id="NavBarTop">
     <Navbar.Header>
       <Navbar.Brand>
-        <a href="" style={{color:"#FFFFFF"}}>Project ROUS</a>
+        <div>
+          <p style={{float:"left"}}><img src="/static/favicon.ico" weign="30" height="40"/></p>
+          <p style={{float:"right"}}><a href="" 
+             style={{color:"#FFFFFF",marginLeft:"5px"}}>
+             Project ROUS
+          </a></p>
+        </div>
       </Navbar.Brand>
     </Navbar.Header>
     <Nav>
@@ -330,8 +332,10 @@ export class TableMain extends Component {
                 })}
               </FormGroup>
               <FormGroup className="text-center" style={{marginTop:"0px"}}>
-                <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF"}} 
-                        type="submit">remove trust
+                <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",
+                                padding:"10px 40px 10px 40px",
+                                marginLeft:"2%"}} 
+                        type="submit"><h4><b>REMOVE</b> Node Trust</h4>
                 </Button>
               </FormGroup>
               <FormGroup className="text-center">
@@ -350,34 +354,6 @@ export class TableMain extends Component {
     );
   }
 }
-
-// var fileSocket = socketIOClient('http://127.0.0.1:4242');
-// var uploader = new SocketIOFileClient(fileSocket);
-
-// uploader.on('ready', function() {
-// 	console.log('SocketIOFile ready to go!');
-// });
-// uploader.on('loadstart', function() {
-// 	console.log('Loading file to browser before sending...');
-// });
-// uploader.on('progress', function(progress) {
-// 	console.log('Loaded ' + progress.loaded + ' / ' + progress.total);
-// });
-// uploader.on('start', (fileInfo) => {
-// 	console.log('Start uploading', fileInfo);
-// });
-// uploader.on('stream', (fileInfo) => {
-// 	console.log('Streaming... sent ' + fileInfo.sent + ' bytes.');
-// });
-// uploader.on('complete', (fileInfo) => {
-// 	console.log('Upload Complete', fileInfo);
-// });
-// uploader.on('error', (err) => {
-// 	console.log('Error!', err);
-// });
-// uploader.on('abort', (fileInfo) => {
-// 	console.log('Aborted: ', fileInfo);
-// });
 
 
 /*#######################################*/
@@ -416,23 +392,23 @@ class FormSend extends Component {
   complexSend = (e) => {
     e.preventDefault();
     // console.log(this.state.bw_files);
-    var tmp = [];
-    if(this.state.bw_files.length !== 0){
-      console.log("in");
-      for(var x=0;x<this.state.bw_files[0].length;x++){
-        console.log(x);
-        tmp[x] = (this.state.print_bw);
-      }
-    }
-    this.state.complex_values.map((data,i)=>{
-      console.log(tmp);
-      console.log(data);
-      tmp.concat(data);
-    });
-    // tmp += this.state.complex_values
-    console.log(tmp);
-    // this.state.complex_values = tmp;
-    console.log(this.state.complex_values);
+    // var tmp = [];
+    // if(this.state.bw_files.length !== 0){
+    //   console.log("in");
+    //   for(var x=0;x<this.state.bw_files[0].length;x++){
+    //     console.log(x);
+    //     tmp[x] = (this.state.print_bw);
+    //   }
+    // }
+    // this.state.complex_values.map((data,i)=>{
+    //   console.log(tmp);
+    //   console.log(data);
+    //   tmp.concat(data);
+    // });
+    // // tmp += this.state.complex_values
+    // console.log(tmp);
+    // // this.state.complex_values = tmp;
+    // console.log(this.state.complex_values);
     this.state.socket.emit('complex_send',this.state.complex_values); 
     this.setState({complex_values:[]});
   };
@@ -476,7 +452,7 @@ class FormSend extends Component {
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
         <Form horizontal onSubmit={this.send}>
           <h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>
-          <ButtonToolbar className="text-center" style={{margin:"10px",marginBottom:"15px"}}>
+          <ButtonToolbar className="text-center" style={{margin:"15px",marginBottom:"15px"}}>
             <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
               <ToggleButton style={{padding:"30px 100px 30px 100px",fontWeight:"bold",marginBottom:"5%"}} 
                             onChange={this.handleShow}>
@@ -485,30 +461,48 @@ class FormSend extends Component {
           </ButtonToolbar>
 
           <ButtonToolbar className="text-center" 
-                         style={{margin:"10px",marginBottom:"15px",marginLeft:"5%"}}>
-            <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical-block>
-              <ToggleButton style={{padding:"30px 40px 30px 40px",color:""}}
+                         style={{margin:"10px",marginBottom:"15px",marginLeft:"2%"}}>
+            <ToggleButtonGroup type="radio" name="options" 
+                               defaultValue={0}
+                               vertical-block>
+              <ToggleButton style={{color:""}}
+                            className="btn btn-default"
+                            id="TabButtons"
                             value={this.state.g_on} onChange={this.messageChange}>
                             <p>Green ON</p>
               </ToggleButton>
-              <ToggleButton style={{padding:"30px 42px 30px 40px",color:""}}
+              <ToggleButton style={{color:""}}
+                            className="btn btn-default"
+                            id="TabButtons"
                             value={this.state.r_on} onChange={this.messageChange}>
-                            <p>Red ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 40px 30px 40px",color:""}}
+                            <p>Red ON</p>
+              </ToggleButton>
+              <ToggleButton style={{color:""}}
+                            className="btn btn-default"
+                            id="TabButtons"
                             value={this.state.b_on} onChange={this.messageChange}>
-                            <p>Blue ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 45px 30px 46px",color:""}}
+                            <p>Blue ON</p>
+              </ToggleButton>
+              <ToggleButton style={{color:""}}
+                            className="btn btn-default"
+                            id="TabButtons" 
                             value={this.state.p_on} onChange={this.messageChange}>
-                            <p>Pink ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 34px 30px 33px",color:""}}
+                            <p>Pink ON</p>
+              </ToggleButton>
+              <ToggleButton style={{color:""}}
+                            className="btn btn-default"
+                            id="TabButtons"
                             value={this.state.y_on} onChange={this.messageChange}>
-                            <p>Yellow ON</p></ToggleButton>
-              <ToggleButton style={{padding:"30px 35px 30px 35px",color:""}}
+                            <p>Yellow ON</p>
+              </ToggleButton>
+              <ToggleButton style={{color:""}}
+                            className="btn btn-default"
+                            id="TabButtons"
                             value={this.state.w_on} onChange={this.messageChange}>
                             <p>White ON</p>
               </ToggleButton>
 
-              <ToggleButton style={{padding:"18px",marginTop:"5%",marginLeft:"15%"}}
+              <ToggleButton style={{padding:"18px",marginTop:"8%",marginLeft:"7%"}}
                             onChange={this.messageChange}
                             value={this.state.print_bw}>
                             <p>Print (Black and White)</p>
@@ -516,7 +510,7 @@ class FormSend extends Component {
                                    style={{marginLeft:"15%"}}
                                    onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
-              <ToggleButton style={{padding:"18px", marginLeft:"15%"}}
+              <ToggleButton style={{padding:"18px", marginLeft:"7%",marginTop:"1px"}}
                             onChange={this.messageChange}
                             value={this.state.print_color}>
                             <p>Print (Color)</p>
@@ -527,10 +521,12 @@ class FormSend extends Component {
             </ToggleButtonGroup>
           </ButtonToolbar>
           
-          <FormGroup className="text-center" style={{marginTop:"20px",marginLeft:"2%"}}>
+          <FormGroup className="text-center" style={{marginTop:"25px",marginLeft:"1px"}}>
             <Col>
-              <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",padding:""}} 
-                      type="submit">send to node network</Button>
+              <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",
+                              padding:"10px 40px 10px 40px"}}
+                      className="btn btn-default" 
+                      type="submit"><h4><b>SEND</b> to Node Network</h4></Button>
             </Col>
           </FormGroup>
         </Form> 
@@ -542,45 +538,78 @@ class FormSend extends Component {
           <Modal.Body>
               <div className="text-center">
                 <Form horizontal onSubmit={this.complexSend}>
-                  <h4>Select Services</h4>
+                  <h4 style={{marginBottom:"20px"}}>Select Services</h4>
                   <ToggleButtonGroup type="checkbox" 
                                     onChange={this.complexChange}
-                                    vertical
-                                    style={{marginBottom:"15px"}}>
-                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:""}}
+                                    vertical-block
+                                    style={{marginBottom:"15px",marginLeft:"8%"}}>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
                                   value={this.state.g_on}>
-                                  <p>Green ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
+                                  <p>Green ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
                                   value={this.state.r_on}>
-                                  <p>Red ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
+                                  <p>Red ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
                                   value={this.state.b_on}>
-                                  <p>Blue ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px 100px 15px 100px",color:""}}
+                                  <p>Blue ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
                                   value={this.state.p_on}>
-                                  <p>Pink ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
+                                  <p>Pink ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
                                   value={this.state.y_on}>
-                                  <p>Yellow ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"12px",color:""}}
+                                  <p>Yellow ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
                                   value={this.state.w_on}>
-                                  <p>White ON</p></ToggleButton>
-                    <ToggleButton style={{padding:"18px",marginTop:"5%"}}
+                                  <p>White ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
+                                  disabled
+                                  value={this.state.w_on}>
+                                  <p></p>
+                    </ToggleButton>
+                    <ToggleButton style={{color:""}}
+                                  className="btn btn-default"
+                                  id="TabButtons"
+                                  disabled
+                                  value={this.state.w_on}>
+                                  <p></p>
+                    </ToggleButton>
+                    <ToggleButton style={{padding:"18px",marginTop:"5%",
+                                          marginLeft:"18%"}}
                                   value={this.state.print_bw}>
                                   <p>Print (Black and White)</p>
                                   <input type="file" id="myFile" 
                                     multiple="multiple"
                                     onChange={(e)=>this.handleChange(e.target.files)}
                                     style={{marginLeft:"10%"}} />
-                                  </ToggleButton>
-                    <ToggleButton style={{padding:"18px"}}
+                    </ToggleButton>
+                    <ToggleButton style={{padding:"18px",marginLeft:"18%"}}
                                   value={this.state.print_color}>
                                   <p>Print (Color)</p>
                                   <input type="file" id="myFile"
                                     multiple="multiple"
                                     onChange={(e)=>this.handleChange(e.target.files)} 
                                     style={{marginLeft:"10%"}} />
-                                  </ToggleButton>
+                    </ToggleButton>
                   </ToggleButtonGroup>
                   {this.state.complex_values.map((data,i)=>{
                       return <p style={{textAlign:"left",marginLeft:"43%"}}>
@@ -594,7 +623,7 @@ class FormSend extends Component {
                                       padding:"10px 120px 10px 120px"
                                     }} 
                               onClick={this.handleClose}
-                              type="submit">submit complex job
+                              type="submit"><h4><b>SEND</b> to Node Network</h4>
                       </Button>
                     </Col>
                   </FormGroup>

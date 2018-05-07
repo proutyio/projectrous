@@ -453,10 +453,7 @@ export class FormSend extends Component {
                                 justifed
                                 style={{marginBottom:"15px"}}
                                 bsSize="large">
-
                     <ToggleButton style={{backgroundColor:""}}
-                                  // active = "true"
-                                  // disabled
                                   id="TabButtons"
                                   className="btn btn-default"
                                   value={this.state.g_on}>
@@ -482,21 +479,18 @@ export class FormSend extends Component {
                   
                     <ToggleButton style={{backgroundColor:"k"}}
                                   id="TabButtons"
-                                  checked={false} 
                                   className="btn btn-default"
                                   value={this.state.p_on}>
                                   <p>Pink ON</p>
                     </ToggleButton>
                     <ToggleButton style={{backgroundColor:""}}
                                   id="TabButtons"
-                                  checked={false} 
                                   className="btn btn-default"
                                   value={this.state.y_on}>
                                   <p>Yellow ON</p>
                     </ToggleButton>
                     <ToggleButton style={{backgroundColor:""}}
                                   id="TabButtons"
-                                  checked={false} 
                                   className="btn btn-default"
                                   value={this.state.w_on}>
                                   <p>White ON</p>
