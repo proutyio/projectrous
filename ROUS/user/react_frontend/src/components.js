@@ -67,12 +67,12 @@ export class TableMain extends Component {
       trust:'',
       untrusted:[],
       check:false,
-      row:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
+      row:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
       row_A:[],
       row_B:[],
       row_C:[],
       track:[],
-      IP:["192.168.0.102"],  
+      IP:["192.168.0.102","192.168.0.103","192.168.0.104","192.168.0.105"],  
     };
     
     setInterval(() => {
@@ -223,11 +223,11 @@ export class TableMain extends Component {
     return (
       <div>
 
-      <Col xs={3} md={2}>
+      <Col xs={2} md={2}>
         <ConsoleLog/>
       </Col>
 
-      <Col xs={7} md={7}>
+      <Col xs={8} md={8}>
         <Well className="TableMain">
           <Table>
             <thead>
@@ -274,9 +274,9 @@ export class TableMain extends Component {
                           }
                         </thead>
                         <tbody>
-                          <tr>{this.state.row_A[i]}</tr>
-                          <tr>{this.state.row_B[i]}</tr>
-                          <tr>{this.state.row_C[i]}</tr>
+                          <tr id="rowA">{this.state.row_A[i]}</tr>
+                          <tr id="rowB">{this.state.row_B[i]}</tr>
+                          <tr id="rowC">{this.state.row_C[i]}</tr>
                         </tbody>
                       </Table>
                     </td>
@@ -284,9 +284,9 @@ export class TableMain extends Component {
                     <td style={{verticalAlign:"middle"}}>   
                       {JSON.parse(parsed_data['services']).map((data,j) => {
                         return (
-                          <h4 id="service" key={j}>
+                          <p id="service" key={j}>
                             {removeAndCapitalize(data['service'])}
-                          </h4>
+                          </p>
                         );
                       })}
                     </td>
@@ -299,7 +299,7 @@ export class TableMain extends Component {
         </Well>
         </Col>
 
-        <Col xs={3} md={3}>
+        <Col xs={2} md={2}>
           <div style={{}}>
             <FormSend/>
           </div>
@@ -333,7 +333,7 @@ export class TableMain extends Component {
               </FormGroup>
               <FormGroup className="text-center" style={{marginTop:"0px"}}>
                 <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",
-                                padding:"10px 40px 10px 40px",
+                                padding:"10px 35px 10px 20px",
                                 marginLeft:"2%"}} 
                         type="submit"><h4><b>REMOVE</b> Node Trust</h4>
                 </Button>
@@ -449,12 +449,13 @@ class FormSend extends Component {
  
   render() {
     return (
-      <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
+      <Well className="FormSend" style={{marginTop:"0px",padding:"5px"}}>
         <Form horizontal onSubmit={this.send}>
           <h3 className="text-center" style={{marginTop:"20px"}}>Select Service</h3>
           <ButtonToolbar className="text-center" style={{margin:"15px",marginBottom:"15px"}}>
             <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
-              <ToggleButton style={{padding:"30px 100px 30px 100px",fontWeight:"bold",marginBottom:"5%"}} 
+              <ToggleButton style={{padding:"30px 50px 30px 50px",fontWeight:"bold",
+                                    marginBottom:"3%"}} 
                             onChange={this.handleShow}>
                             Complex Job</ToggleButton>
               </ToggleButtonGroup>
@@ -502,29 +503,32 @@ class FormSend extends Component {
                             <p>White ON</p>
               </ToggleButton>
 
-              <ToggleButton style={{padding:"18px",marginTop:"8%",marginLeft:"7%"}}
+              <ToggleButton style={{width:"85%",marginTop:"1%",marginLeft:"0%",
+                                    fontSize:"12px"}}
                             onChange={this.messageChange}
                             value={this.state.print_bw}>
-                            <p>Print (Black and White)</p>
+                            <p>Print (Black&White)</p>
                             <input type="file" 
-                                   style={{marginLeft:"15%"}}
+                                   style={{marginLeft:"1%"}}
                                    onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
-              <ToggleButton style={{padding:"18px", marginLeft:"7%",marginTop:"1px"}}
+              <ToggleButton style={{width:"85%", marginLeft:"0%",marginTop:"1px",
+                                    fontSize:"12px"}}
                             onChange={this.messageChange}
                             value={this.state.print_color}>
                             <p>Print (Color)</p>
                             <input type="file"
-                                   style={{marginLeft:"15%"}} 
+                                   style={{marginLeft:"1%"}} 
                                    onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
             </ToggleButtonGroup>
           </ButtonToolbar>
           
-          <FormGroup className="text-center" style={{marginTop:"25px",marginLeft:"1px"}}>
+          <FormGroup className="text-center" style={{marginTop:"25px",marginLeft:"0px"}}>
             <Col>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",
-                              padding:"10px 40px 10px 40px"}}
+                              padding:"10px 20px 10px 20px",
+                              marginRight:"12px"}}
                       className="btn btn-default" 
                       type="submit"><h4><b>SEND</b> to Node Network</h4></Button>
             </Col>
@@ -545,50 +549,50 @@ class FormSend extends Component {
                                     style={{marginBottom:"15px",marginLeft:"8%"}}>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   value={this.state.g_on}>
                                   <p>Green ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   value={this.state.r_on}>
                                   <p>Red ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   value={this.state.b_on}>
                                   <p>Blue ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   value={this.state.p_on}>
                                   <p>Pink ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   value={this.state.y_on}>
                                   <p>Yellow ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   value={this.state.w_on}>
                                   <p>White ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   disabled
                                   value={this.state.w_on}>
                                   <p></p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
-                                  id="TabButtons"
+                                  id="TabButtons_c"
                                   disabled
                                   value={this.state.w_on}>
                                   <p></p>
@@ -649,7 +653,7 @@ export class ConsoleLog extends Component {
       socket:socketIOClient("http://127.0.0.1:4242"),
       data: [],
       check:[],
-      console_length: 200,
+      console_length: 100,
     };
         
     this.state.socket.on("update_console", (data)=>  {
@@ -676,7 +680,7 @@ export class ConsoleLog extends Component {
   };
 
   filterAddress = (data) => {
-    if(JSON.parse(data)['address']==='192.168.0.105')
+    if(JSON.parse(data)['address']==='192.168.0.106')
       return ''
     else
       return JSON.parse(data)['address']
@@ -715,7 +719,7 @@ export class ConsoleLog extends Component {
 
   render() {
     return (
-      <Well style={{marginTop:"20px"}}>
+      <Well style={{marginTop:"0px"}}>
         <ListGroup>
             <h3 id="Console_h4" className="text-center">
               Console Log

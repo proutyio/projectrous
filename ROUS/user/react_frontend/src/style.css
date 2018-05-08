@@ -42,12 +42,12 @@ svg {
 }
 
 #PageTitle {
-	margin-top: 100px;
+	margin-top: 35px;
 }
 
 .TableMain {
-	margin-top: 20px;
-	margin-bottom: 50px;
+	margin-top: 0px;
+	margin-bottom: 30px;
 }
 
 .FormSend {
@@ -93,11 +93,44 @@ svg {
 	padding: 18px;
 }
 
+#rowA {
+	/*width:100px;*/
+	/*height: 100px;*/
+}
+
+#rowB {
+	/*width:100px;
+	height: 100px;*/
+
+}
+
+#rowC {
+/*	width:20px;
+	height: 10px;*/
+
+}
+
 #service {
-	font-size:16px;
+	font-size:14px;
+	padding: 0px;
+	margin:0px;
 }
 
 #TabButtons {
+	/*padding:50px;*/
+	margin-left: 0%;
+	margin-bottom: .5%;
+	width: 75px;
+	height: 70px;
+}
+
+#TabButtons p {
+	margin-top:44%;
+	font-size: 11px;
+}	
+
+
+#TabButtons_c {
 	/*padding:50px;*/
 	margin-left: 1%;
 	margin-bottom: .5%;
@@ -105,6 +138,6 @@ svg {
 	height: 100px;
 }
 
-#TabButtons p{
+#TabButtons_c p{
 	margin-top:40%;
 }
