@@ -5,14 +5,13 @@ from flask_cors import CORS, cross_origin
 from threading import Thread, Lock
 from functools import partial
 import sys
-# sys.path.append('~/Workspace/projectrous/ROUS/utils/')
 import socket
 import json
 import signal
-import ROUS.utils.utils as utils 
-import ROUS.utils.config as configuration
-import ROUS.utils.network as network
-import ROUS.utils.encryption as encryption
+import ROUS.user.utils.utils as utils 
+import ROUS.user.utils.config as configuration
+import ROUS.user.utils.network as network
+import ROUS.user.utils.encryption as encryption
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -44,7 +43,6 @@ def disconnect():
 	emit("disconnect")
 	print "%s disconnected" % (request.sid)
 
-
 #
 @io.on('whois')
 def discover_nodes():
@@ -65,20 +63,6 @@ def complex_send(msg_lst):
 	network.send_multicast_message(message,ukey,self_ip)
 
 #
-# @io.on('console')
-# def update_console():
-# 	print 
-# 	print "YES"
-# 	emit("update_console", console_data)
-# 	print
-# 	mutex.acquire()
-# 	try:
-# 		emit("update_console", console_data)
-# 	finally:
-# 		mutex.release()
-
-
-#
 @io.on("erase_data")
 def erase_data():
 	mutex.acquire()
@@ -87,6 +71,12 @@ def erase_data():
 		del console_data[:]
 	finally:
 		mutex.release()
+
+@io.on("clearall")
+def clear_all():
+	network.send_multicast_message(
+		'{"tag":"clearall","address":"'+self_ip+'"}',ukey,self_ip)
+
 
 
 # when restoring I want to issue new keys to removed list + found nodes
@@ -100,9 +90,10 @@ def remove_trust(block_ip):
 		# network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
-			network.send_tcp_message('192.168.0.100',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.101',"key,ukey,"+newkey)
 			network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.105',"key,ukey,"+newkey)
 			# for r in removed:
 			# 	if r != str(0):
 			# 		network.send_tcp_message(r,"key,ukey,"+newkey)
@@ -139,12 +130,15 @@ def thread_listener(sock, address):
 		if message:
 			msg = encryption.decrypt(message, ukey)
 			try:
-				if json.loads(msg)['tag'] == "stop": 
+				tag = json.loads(msg)['tag']
+				if tag == "stop": 
 					break
-				if (json.loads(msg)['tag'] == "winner" or 
-					json.loads(msg)['tag'] == "bidding" or 
-					json.loads(msg)['tag'] == "waiting"):
+				if (tag == "winner" or 
+					tag == "bidding" or 
+					tag == "waiting"):
 						io.emit("update_console", [msg])
+				if tag == "clearall":
+					io.emit("clearall")
 			except: pass
 			mutex.acquire()
 			try:

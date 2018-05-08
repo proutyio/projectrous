@@ -111,6 +111,10 @@ export class TableMain extends Component {
           })
       });
     });
+
+    this.state.socket.on("clearall", () =>{
+      this.clearAll();
+    });
   }
 
   componentWillUnmount() {
@@ -658,6 +662,10 @@ export class ConsoleLog extends Component {
         
     this.state.socket.on("update_console", (data)=>  {
       this.setState({ data: this.state.data.concat(data)}); 
+    });
+
+    this.state.socket.on("clearall", () =>{
+      this.setState({ data:[]});
     });
   }
 
