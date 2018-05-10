@@ -57,6 +57,19 @@ function removeAndCapitalize(str){
   });
 }
 
+function findColor(x){
+  switch(x){
+    case 1: return "#D73F09"; break;
+    case 2: return "#8A2BE2"; break;
+    case 3: return "#FF00FF"; break;
+    case 4: return "maroon"; break;
+    case 5: return "#2F4F4F"; break;
+    case 6: return "olive"; break;
+    case 7: return "#DAA520"; break;
+    default: return "black";
+  }
+}
+
 /*#######################################*/
 export class TableMain extends Component {
   constructor() {
@@ -71,8 +84,11 @@ export class TableMain extends Component {
       row_A:[],
       row_B:[],
       row_C:[],
+      row_D:[],
       track:[],
-      IP:["192.168.0.102","192.168.0.103","192.168.0.104","192.168.0.105"],  
+      time_value:0,
+      time_color:"black",
+      IP:["192.168.0.102"],  
     };
     
     setInterval(() => {
@@ -82,13 +98,15 @@ export class TableMain extends Component {
     this.state.socket.on("discover_nodes", (nodes)=> {
       this.setState({ data: nodes });
       if(this.state.row_A.length===0){
-        this.setState({row_A:this.createArr()});
+        this.setState({row_A:this.createArr(0)});
         this.setState({track:this.trackArr()});
       }
       if(this.state.row_B.length===0)
-        this.setState({row_B:this.createArr()});
+        this.setState({row_B:this.createArr(1)});
       if(this.state.row_C.length===0)
-        this.setState({row_C:this.createArr()});
+        this.setState({row_C:this.createArr(2)});
+      if(this.state.row_D.length===0)
+        this.setState({row_D:this.createArr(3)});
     });
 
     this.state.socket.on("update_console", (data) => {
@@ -98,22 +116,32 @@ export class TableMain extends Component {
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
               this.graphLogic(this.state.row_A[i],i,this.state.track[i],"green")
+              this.updateTime(
+                this.state.row_D[i],i,this.state.track[i],findColor(this.state.time_value))
           })
         if(m["tag"] == "bidding")
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
               this.graphLogic(this.state.row_B[i],i,this.state.track[i],"red")
+              this.updateTime(
+                this.state.row_D[i],i,this.state.track[i],findColor(this.state.time_value))
           })
         if(m["tag"] == "waiting")
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
               this.graphLogic(this.state.row_C[i],i,this.state.track[i],"blue")
+              this.updateTime(
+                this.state.row_D[i],i,this.state.track[i],findColor(this.state.time_value))
           })
       });
     });
 
     this.state.socket.on("clearall", () =>{
       this.clearAll();
+    });
+
+    this.state.socket.on("updatetime", () =>{
+      this.state.time_value = (this.state.time_value+1);
     });
   }
 
@@ -123,8 +151,6 @@ export class TableMain extends Component {
 
   removeTrust = (e) => {
     e.preventDefault();
-    // console.log(this.state.trust);
-
     if(this.state.trust !== '0'){
       this.setState({untrusted: this.state.untrusted.concat(this.state.trust)});
       this.state.untrusted.map((data,i)=>{
@@ -145,15 +171,22 @@ export class TableMain extends Component {
   changeTrust = (e) => {
     this.setState({trust: e.currentTarget.value});
   };
+
   
    //I need to explain all the graph logic below. I will forget, little complicated
   graphLogic = (graph,x,track,color) => {
     try{
       var check = false;
       track.map((data,i)=>{
-        if(i===this.state.row.length-1 && data===2 && check===false){
-          graph[i] = <td style={{backgroundColor:color}}/>
-          this.clearGraph(track,x)
+        if(i===this.state.row.length-1 && data===1 && check===false){
+          graph[i] = <td style={{backgroundColor:color}}/>;
+          track[i] = 2;
+        }
+        else if(i===this.state.row.length-1 && data===2 && check===false){
+          this.clearGraph(track,x);
+          var firstrow = ((i)-this.state.row.length);
+          graph[firstrow] = <td style={{backgroundColor:color}}/>;
+          track[firstrow] = 2;
           check = true;
         }
         else if(data===1 && check===false){
@@ -167,11 +200,36 @@ export class TableMain extends Component {
 
   updateGraph = (data,track,i,color) => {
     data[i] = <td style={{backgroundColor:color}}/>;
-    track[i] = 2;
-    console.log(track);
     data.map((r,j) => {
       if(j > i)
-        data[j] = <td style={{backgroundColor:""}}/>
+        data[j] = <td style={{backgroundColor:""}}/>;
+    });
+  };
+
+  updateTime = (data,x,track,color) => {
+    var check = false;
+    track.map((d,i)=>{
+      if(i===this.state.row.length-1 && d===1 && check===false){
+        data[i] = <td style={{backgroundColor:color}}/>;
+        check = true;
+      }
+      else if(i===this.state.row.length-1 && d===2 && check===false){
+        var firstrow = ((i+1)-this.state.row.length);
+        data[firstrow] = <td style={{backgroundColor:color}}/>;
+        check = true;
+      }
+      else if(i===0 && d===1 && check===false){
+        this.updateGraph(data,track,i,color);
+        check = true;
+      }
+      else if(i===this.state.row.length-1 && d===1 && check===false){
+        this.updateGraph(data,track,i,color);
+        check = true;
+      }
+      else if(d===1 && check===false){
+        this.updateGraph(data,track,(i-1),color);
+        check = true;
+      }
     });
   };
 
@@ -180,8 +238,10 @@ export class TableMain extends Component {
       this.state.row_A[x][i] = <td style={{backgroundColor:""}}/>
       this.state.row_B[x][i] = <td style={{backgroundColor:""}}/>
       this.state.row_C[x][i] = <td style={{backgroundColor:""}}/>
+      this.state.row_D[x][i] = <td style={{backgroundColor:""}}/>
       track[i] = 1
     });
+    this.setState({time_value:0});
   };
 
   clearAll = () => {
@@ -190,21 +250,29 @@ export class TableMain extends Component {
         this.state.row_A[i][j] = <td style={{backgroundColor:""}}/>
         this.state.row_B[i][j] = <td style={{backgroundColor:""}}/>
         this.state.row_C[i][j] = <td style={{backgroundColor:""}}/>
+        this.state.row_D[i][j] = <td style={{backgroundColor:""}}/>
         this.state.track[i][j] = 1
       });
     });
+    this.setState({time_value:0});
   };
 
-  createRows = (e) =>{
+  createRows = (x) =>{
     var r = []
+    switch(x){
+      case 0: r[0]=<p style={{border:"none"}}>Win</p>;break;
+      case 1: r[0]=<p>Bid</p>;break;
+      case 2: r[0]=<p>Wait</p>;break;
+      case 3: r[0]=<p>Time</p>;break;
+    }
     this.state.row.map((data,i)=>{r[i] = <td/>});
     return r;
   };
 
-  createArr = (e) => {
+  createArr = (x) => {
     var arr = new Array(100); //bug with getting length so hardcoded for now
     this.state.data.map((data,i)=>{
-      arr[i] = this.createRows();
+      arr[i] = this.createRows(x);
     });
     return arr;
   };
@@ -264,7 +332,7 @@ export class TableMain extends Component {
                                 color:"#D73F09",
                                 fontSize:"26px"}}>{parsed_data['address']}
                     </td>
-                    
+          
                     <td style={{verticalAlign:"middle",paddingLeft:"2%",paddingRight:"2%"}}>
                       <Table id="GraphTable" striped bordered condensed hover>
                         <thead>
@@ -281,6 +349,7 @@ export class TableMain extends Component {
                           <tr id="rowA">{this.state.row_A[i]}</tr>
                           <tr id="rowB">{this.state.row_B[i]}</tr>
                           <tr id="rowC">{this.state.row_C[i]}</tr>
+                          <tr style={{padding:"100px"}}>{this.state.row_D[i]}</tr>
                         </tbody>
                       </Table>
                     </td>
@@ -381,6 +450,8 @@ class FormSend extends Component {
       p_on: '{"tag":"service","service":"pink_on"}',
       y_on: '{"tag":"service","service":"yellow_on"}',
       w_on: '{"tag":"service","service":"white_on"}',
+      rbg_on: '{"tag":"service","service":"red_blue_green"}',
+      wpy_on: '{"tag":"service","service":"white_pink_yellow"}',
       print_bw: '{"tag":"service","service":"print_bw"}',
       print_color: '{"tag":"service","service":"print_color"}',
     };
@@ -395,24 +466,6 @@ class FormSend extends Component {
 
   complexSend = (e) => {
     e.preventDefault();
-    // console.log(this.state.bw_files);
-    // var tmp = [];
-    // if(this.state.bw_files.length !== 0){
-    //   console.log("in");
-    //   for(var x=0;x<this.state.bw_files[0].length;x++){
-    //     console.log(x);
-    //     tmp[x] = (this.state.print_bw);
-    //   }
-    // }
-    // this.state.complex_values.map((data,i)=>{
-    //   console.log(tmp);
-    //   console.log(data);
-    //   tmp.concat(data);
-    // });
-    // // tmp += this.state.complex_values
-    // console.log(tmp);
-    // // this.state.complex_values = tmp;
-    // console.log(this.state.complex_values);
     this.state.socket.emit('complex_send',this.state.complex_values); 
     this.setState({complex_values:[]});
   };
@@ -590,16 +643,16 @@ class FormSend extends Component {
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
                                   id="TabButtons_c"
-                                  disabled
-                                  value={this.state.w_on}>
-                                  <p></p>
+                                  // disabled
+                                  value={this.state.rbg_on}>
+                                  <p>RBG ON</p>
                     </ToggleButton>
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
                                   id="TabButtons_c"
                                   disabled
-                                  value={this.state.w_on}>
-                                  <p></p>
+                                  value={this.state.wpy_on}>
+                                  <p>WPY ON</p>
                     </ToggleButton>
                     <ToggleButton style={{padding:"18px",marginTop:"5%",
                                           marginLeft:"18%"}}
@@ -658,6 +711,7 @@ export class ConsoleLog extends Component {
       data: [],
       check:[],
       console_length: 100,
+      time_value:0,
     };
         
     this.state.socket.on("update_console", (data)=>  {
@@ -666,6 +720,10 @@ export class ConsoleLog extends Component {
 
     this.state.socket.on("clearall", () =>{
       this.setState({ data:[]});
+    });
+
+     this.state.socket.on("updatetime", () =>{
+      this.setState({time_value:this.state.time_value+1});
     });
   }
 

@@ -1,10 +1,8 @@
 import RPi.GPIO as rpi
 import time
 import threading
-# import logging as log
 import utils
 import config
-
 
 green_threads = []
 red_threads = []
@@ -12,6 +10,8 @@ blue_threads = []
 pink_threads = []
 yellow_threads = []
 white_threads = []
+
+led_timeout = 15
 
 pins = [("green",int(config.settings("green_pin")),green_threads),
 		("red",int(config.settings("red_pin")),red_threads),
@@ -35,8 +35,7 @@ def thread_on(str_pin):
 		start = time.time()
 		while getattr(t, "exit", True):
 			rpi.output(pin,rpi.HIGH)
-			# time.sleep(.1)
-			if(abs(start-time.time()) > 10):
+			if(abs(start-time.time()) > led_timeout):
 				off(str_pin)
 
 
@@ -63,25 +62,3 @@ def find_pin(pin):
 	for p in pins:
 		if p[0] == pin:
 			return (p[1],p[2])
-
-
-
-# def led_solid_green_on():
-# 	while getattr(threads[0], "exit", True):
-# 		rpi.output(p1,rpi.HIGH)
-# 		time.sleep(.1)
-
-
-# def green_off():
-# 	if threads:
-# 		threads[0].exit = False
-# 		threads[0].join()
-# 		rpi.output(p1,rpi.LOW)
-# 		del threads[:]
-		
-		
-# def green_on():
-# 	if not threads:
-# 		t = threading.Thread(target=led_solid_green_on)
-# 		threads.append(t)
-# 		t.start()

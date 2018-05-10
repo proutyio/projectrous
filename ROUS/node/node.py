@@ -22,7 +22,7 @@ import utils.encryption as encryption
 #  info, error    = {tag:"", message:"", address:""}
 #  bid            = {tag:"", bid:"", address:""}
 #  confirm        = {tag:"", id:""}
-#  whois          = {tag:""}
+#  whois          = {tag:"", address:""}
 #
 #############################
 
@@ -52,7 +52,9 @@ def wait_for_message(sock):
                 try:
                     print json.loads(msg)
                 except:
+                    print
                     print msg
+                    print
                 choose_path(msg, sock)
             except:
                 print "bad message"
@@ -165,7 +167,6 @@ def timer(my_bid, msg):
     t.start()
 
 
-
 #
 def finish_bidding(my_bid,msg):
     try:
@@ -183,13 +184,11 @@ def finish_bidding(my_bid,msg):
             print "\tLOST" 
     except:
         pass
-        # print "finish_bidding failed"
     finally:
         del bids[:]
         network.send_multicast_message(
             '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
         
-
 
 #
 def slow_down():

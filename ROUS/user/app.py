@@ -8,6 +8,7 @@ import sys
 import socket
 import json
 import signal
+import time
 import ROUS.user.utils.utils as utils 
 import ROUS.user.utils.config as configuration
 import ROUS.user.utils.network as network
@@ -53,14 +54,17 @@ def discover_nodes():
 #
 @io.on('send')
 def send_message(message):
-	print message
 	network.send_multicast_message(message,ukey,self_ip)
+	time.sleep(1)
+	io.emit("updatetime")
 
 
 @io.on('complex_send')
 def complex_send(msg_lst):
 	message = build_complex(msg_lst)
 	network.send_multicast_message(message,ukey,self_ip)
+	time.sleep(1)
+	io.emit("updatetime")
 
 #
 @io.on("erase_data")
@@ -139,6 +143,8 @@ def thread_listener(sock, address):
 						io.emit("update_console", [msg])
 				if tag == "clearall":
 					io.emit("clearall")
+				if tag == "timevalue":
+					io.emit("updatetime")
 			except: pass
 			mutex.acquire()
 			try:
