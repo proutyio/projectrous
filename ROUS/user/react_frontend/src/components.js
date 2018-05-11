@@ -64,8 +64,10 @@ function findColor(x){
     case 3: return "#FF00FF"; break;
     case 4: return "maroon"; break;
     case 5: return "#2F4F4F"; break;
-    case 6: return "olive"; break;
-    case 7: return "#DAA520"; break;
+    case 6: return "#DAA520";break;
+    case 7: return "#3CB371"; break;
+    case 9: return "#696969";break;
+    case 8: return "#191970"; break;
     default: return "black";
   }
 }
@@ -80,7 +82,7 @@ export class TableMain extends Component {
       trust:'',
       untrusted:[],
       check:false,
-      row:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
+      row:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
       row_A:[],
       row_B:[],
       row_C:[],
@@ -88,7 +90,7 @@ export class TableMain extends Component {
       track:[],
       time_value:0,
       time_color:"black",
-      IP:["192.168.0.102"],  
+      IP:["192.168.0.102","192.168.0.103"],  
     };
     
     setInterval(() => {
@@ -98,15 +100,15 @@ export class TableMain extends Component {
     this.state.socket.on("discover_nodes", (nodes)=> {
       this.setState({ data: nodes });
       if(this.state.row_A.length===0){
-        this.setState({row_A:this.createArr(0)});
+        this.setState({row_A:this.createArr(0,0)});
         this.setState({track:this.trackArr()});
       }
       if(this.state.row_B.length===0)
-        this.setState({row_B:this.createArr(1)});
+        this.setState({row_B:this.createArr(1,0)});
       if(this.state.row_C.length===0)
-        this.setState({row_C:this.createArr(2)});
+        this.setState({row_C:this.createArr(2,0)});
       if(this.state.row_D.length===0)
-        this.setState({row_D:this.createArr(3)});
+        this.setState({row_D:this.createArr(3,1)});
     });
 
     this.state.socket.on("update_console", (data) => {
@@ -179,13 +181,13 @@ export class TableMain extends Component {
       var check = false;
       track.map((data,i)=>{
         if(i===this.state.row.length-1 && data===1 && check===false){
-          graph[i] = <td style={{backgroundColor:color}}/>;
+          graph[i] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
           track[i] = 2;
         }
         else if(i===this.state.row.length-1 && data===2 && check===false){
           this.clearGraph(track,x);
           var firstrow = ((i)-this.state.row.length);
-          graph[firstrow] = <td style={{backgroundColor:color}}/>;
+          graph[firstrow] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
           track[firstrow] = 2;
           check = true;
         }
@@ -199,10 +201,18 @@ export class TableMain extends Component {
   };
 
   updateGraph = (data,track,i,color) => {
-    data[i] = <td style={{backgroundColor:color}}/>;
+    data[i] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
     data.map((r,j) => {
       if(j > i)
-        data[j] = <td style={{backgroundColor:""}}/>;
+        data[j] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>;
+    });
+  };
+
+  updateRowD = (data,track,i,color) => {
+    data[i] = <td style={{backgroundColor:color,padding:"6px"}}/>;
+    data.map((r,j) => {
+      if(j > i)
+        data[j] = <td style={{backgroundColor:"",padding:"6px"}}/>;
     });
   };
 
@@ -210,24 +220,24 @@ export class TableMain extends Component {
     var check = false;
     track.map((d,i)=>{
       if(i===this.state.row.length-1 && d===1 && check===false){
-        data[i] = <td style={{backgroundColor:color}}/>;
+        data[i] = <td style={{backgroundColor:color,padding:"6px"}}/>;
         check = true;
       }
       else if(i===this.state.row.length-1 && d===2 && check===false){
         var firstrow = ((i+1)-this.state.row.length);
-        data[firstrow] = <td style={{backgroundColor:color}}/>;
+        data[firstrow] = <td style={{backgroundColor:color,padding:"6px"}}/>;
         check = true;
       }
       else if(i===0 && d===1 && check===false){
-        this.updateGraph(data,track,i,color);
+        this.updateRowD(data,track,i,color);
         check = true;
       }
       else if(i===this.state.row.length-1 && d===1 && check===false){
-        this.updateGraph(data,track,i,color);
+        this.updateRowD(data,track,i,color);
         check = true;
       }
       else if(d===1 && check===false){
-        this.updateGraph(data,track,(i-1),color);
+        this.updateRowD(data,track,(i-1),color);
         check = true;
       }
     });
@@ -235,10 +245,10 @@ export class TableMain extends Component {
 
   clearGraph = (track, x) => {
     this.state.track[x].map((t,i)=>{
-      this.state.row_A[x][i] = <td style={{backgroundColor:""}}/>
-      this.state.row_B[x][i] = <td style={{backgroundColor:""}}/>
-      this.state.row_C[x][i] = <td style={{backgroundColor:""}}/>
-      this.state.row_D[x][i] = <td style={{backgroundColor:""}}/>
+      this.state.row_A[x][i] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>
+      this.state.row_B[x][i] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
+      this.state.row_C[x][i] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
+      this.state.row_D[x][i] = <td style={{backgroundColor:"",padding:"6px"}}/>
       track[i] = 1
     });
     this.setState({time_value:0});
@@ -247,17 +257,17 @@ export class TableMain extends Component {
   clearAll = () => {
     this.state.IP.map((d,i)=>{
       this.state.row.map((e,j)=>{
-        this.state.row_A[i][j] = <td style={{backgroundColor:""}}/>
-        this.state.row_B[i][j] = <td style={{backgroundColor:""}}/>
-        this.state.row_C[i][j] = <td style={{backgroundColor:""}}/>
-        this.state.row_D[i][j] = <td style={{backgroundColor:""}}/>
+        this.state.row_A[i][j] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>
+        this.state.row_B[i][j] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
+        this.state.row_C[i][j] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
+        this.state.row_D[i][j] = <td style={{backgroundColor:"",padding:"6px"}}/>
         this.state.track[i][j] = 1
       });
     });
     this.setState({time_value:0});
   };
 
-  createRows = (x) =>{
+  createRows = (x,t) =>{
     var r = []
     switch(x){
       case 0: r[0]=<p style={{border:"none"}}>Win</p>;break;
@@ -265,14 +275,17 @@ export class TableMain extends Component {
       case 2: r[0]=<p>Wait</p>;break;
       case 3: r[0]=<p>Time</p>;break;
     }
-    this.state.row.map((data,i)=>{r[i] = <td/>});
+    if(t === 0)
+      this.state.row.map((data,i)=>{r[i] = <td style={{padding:"32px 14px 0px 14px"}}></td>});
+    else
+      this.state.row.map((data,i)=>{r[i] = <td style={{padding:"6px"}}></td>});
     return r;
   };
 
-  createArr = (x) => {
+  createArr = (x,t) => {
     var arr = new Array(100); //bug with getting length so hardcoded for now
     this.state.data.map((data,i)=>{
-      arr[i] = this.createRows(x);
+      arr[i] = this.createRows(x,t);
     });
     return arr;
   };
@@ -304,7 +317,7 @@ export class TableMain extends Component {
           <Table>
             <thead>
               <tr className="text-center">
-                <th/>
+                
                 <th>Node</th>
                 <th>Address</th>
                 <th>Graph
@@ -314,7 +327,7 @@ export class TableMain extends Component {
                     </Button>
                 </th>
                 <th>Services</th>
-                <th/>
+                
               </tr>
             </thead>
             
@@ -323,14 +336,14 @@ export class TableMain extends Component {
                 var parsed_data = JSON.parse(data);                
                 return (
                   <tr key={i}>
-                    <td/>
+                    
                     <td style={{verticalAlign:"middle",
                                 fontSize:"20px",fontWeight:"bold"}}>{i+1}
                     </td>
                     <td style={{verticalAlign:"middle",
                                 marginTop:"0px",
                                 color:"#D73F09",
-                                fontSize:"26px"}}>{parsed_data['address']}
+                                fontSize:"24px"}}>{parsed_data['address']}
                     </td>
           
                     <td style={{verticalAlign:"middle",paddingLeft:"2%",paddingRight:"2%"}}>
@@ -363,7 +376,7 @@ export class TableMain extends Component {
                         );
                       })}
                     </td>
-                    <td/>
+                    
                   </tr>
                 );
               })}
@@ -650,7 +663,6 @@ class FormSend extends Component {
                     <ToggleButton style={{color:""}}
                                   className="btn btn-default"
                                   id="TabButtons_c"
-                                  disabled
                                   value={this.state.wpy_on}>
                                   <p>WPY ON</p>
                     </ToggleButton>

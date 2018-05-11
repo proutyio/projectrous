@@ -51,7 +51,7 @@ def run_service(msg, ukey, sender_address):
 			if srv == "red_blue_green":
 				red_blue_green(ukey,sender_address)
 			if srv == "white_pink_yellow":
-				red_blue_green(ukey,sender_address)
+				white_pink_yellow(ukey,sender_address)
 		else:
 			# print "in"
 			complex(msg, ukey, sender_address)
@@ -90,26 +90,27 @@ def print_color(sender_address):
 
 def red_blue_green(ukey, sender_address):
 	lst = [r_on,b_on,g_on]
-	msg = build_complex_service(lst)
-	network.send_multicast_message(msg,ukey,sender_address)
+	# msg = build_complex_service(lst)
+	# network.send_multicast_message(msg,ukey,sender_address)
+	for l in lst:
+		network.send_multicast_message(l,ukey,sender_address)
+		time.sleep(3)
 
 def white_pink_yellow(ukey, sender_address):
 	lst = [w_on,p_on,y_on]
-	msg = build_complex_service(lst)
-	network.send_multicast_message(msg,ukey,sender_address)
+	# msg = build_complex_service(lst)
+	# network.send_multicast_message(msg,ukey,sender_address)
+	for l in lst:
+		network.send_multicast_message(l,ukey,sender_address)
+		time.sleep(3)
+
 
 def build_complex_service(msg_lst):
-	print
-	print msg_lst
 	msg = '['
 	for m in msg_lst:
 		msg+=''+m+','
-		print msg
 	msg = msg[:-1]+']'
-	print msg
 	msg = '{"tag":"service","service":"complex","services":'+msg+'}'
-	# print json.loads(msg)
-	print
 	return msg 
 
 def thread_complex(services,ukey,sender_address):
@@ -129,7 +130,6 @@ def complex(msg, ukey, sender_address):
 			services = []
 			for m in msg['services']:
 				services.append('{"tag":"'+m['tag']+'","service":"'+m['service']+'"' )
-			print services
 		else:
 			services = msg['services'][1:-1].split("}")
 	finally:

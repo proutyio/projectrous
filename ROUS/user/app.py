@@ -54,17 +54,19 @@ def discover_nodes():
 #
 @io.on('send')
 def send_message(message):
-	network.send_multicast_message(message,ukey,self_ip)
-	time.sleep(1)
 	io.emit("updatetime")
+	time.sleep(2)
+	network.send_multicast_message(message,ukey,self_ip)
+	
 
 
 @io.on('complex_send')
 def complex_send(msg_lst):
+	io.emit("updatetime")
+	time.sleep(2)
 	message = build_complex(msg_lst)
 	network.send_multicast_message(message,ukey,self_ip)
-	time.sleep(1)
-	io.emit("updatetime")
+	
 
 #
 @io.on("erase_data")
@@ -94,13 +96,13 @@ def remove_trust(block_ip):
 		# network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
-			network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.105',"key,ukey,"+newkey)
-			# for r in removed:
-			# 	if r != str(0):
-			# 		network.send_tcp_message(r,"key,ukey,"+newkey)
+			# network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey)
+			# network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey)
+			# network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey)
+			# network.send_tcp_message('192.168.0.105',"key,ukey,"+newkey)
+			for r in removed:
+				if r != str(0):
+					network.send_tcp_message(r,"key,ukey,"+newkey)
 		except: pass
 		if nodes:
 			for n in nodes:
