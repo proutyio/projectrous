@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import threading
-# import logging as log
 import config
 import printer
 import rpi_control as rpi
@@ -16,7 +15,7 @@ y_on = '{"tag":"service","service":"yellow_on"}'
 w_on = '{"tag":"service","service":"white_on"}'
 complex_timeout = 2
 
-#this is confusing looking, but I am just building a string
+#this is confusing looking, but I am just building a string, and returning it
 def all_services():
 	jstr = '['
 	svc = config.all_services()
@@ -25,15 +24,10 @@ def all_services():
 	jstr = jstr[:-1]+']'
 	return jstr
 
-
 def run_service(msg, ukey, sender_address):
-		# print "out"
-	# rpi.on("green")
-	#try:
+	try:
 		if not msg['service'] == "complex":
-			# print msg['service']
-			# print config.call_service(msg['service'], sender_address)
-			
+			#config.call_service(msg['service'], sender_address)
 			## !! temp bug fix, hardcoded for now
 			srv = msg['service']
 			if srv == "green_on":
@@ -53,12 +47,9 @@ def run_service(msg, ukey, sender_address):
 			if srv == "white_pink_yellow":
 				white_pink_yellow(ukey,sender_address)
 		else:
-			# print "in"
 			complex(msg, ukey, sender_address)
-			# print "call service "+msg['service']
-			# log.info("%s Error - Failed to call serivce", sender_address)
-	#finally:
-	#	pass
+	except:
+		pass
 
 
 # this code looks like it should be refactored but it works like this for
@@ -90,20 +81,13 @@ def print_color(sender_address):
 
 def red_blue_green(ukey, sender_address):
 	lst = [r_on,b_on,g_on]
-	# msg = build_complex_service(lst)
-	# network.send_multicast_message(msg,ukey,sender_address)
-	for l in lst:
-		network.send_multicast_message(l,ukey,sender_address)
-		time.sleep(3)
+	msg = build_complex_service(lst)
+	network.send_multicast_message(msg,ukey,sender_address)
 
 def white_pink_yellow(ukey, sender_address):
 	lst = [w_on,p_on,y_on]
-	# msg = build_complex_service(lst)
-	# network.send_multicast_message(msg,ukey,sender_address)
-	for l in lst:
-		network.send_multicast_message(l,ukey,sender_address)
-		time.sleep(3)
-
+	msg = build_complex_service(lst)
+	network.send_multicast_message(msg,ukey,sender_address)
 
 def build_complex_service(msg_lst):
 	msg = '['

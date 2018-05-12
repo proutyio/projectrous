@@ -2,7 +2,6 @@ from Crypto.Cipher import AES
 from Crypto import Random
 import uuid
 
-
 def encrypt(message, key):
 	try:
 		iv = Random.new().read(AES.block_size)

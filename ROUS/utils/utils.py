@@ -5,21 +5,19 @@ import signal
 import commands
 import socket
 import re
-# import logging as log
 
-# log_file = "rous.log"
 
-#
+# return blacklist
 def blacklist():
     import config as configuration
     return configuration.settings("blacklist")
 
-#
+# return ukey
 def ukey(): 
     import config as configuration
     return configuration.settings("node_key")
 
-#
+# returns admin key
 def akey():
     import config as configuration 
     return configuration.settings("admin_key")
@@ -33,7 +31,6 @@ def setup_logger():
         level=log.INFO)
 # setup_logger()
 
-
 #
 def read_from_whitelist(address):
     try:
@@ -43,8 +40,6 @@ def read_from_whitelist(address):
         return lst
     except:
         pass
-        # log.error("%s - FAILED to read blacklist",address)
-
 
 #
 def write_to_whitelist(lst, address):
@@ -58,22 +53,16 @@ def write_to_whitelist(lst, address):
         f.close()
     except:
         pass
-        # log.error("%s - FAILED to write to blacklist",address)
-
 
 #
 def write_new_key(file, newkey, address):
     erase_text_file(file, address)
-    print
-    print file
     try:
         f = open(file, "a")
-        print f
         f.write(newkey)
         f.close()
     except:
         print "FAILED to write to new key"
-
 
 #
 def erase_text_file(text_file, address):
@@ -83,8 +72,6 @@ def erase_text_file(text_file, address):
         f.close()
     except:
         pass
-        # log.error("%s - FAILED to erase text file",address)
-
 
 #
 def root_path():

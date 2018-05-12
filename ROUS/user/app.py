@@ -32,6 +32,11 @@ win_nodes = []
 check_nodes = []
 mutex = Lock()
 
+# web socket functions. they listen for keywords and can emit messages
+#	back to the sender. This is the functionality that updates the 
+#	react frontend interface with data. Functions to pass data to the 
+# 	via web sockets and listen for multicast message using the same
+#	python functions that the nodes use.
 #
 @io.on('connect')
 def connected():
@@ -119,7 +124,8 @@ def remove_trust(block_ip):
 				utils.write_new_key(utils.ukey(),newkey,self_ip)
 
 
-#
+# build then return a json string for complex jobs. takes a
+#	list of single services.
 def build_complex(msg_lst):
 	msg = '['
 	for m in msg_lst:
@@ -129,6 +135,8 @@ def build_complex(msg_lst):
 	return msg
 
 
+# sits in a thread and listens for multicast messages. this is
+#	how all data is collected to send to fontend
 # lots of try except so I can allow some cases to be able to fail
 def thread_listener(sock, address):
 	while True:
@@ -156,7 +164,7 @@ def thread_listener(sock, address):
 			finally:
 				mutex.release()
 
-#
+# mutlicast listen, threaded
 def listener():
 	sock = network.start_multicast_receiver(self_ip)
 	t = Thread(target=thread_listener, args=(sock, self_ip))
@@ -164,7 +172,8 @@ def listener():
 	return t
 
 
-#
+# parses through the captured mutlicast data and finds all the nodes
+#	by their IP and then return the full json string in a list of nodes
 def find_nodes():
 	network.send_multicast_message(
 		'{"tag":"whois","address":"'+self_ip+'"}',ukey,self_ip)

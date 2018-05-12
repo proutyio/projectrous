@@ -89,7 +89,7 @@ def choose_path(message, sock):
 
 
 
-#
+# main pathway for any service. starts bidding if service exists
 def service_path(msg, sock):
     if check_service_exists(msg):
         del bids[:]
@@ -148,7 +148,7 @@ def place_bid(my_bid):
 
 
 
-#
+# this is started and controls how long the node waits for bids
 def thread_timer(my_bid,msg):
     TTL = 1
     timeout = time.time()+TTL
@@ -167,7 +167,8 @@ def timer(my_bid, msg):
     t.start()
 
 
-#
+# after the nodes have collected bids, this function finishes the
+#   process and calls the service function if node wins
 def finish_bidding(my_bid,msg):
     try:
         print bids
@@ -212,9 +213,9 @@ def handle_crtl_c(signal, frame):
     sys.exit(0)
 
 
-#
+# starts multicast, starts tcp server, and then starts listening for multicast messages
 def main():
-    # try:
+    try:
         mcast_sock = network.start_multicast_receiver(self_ip)
         network.send_multicast_message(
             '{"tag":"info","message":"starting mcast reciever","address":"'
@@ -229,9 +230,9 @@ def main():
             '{"tag":"info","message":"waiting for message","address":"'
             +self_ip+'"}',ukey,self_ip)
         wait_for_message(mcast_sock)
-    # except:
-        # pass
-        # network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
+    except:
+        pass
+        network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
 
 
 signal.signal(signal.SIGINT, handle_crtl_c)

@@ -4,6 +4,8 @@ import threading
 import utils
 import config
 
+# RPi control manages turning on and off GPIO pins
+
 green_threads = []
 red_threads = []
 blue_threads = []

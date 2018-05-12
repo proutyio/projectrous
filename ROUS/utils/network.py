@@ -6,11 +6,12 @@ import socket
 import struct
 import re
 import threading
-# import logging as log
 import utils 
 import config as configuration
 import encryption
 
+# both nodes and user use the below network function to listen and send 
+#	multicast and tcp messages.
 
 mcast_host = configuration.settings("mcast_host")
 mcast_port = int(configuration.settings("mcast_port"))
@@ -30,8 +31,6 @@ def find_my_ip():
 		return ip
 	except:
 		print "failed to find_my_ip"
-		# log.error("FAILED to find my IP address")
-
 
 
 #
@@ -43,14 +42,13 @@ def start_multicast_receiver(address):
                     socket.IP_ADD_MEMBERSHIP, 
                     struct.pack('4sL', socket.inet_aton(mcast_host), socket.INADDR_ANY)
                     )
-	# log.info("%s - STARTED multicast receiver", address)
 	return sock
 
 
 
 #
 def send_multicast_message(message, key, address):
-	#try:
+	try:
 		multicast_group = (mcast_host, mcast_port)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		sock.setsockopt(socket.IPPROTO_IP, 
@@ -59,11 +57,9 @@ def send_multicast_message(message, key, address):
 						)
 		encrypt_message = encryption.encrypt(str(message), key)
 		sent = sock.sendto(encrypt_message, multicast_group)
-		sock.close()
-		#log.info("%s - SENT: %s", address, message)
-		
-	#except:
-		#log.error("%s - FAILED to send: %s", address, message)
+		sock.close()		
+	except:
+		log.error("%s - FAILED to send: %s", address, message)
 
 
 
@@ -106,7 +102,7 @@ def receive_print(data, conn):
 
 
 
-#
+# writes a new key to the key file
 def update_key(data, host):
 	try:
 		msg = data.split(",")
@@ -128,7 +124,6 @@ def start_tcp_server(address):
 
 
 
-
 # send message to myself, I use this to stop the tcp server thread
 #	with a "stop" message 
 def send_tcp_message(host,message):
@@ -142,7 +137,6 @@ def send_tcp_message(host,message):
 	finally:
 		sock.close()
 		return
-	# except:
 
 
 

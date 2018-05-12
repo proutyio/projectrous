@@ -39,23 +39,17 @@ def all_services():
 				services.append(function)
 	return services
 
-#
+
+# uses config to find module and calls passed in function in that module
 def call_service(service, sender_address):
-	print service
 	config = config_parser( configuration )
 	for section in config.sections():
 		for (function, file) in config.items(section): 
 			if(function == service):
-				print file
 				file = "ROUS/"+file
 				filepath = utils.file_path(file)
-				print filepath
-				#try:
 				module = imp.load_source(function, filepath)
-				print module
 				call_func = getattr(module, function) #the goods, magic is here
 				call_func(sender_address)
 				return True
-				#except:
-				#	return False
 	return False

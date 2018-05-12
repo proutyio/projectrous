@@ -15,3 +15,6 @@ def start_frontend():
 
 start_backend()
 #start_frontend()
+
+
+# not using this anymore. install scripts add a start up script to desktop to click on
