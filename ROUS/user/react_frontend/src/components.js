@@ -90,7 +90,7 @@ export class TableMain extends Component {
       track:[],
       time_value:0,
       time_color:"black",
-      IP:["192.168.0.102","192.168.0.103"],  
+      IP:["192.168.0.101","192.168.0.102","192.168.0.103","192.168.0.106"],  
     };
     
     setInterval(() => {
@@ -118,22 +118,16 @@ export class TableMain extends Component {
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
               this.graphLogic(this.state.row_A[i],i,this.state.track[i],"green")
-              this.updateTime(
-                this.state.row_D[i],i,this.state.track[i],findColor(this.state.time_value))
           })
         if(m["tag"] == "bidding")
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
               this.graphLogic(this.state.row_B[i],i,this.state.track[i],"red")
-              this.updateTime(
-                this.state.row_D[i],i,this.state.track[i],findColor(this.state.time_value))
           })
         if(m["tag"] == "waiting")
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
               this.graphLogic(this.state.row_C[i],i,this.state.track[i],"blue")
-              this.updateTime(
-                this.state.row_D[i],i,this.state.track[i],findColor(this.state.time_value))
           })
       });
     });
@@ -182,17 +176,21 @@ export class TableMain extends Component {
       track.map((data,i)=>{
         if(i===this.state.row.length-1 && data===1 && check===false){
           graph[i] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
+          this.state.row_D[x][i] = 
+                <td style={{backgroundColor:findColor(this.state.time_value),padding:"6px"}}/>;
           track[i] = 2;
         }
         else if(i===this.state.row.length-1 && data===2 && check===false){
           this.clearGraph(track,x);
           var firstrow = ((i)-this.state.row.length);
           graph[firstrow] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
+          this.state.row_D[x][firstrow] = 
+                <td style={{backgroundColor:findColor(this.state.time_value),padding:"6px"}}/>;
           track[firstrow] = 2;
           check = true;
         }
         else if(data===1 && check===false){
-          this.updateGraph(graph,track,i,color);     
+          this.updateGraph(graph,x,track,i,color);     
           check = true;
           track[i] = 2;
         }
@@ -200,48 +198,52 @@ export class TableMain extends Component {
     }finally{}
   };
 
-  updateGraph = (data,track,i,color) => {
+  updateGraph = (data,x,track,i,color) => {
     data[i] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
+    this.state.row_D[x][i] = 
+          <td style={{backgroundColor:findColor(this.state.time_value),padding:"6px"}}/>;
     data.map((r,j) => {
-      if(j > i)
+      if(j > i){
         data[j] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>;
+        this.state.row_D[x][j] = <td style={{backgroundColor:"",padding:"6px"}}/>;
+      }
     });
   };
 
-  updateRowD = (data,track,i,color) => {
-    data[i] = <td style={{backgroundColor:color,padding:"6px"}}/>;
-    data.map((r,j) => {
-      if(j > i)
-        data[j] = <td style={{backgroundColor:"",padding:"6px"}}/>;
-    });
-  };
+  // updateRowD = (data,track,i,color) => {
+  //   data[i] = <td style={{backgroundColor:color,padding:"6px"}}/>;
+  //   data.map((r,j) => {
+  //     if(j > i)
+  //       data[j] = <td style={{backgroundColor:"",padding:"6px"}}/>;
+  //   });
+  // };
 
-  updateTime = (data,x,track,color) => {
-    var check = false;
-    track.map((d,i)=>{
-      if(i===this.state.row.length-1 && d===1 && check===false){
-        data[i] = <td style={{backgroundColor:color,padding:"6px"}}/>;
-        check = true;
-      }
-      else if(i===this.state.row.length-1 && d===2 && check===false){
-        var firstrow = ((i+1)-this.state.row.length);
-        data[firstrow] = <td style={{backgroundColor:color,padding:"6px"}}/>;
-        check = true;
-      }
-      else if(i===0 && d===1 && check===false){
-        this.updateRowD(data,track,i,color);
-        check = true;
-      }
-      else if(i===this.state.row.length-1 && d===1 && check===false){
-        this.updateRowD(data,track,i,color);
-        check = true;
-      }
-      else if(d===1 && check===false){
-        this.updateRowD(data,track,(i-1),color);
-        check = true;
-      }
-    });
-  };
+  // updateTime = (data,x,track,color) => {
+  //   var check = false;
+  //   track.map((d,i)=>{
+  //     if(i===this.state.row.length-1 && d===1 && check===false){
+  //       data[i] = <td style={{backgroundColor:color,padding:"6px"}}/>;
+  //       check = true;
+  //     }
+  //     else if(i===this.state.row.length-1 && d===2 && check===false){
+  //       var firstrow = ((i+1)-this.state.row.length);
+  //       data[firstrow] = <td style={{backgroundColor:color,padding:"6px"}}/>;
+  //       check = true;
+  //     }
+  //     else if(i===0 && d===1 && check===false){
+  //       this.updateRowD(data,track,i,color);
+  //       check = true;
+  //     }
+  //     else if(i===this.state.row.length-1 && d===1 && check===false){
+  //       this.updateRowD(data,track,i,color);
+  //       check = true;
+  //     }
+  //     else if(d===1 && check===false){
+  //       this.updateRowD(data,track,(i-1),color);
+  //       check = true;
+  //     }
+  //   });
+  // };
 
   clearGraph = (track, x) => {
     this.state.track[x].map((t,i)=>{

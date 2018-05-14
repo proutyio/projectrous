@@ -118,7 +118,6 @@ def remove_trust(block_ip):
 			network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		for n in nodes: #issue new keys to all nodes but untrusted
 			node_ip = json.loads(n)['address']
-			print node_ip
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
 				utils.write_new_key(utils.ukey(),newkey,self_ip)
