@@ -13,9 +13,9 @@ def find_printer():
 		print p
 	return (conn, printers.keys()[0])
 
-def print(file):
-	(conn, printer) = find_printer()
-	conn.printFile(printer, file, "", {"cpi": "12", "lpi": "8"})
+# def print(file):
+# 	(conn, printer) = find_printer()
+# 	conn.printFile(printer, file, "", {"cpi": "12", "lpi": "8"})
 
 def print_file(file):
 	os.system("lp ~/ROUS/rous/utils/m.txt")

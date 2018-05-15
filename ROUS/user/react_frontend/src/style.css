@@ -4,7 +4,6 @@ body, ul {
 	background-color: #FFFFFF;
 	/*font-family: "Times New Roman", Times, serif;*/
 	 font-size: 16px;
-
 }
 
 body { padding: 40px; }
@@ -53,8 +52,6 @@ svg {
 .FormSend {
 	/*background-color: #fff0e6;*/
 }
-
-
 
 #TopWell {
 	margin: 0;
@@ -125,7 +122,24 @@ svg {
 	margin-top:40%;
 }
 
+#r_style {
+	font-size: 11px;
+	padding: 6px 2px 0px 2px;
+	/*width: 2px;*/
+	border: none;
+	box-shadow:none;
+}
 
 #rowD {
 	height:100px;
 }
+
+#rowE{
+	border: none;
+	box-shadow:none;
+	background-color:"";
+	padding: 6px;
+	text-align: center;
+}
+
+

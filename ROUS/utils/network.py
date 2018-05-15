@@ -59,7 +59,7 @@ def send_multicast_message(message, key, address):
 		sent = sock.sendto(encrypt_message, multicast_group)
 		sock.close()		
 	except:
-		log.error("%s - FAILED to send: %s", address, message)
+		print "multicast send FAILED"
 
 
 
