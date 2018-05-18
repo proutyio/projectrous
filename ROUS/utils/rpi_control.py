@@ -34,12 +34,9 @@ def thread_on(str_pin):
 	print "ON"
 	(pin, threads) = find_pin(str_pin)
 	for t in threads:
-		start = time.time()
 		while getattr(t, "exit", True):
 			rpi.output(pin,rpi.HIGH)
-			if(abs(start-time.time()) > led_timeout):
-				off(str_pin)
-
+			
 
 def off(str_pin):
 	(pin, threads) = find_pin(str_pin)

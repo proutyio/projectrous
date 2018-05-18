@@ -7,7 +7,6 @@ import random
 import threading
 import time
 import json
-# import logging as log
 from functools import partial
 import utils.utils as utils
 import utils.services as services
@@ -64,7 +63,6 @@ def decrypt_message(message):
     return encryption.decrypt(message, ukey)
 
 
-
 # if host is in list return true, returns empty list
 # else return original list
 def check_trust(host, data):
@@ -75,8 +73,6 @@ def check_trust(host, data):
     return True
 
 
-
-
 # choose the path the message will take
 def choose_path(message, sock): 
     m = json.loads(message)
@@ -85,8 +81,8 @@ def choose_path(message, sock):
     elif m['tag'] == "error": error_path()
     elif m['tag'] == "whois": whois_path()
     elif m['tag'] == "bid": bid_path(m)
+    elif m['tag'] == "leds_off": led_path(m)
     else: return
-
 
 
 # main pathway for any service. starts bidding if service exists
@@ -100,7 +96,6 @@ def service_path(msg, sock):
         place_bid(my_bid)
         return    
 
-
 #
 def whois_path():
     servs = json.dumps(services.all_services())
@@ -109,13 +104,16 @@ def whois_path():
         +self_ip+'","services":'+servs+'}',ukey,self_ip)
 
 
-
 #
 def bid_path(msg):
     if msg['tag'] == "bid":
         if msg['bid'].isdigit():
             bids.append(str(msg['bid']))
             return
+
+#
+def led_path(msg):
+    services.leds_off()
 
 
 # these are here incase I want to use them later.
@@ -137,15 +135,12 @@ def check_service_exists(msg):
     return False
 
 
-
-
 # thread dies after it sends bid to multicast group
 def place_bid(my_bid):
     network.send_multicast_message(
         '{"tag":"bid","bid":"'+str(my_bid)+'","address":"'+self_ip+'"}',ukey,self_ip)
     t = threading.Thread(target=network.send_multicast_message, args=(my_bid,ukey,self_ip))
     t.start()
-
 
 
 # this is started and controls how long the node waits for bids
@@ -189,7 +184,7 @@ def finish_bidding(my_bid,msg):
         del bids[:]
         network.send_multicast_message(
             '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
-        
+
 
 #
 def slow_down():

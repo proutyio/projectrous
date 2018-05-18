@@ -63,15 +63,16 @@ def send_message(message):
 	time.sleep(2)
 	network.send_multicast_message(message,ukey,self_ip)
 	
-
-
+#
 @io.on('complex_send')
 def complex_send(msg_lst):
+	turn_off_leds()
+	io.emit("clearall")
+	time.sleep(.5)
 	io.emit("updatetime")
 	time.sleep(2)
 	message = build_complex(msg_lst)
 	network.send_multicast_message(message,ukey,self_ip)
-	
 
 #
 @io.on("erase_data")
@@ -83,11 +84,12 @@ def erase_data():
 	finally:
 		mutex.release()
 
+#
 @io.on("clearall")
 def clear_all():
+	turn_off_leds()
 	network.send_multicast_message(
 		'{"tag":"clearall","address":"'+self_ip+'"}',ukey,self_ip)
-
 
 
 # when restoring I want to issue new keys to removed list + found nodes
@@ -98,7 +100,7 @@ def remove_trust(block_ip):
 	newkey = str(encryption.newkey())
 	removed.append(block_ip)
 	if block_ip == str(0): #restore keys to all
-		# network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+		network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
 			network.send_tcp_message('192.168.0.101',"key,ukey,"+newkey)
@@ -121,6 +123,13 @@ def remove_trust(block_ip):
 			if block_ip != node_ip:
 				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
 				utils.write_new_key(utils.ukey(),newkey,self_ip)
+
+
+# sends msg to all nodes to turn off their leds
+@io.on('leds_off')
+def turn_off_leds():
+	network.send_multicast_message(
+		'{"tag":"leds_off","address":"'+self_ip+'"}',ukey,self_ip)
 
 
 # build then return a json string for complex jobs. takes a

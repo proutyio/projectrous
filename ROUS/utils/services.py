@@ -15,6 +15,7 @@ y_on = '{"tag":"service","service":"yellow_on"}'
 w_on = '{"tag":"service","service":"white_on"}'
 complex_timeout = 2
 
+
 #this is confusing looking, but I am just building a string, and returning it
 def all_services():
 	jstr = '['
@@ -72,6 +73,14 @@ def white_on(sender_address):
 
 def pink_on(sender_address):
 	rpi.on("pink")
+
+def leds_off():
+	rpi.off("green")
+	rpi.off("red")
+	rpi.off("blue")
+	rpi.off("pink")
+	rpi.off("yellow")
+	rpi.off("white")
 
 def print_bw(sender_address):
 	printer.print_file("rous/utils/m.txt")

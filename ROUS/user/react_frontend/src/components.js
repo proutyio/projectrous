@@ -83,11 +83,11 @@ export class TableMain extends Component {
       untrusted:[],
       check:false,
       row:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //graph block rows, gets size from
-      row_A:[],
-      row_B:[],
-      row_C:[],
-      row_D:[],
-      row_E:[],
+      row_A:[], //winner
+      row_B:[], //bidding
+      row_C:[], //waiting
+      row_D:[], //timeline
+      row_E:[], //service
       track:[],
       time_value:0,
       time_color:"black",
@@ -120,12 +120,12 @@ export class TableMain extends Component {
         if(m["tag"] == "winner")
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
-              this.graphLogic(this.state.row_A[i],i,this.state.track[i],"#DAA520",m,true)
+              this.graphLogic(this.state.row_A[i],i,this.state.track[i],"green",m,true)
           })
         if(m["tag"] == "bidding")
           this.state.IP.map((ip,i)=>{
             if(m["address"] == ip)
-              this.graphLogic(this.state.row_B[i],i,this.state.track[i],"#FF1493",m,false)
+              this.graphLogic(this.state.row_B[i],i,this.state.track[i],"red",m,false)
           })
         if(m["tag"] == "waiting")
           this.state.IP.map((ip,i)=>{
@@ -183,7 +183,7 @@ export class TableMain extends Component {
       track.map((data,i)=>{
         if(i===this.state.row.length-1 && data===1 && check===false){
           graph[i] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
-          this.state.row_D[x][i] = <td style={{backgroundColor:findColor(this.state.time_value),padding:"6px"}}/>;
+          this.state.row_D[x][i] = <td style={{backgroundColor:findColor(this.state.time_value),padding:"5px"}}/>;
           track[i] = 2;
           if(bool === true)
             this.state.row_E[x][i] = <td id="r_style">{removeAndCapitalize(msg['service'])}</td>
@@ -192,7 +192,7 @@ export class TableMain extends Component {
           this.clearGraph(track,x);
           var firstrow = ((i)-this.state.row.length);
           graph[firstrow] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
-          this.state.row_D[x][firstrow] = <td style={{backgroundColor:findColor(this.state.time_value),padding:"6px"}}/>;
+          this.state.row_D[x][firstrow] = <td style={{backgroundColor:findColor(this.state.time_value),padding:"5px"}}/>;
           track[firstrow] = 2;
           check = true;
           if(bool === true)
@@ -209,7 +209,7 @@ export class TableMain extends Component {
 
   updateGraph = (data,x,track,i,color,msg,bool) => {
     data[i] = <td style={{backgroundColor:color,padding:"32px 14px 0px 14px"}}/>;
-    this.state.row_D[x][i] = <td style={{backgroundColor:findColor(this.state.time_value),padding:"6px"}}/>;
+    this.state.row_D[x][i] = <td style={{backgroundColor:findColor(this.state.time_value),padding:"5px"}}/>;
     if(bool === true)
       this.state.row_E[x][i] = <p style={{fontSize:"11px",marginBottom:"2px",fontWeight:"bold"}}>
                                   {this.snd(msg['service'])}
@@ -217,7 +217,7 @@ export class TableMain extends Component {
     data.map((r,j) => {
       if(j > i){
         data[j] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>;
-        this.state.row_D[x][j] = <td style={{backgroundColor:"",padding:"6px"}}/>;
+        this.state.row_D[x][j] = <td style={{backgroundColor:"",padding:"5px"}}/>;
       }
     });
   };
@@ -227,7 +227,7 @@ export class TableMain extends Component {
       this.state.row_A[x][i] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>
       this.state.row_B[x][i] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
       this.state.row_C[x][i] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
-      this.state.row_D[x][i] = <td style={{backgroundColor:"",padding:"6px"}}/>
+      this.state.row_D[x][i] = <td style={{backgroundColor:"",padding:"5px"}}/>
       this.state.row_E[x][i] = <td id="rowE" style={{backgroundColor:"",padding:"6px"}}/>
       track[i] = 1
     });
@@ -240,7 +240,7 @@ export class TableMain extends Component {
         this.state.row_A[i][j] = <td style={{backgroundColor:"",padding:"32px 14px 0px 14px"}}/>
         this.state.row_B[i][j] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
         this.state.row_C[i][j] = <td style={{backgroundColor:"",padding:"32px 0px 0px 0px"}}/>
-        this.state.row_D[i][j] = <td style={{backgroundColor:"",padding:"6px"}}/>
+        this.state.row_D[i][j] = <td style={{backgroundColor:"",padding:"5px"}}/>
         this.state.row_E[i][j] = <td id="rowE" style={{backgroundColor:"",padding:"6px"}}/>
         this.state.track[i][j] = 1
       });
@@ -261,7 +261,7 @@ export class TableMain extends Component {
     else if(t === 1)
       this.state.row.map((data,i)=>{r[i] = <td style={{padding:"6px",border:"none",boxShadow:"none"}}></td>});
     else
-      this.state.row.map((data,i)=>{r[i] = <td style={{padding:"6px"}}></td>});
+      this.state.row.map((data,i)=>{r[i] = <td style={{padding:"5px"}}></td>});
     return r;
   };
 
@@ -404,7 +404,7 @@ export class TableMain extends Component {
               </FormGroup>
               <FormGroup className="text-center" style={{marginTop:"0px"}}>
                 <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",
-                                padding:"10px 35px 10px 20px",
+                                padding:"6px 25px 6px 10px",
                                 marginLeft:"2%"}} 
                         type="submit"><h4><b>REMOVE</b> Node Trust</h4>
                 </Button>
@@ -510,7 +510,7 @@ class FormSend extends Component {
           <ButtonToolbar className="text-center" style={{margin:"15px",marginBottom:"15px"}}>
             <ToggleButtonGroup type="radio" name="options" defaultValue={0} vertical>
               <ToggleButton style={{padding:"30px 50px 30px 50px",fontWeight:"bold",
-                                    marginBottom:"3%"}} 
+                                    marginBottom:"0%"}} 
                             onChange={this.handleShow}>
                             Complex Job</ToggleButton>
               </ToggleButtonGroup>
@@ -558,7 +558,7 @@ class FormSend extends Component {
                             <p>White ON</p>
               </ToggleButton>
 
-              <ToggleButton style={{width:"85%",marginTop:"1%",marginLeft:"0%",
+              <ToggleButton style={{width:"85%",marginTop:"5%",marginLeft:"0%",
                                     fontSize:"12px"}}
                             onChange={this.messageChange}
                             value={this.state.print_bw}>
@@ -582,7 +582,7 @@ class FormSend extends Component {
           <FormGroup className="text-center" style={{marginTop:"25px",marginLeft:"0px"}}>
             <Col>
               <Button style={{backgroundColor:"#D73F09",color:"#FFFFFF",
-                              padding:"10px 20px 10px 20px",
+                              padding:"6px 10px 6px 10px",
                               marginRight:"12px"}}
                       className="btn btn-default" 
                       type="submit"><h4><b>SEND</b> to Node Network</h4></Button>
@@ -751,25 +751,25 @@ export class ConsoleLog extends Component {
 
   filterTag = (data) => {
     if(JSON.parse(data)['tag']==="winner")
-      return  <p style={{color:"#DAA520",fontWeight:"bold"}}>
-                WINNER
-                <p style={{fontWeight:"bold",color:"black"}}>
+      return  <p style={{color:"green",fontWeight:"bold",padding:"0px",margin:"0px"}}>
+                {' '}WINNER
+                <p style={{fontWeight:"bold",color:"black",padding:"0px",margin:"0px"}}>
                   <div className="text-center" style={{marginLeft:"8%"}}>
                     {JSON.parse(data)['service']}</div>
                 </p>
               </p>
     else if(JSON.parse(data)['tag']==="bidding")
-      return <p style={{color:"#FF1493",fontWeight:"bold"}}>BIDDING</p>
+      return <p style={{color:"red",fontWeight:"bold",padding:"0px",margin:"0px"}}>
+              {' '}BIDDING</p>
     else if(JSON.parse(data)['tag']==="waiting")
-      return <p style={{color:"blue",fontWeight:"bold"}}>WAITING</p>
+      return <p style={{color:"blue",fontWeight:"bold",padding:"0px",margin:"0px"}}>
+              {' '}WAITING</p>
     else
       return ""
   };
 
   consoleOutput = (data) => {
-    if ((this.filterTag(data)) === ""){
-      return
-    }
+    if ((this.filterTag(data)) === ""){return}
     else {
       return ([
         <h4 style={{fontWeight:"bold",color:"black"}}>
@@ -784,21 +784,24 @@ export class ConsoleLog extends Component {
     return (
       <Well style={{marginTop:"0px"}}>
         <ListGroup>
-            <h3 id="Console_h4" className="text-center">
+            <h3 id="Console_h4" className="text-center" style={{paddingBottom:"5px"}}>
               Console Log
               <Button style={{marginLeft:"5%"}} 
-                      onClick={()=>{this.setState({data:[]});}}>
+                      onClick={()=>{
+                        this.setState({data:[]});
+                        this.state.socket.emit('leds_off');
+                      }}>
                       Clear
               </Button>
             </h3>
-          <div style={{paddingBottom:"10px",paddingTop:"5px"}}>
+          <div style={{paddingBottom:"0px",paddingTop:"0px"}}>
             {this.state.data.map((data,i) =>{
                 if(i >= this.state.console_length){this.setState({data:[]});}
                 return (
                   <div className="text-center">
                     <div id="Console_p" style={{textAlign:'left',marginLeft:"12%"}}>
                       <div id="Console_div">
-                        {this.consoleOutput(data)}
+                        {' '}{this.consoleOutput(data)}
                       </div>
                     </div>
                   </div>
