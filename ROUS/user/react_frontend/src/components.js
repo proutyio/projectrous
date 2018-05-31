@@ -21,7 +21,6 @@ import {
   Modal,
 } from "react-bootstrap";
 
-
 /*#######################################*/
 export const NavBarTop = (
   <Navbar className="fixedTop" fixedTop id="NavBarTop">
@@ -439,19 +438,19 @@ class FormSend extends Component {
       complex_values: [],
       bw_files: [],
       color_files:[],
-      g_on:'{"tag":"service","service":"green_on"}',
-      g_off: '{"tag":"service","service":"green_off"}',
-      r_on: '{"tag":"service","service":"red_on"}',
-      r_off: '{"tag":"service","service":"red_off"}',
-      b_on: '{"tag":"service","service":"blue_on"}',
-      b_off: '{"tag":"service","service":"blue_off"}',
-      p_on: '{"tag":"service","service":"pink_on"}',
-      y_on: '{"tag":"service","service":"yellow_on"}',
-      w_on: '{"tag":"service","service":"white_on"}',
-      rbg_on: '{"tag":"service","service":"red_blue_green"}',
-      wpy_on: '{"tag":"service","service":"white_pink_yellow"}',
-      print_bw: '{"tag":"service","service":"print_bw"}',
-      print_color: '{"tag":"service","service":"print_color"}',
+      g_on:'{"tag":"service","service":"green_on","uid":""}',
+      g_off: '{"tag":"service","service":"green_off","uid":""}',
+      r_on: '{"tag":"service","service":"red_on","uid":""}',
+      r_off: '{"tag":"service","service":"red_off","uid":""}',
+      b_on: '{"tag":"service","service":"blue_on","uid":""}',
+      b_off: '{"tag":"service","service":"blue_off","uid":""}',
+      p_on: '{"tag":"service","service":"pink_on","uid":""}',
+      y_on: '{"tag":"service","service":"yellow_on","uid":""}',
+      w_on: '{"tag":"service","service":"white_on","uid":""}',
+      rbg_on: '{"tag":"service","service":"red_blue_green","uid":""}',
+      wpy_on: '{"tag":"service","service":"white_pink_yellow","uid":""}',
+      print_bw: '{"tag":"service","service":"print_bw","uid":""}',
+      print_color: '{"tag":"service","service":"print_color","uid":""}',
     };
   }
 

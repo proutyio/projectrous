@@ -15,7 +15,7 @@ import ROUS.user.utils.network as network
 import ROUS.user.utils.encryption as encryption
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app.config['SECRET_KEY'] = 'rous'
 CORS(app)
 io = SocketIO(app)
 
@@ -58,10 +58,11 @@ def discover_nodes():
 
 #
 @io.on('send')
-def send_message(message):
+def send_message(msg):
 	io.emit("updatetime")
 	time.sleep(2)
-	network.send_multicast_message(message,ukey,self_ip)
+	msg = add_uid(msg)
+	network.send_multicast_message(msg,ukey,self_ip)
 	
 #
 @io.on('complex_send')
@@ -103,10 +104,10 @@ def remove_trust(block_ip):
 		network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
-			network.send_tcp_message('192.168.0.101',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.100',"key,ukey,"+newkey)
 			network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey)
 			network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.106',"key,ukey,"+newkey)
+			network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey)
 			# for r in removed:
 			# 	if r != str(0):
 			# 		network.send_tcp_message(r,"key,ukey,"+newkey)
@@ -132,6 +133,15 @@ def turn_off_leds():
 		'{"tag":"leds_off","address":"'+self_ip+'"}',ukey,self_ip)
 
 
+# uid gets added by backend, every message gets a uid
+def add_uid(msg):
+	uid = encryption.newkey()
+	msg = msg[:-2]
+	msg = msg+uid+'"}'
+	print msg
+	return msg
+
+
 # build then return a json string for complex jobs. takes a
 #	list of single services.
 def build_complex(msg_lst):
@@ -153,17 +163,18 @@ def thread_listener(sock, address):
 			msg = encryption.decrypt(message, ukey)
 			try:
 				tag = json.loads(msg)['tag']
-				if tag == "stop": 
+				if tag == "stop":  
 					break
 				if (tag == "winner" or 
 					tag == "bidding" or 
-					tag == "waiting"):
+					tag == "waiting"): 
 						io.emit("update_console", [msg])
-				if tag == "clearall":
+				if tag == "clearall": 
 					io.emit("clearall")
-				if tag == "timevalue":
+				if tag == "timevalue": 
 					io.emit("updatetime")
-			except: pass
+			except: 
+				pass
 			mutex.acquire()
 			try:
 				data.append(msg) 
