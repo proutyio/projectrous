@@ -92,7 +92,7 @@ def choose_path(message, sock):
 # main pathway for any service. starts bidding if service exists
 def service_path(msg, sock):
     if check_service_exists(msg):
-        service_queue.append((msg['service'],msg['uid']))
+        service_queue.append(msg)
         bidding_timer()
         network.send_multicast_message(
             '{"tag":"bidding","uid":"'+msg['uid']+'","address":"'+self_ip+'"}',ukey,self_ip)
@@ -115,7 +115,7 @@ def whois_path():
 def bid_path(msg):
     if msg['tag'] == "bid":
         if msg['bid'].isdigit():
-            bids.append( (str(msg['bid']),msg['uid']) )
+            bids.append(msg)
             return
 
 #
@@ -171,76 +171,35 @@ def bidding_timer():
 
 # after the nodes have collected bids, this function finishes the
 #   process and calls the service function if node wins
-# service_queue [(service,uid)]
-# bid [(bid,uid)]
 # my_bids [(bid,uid)]
+# for each service in queue go through bids and make
+#   list of bids that go with service uid. then check
+#   max bid on that list against self bid for service
 def finish_bidding():
     try:
-        print my_bids
-        print bids
-        print service_queue
-        # print "my bid: "+str(my_bid)
-        # print "max: "+max(bids[0])
         tmp = []
         for s in service_queue:
             del tmp[:]
             for b in bids:
-                if s[1] == b[1]:
-                    tmp.append(b[0]) 
+                if s['uid'] == b['uid']:
+                    tmp.append(b['bid']) 
             for m in my_bids:
-                if s[1] == m[1]:
-                    print
-                    print max(tmp)
-                    print m[0]
-                    print
+                if s['uid'] == m[1]:
                     if(str(m[0]) >= max(tmp)):
                         print "\tWON"
                         network.send_multicast_message(
                         '{"tag":"winner","address":"'+self_ip+'","service":"'+
-                        s[0]+'"}',ukey,self_ip)
-                        services.run_service(s[0],ukey,self_ip)
+                        s['service']+'"}',ukey,self_ip)
+                        services.run_service(s,ukey,self_ip)
                         service_queue.remove(s)
                         my_bids.remove(m)
                     else:
                         print "\tLOST" 
+    except:
+        pass
     finally:
         network.send_multicast_message(
             '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
-
-    #     if bids and (str(my_bid) >= max(bids)):
-    #         print "\tWON"
-    #         network.send_multicast_message(
-    #             '{"tag":"winner","address":"'+self_ip+'","service":"'+
-    #             msg['service']+'"}',ukey,self_ip)
-    #         services.run_service(msg,ukey,self_ip)
-    #     else:
-    #         print "\tLOST" 
-    # except:
-    #     pass
-    # finally:
-    #     # del bids[:]
-    #     network.send_multicast_message(
-    #         '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
-
-    # try:
-    #     print bids
-    #     print "my bid: "+str(my_bid)
-    #     print "max: "+max(bids[0])
-        
-    #     if bids and (str(my_bid) >= max(bids)):
-    #         print "\tWON"
-    #         network.send_multicast_message(
-    #             '{"tag":"winner","address":"'+self_ip+'","service":"'+
-    #             msg['service']+'"}',ukey,self_ip)
-    #         services.run_service(msg,ukey,self_ip)
-    #     else:
-    #         print "\tLOST" 
-    # except:
-    #     pass
-    # finally:
-    #     del bids[:]
-    #     network.send_multicast_message(
-    #         '{"tag":"waiting","address":"'+self_ip+'"}',ukey,self_ip)
 
 #
 def slow_down():
