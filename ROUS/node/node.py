@@ -47,16 +47,18 @@ def wait_for_message(sock):
         message, (host,port) = sock.recvfrom(2048)
 
         if message:
-            msg = decrypt_message(message)
             try:
+                msg = decrypt_message(message)
                 try:
                     print json.loads(msg)
                 except:
-                    print msg
-                choose_path(msg, sock)
+                    print "json loads failed"
+                try:
+                    choose_path(msg, sock)
+                except:
+                    print "failed choose_path"
             except:
-                print msg
-                print "bad message"
+                print "bad message, decrypt failed"
 
 #
 def decrypt_message(message):
@@ -178,7 +180,7 @@ def finish_bidding():
             del tmp[:]
             for b in bids:
                 if s['uid'] == b['uid']:
-                    tmp.append(b['bid']) 
+                    tmp.append(b['bid'])
             for m in my_bids:
                 if s['uid'] == m[1]:
                     if(str(m[0]) >= max(tmp)):
@@ -235,8 +237,7 @@ def main():
             +self_ip+'"}',ukey,self_ip)
         wait_for_message(mcast_sock)
     except:
-        pass
-        network.send_multicast_message("error, ERROR - main failed: "+self_ip,self_ip)
+        network.send_multicast_message("error, ERROR - main failed: "+self_ip,ukey,self_ip)
 
 
 signal.signal(signal.SIGINT, handle_crtl_c)

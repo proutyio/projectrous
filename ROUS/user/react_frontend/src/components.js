@@ -151,13 +151,12 @@ export class TableMain extends Component {
     e.preventDefault();
     if(this.state.trust !== '0'){
       this.setState({untrusted: this.state.untrusted.concat(this.state.trust)});
-      this.state.untrusted.map((data,i)=>{
-        this.state.socket.emit("trust",data);
-      });
+      // this.state.untrusted.map((data,i)=>{
+      this.state.socket.emit("trust",this.state.trust);
+      // });
     }
     else{
-      var t = this.state.trust
-      this.state.socket.emit("trust",t);
+      this.state.socket.emit("trust",this.state.trust);
       this.setState({untrusted:[]});
     }
   };
@@ -167,7 +166,7 @@ export class TableMain extends Component {
   };
 
   changeTrust = (e) => {
-    this.setState({trust: e.currentTarget.value});
+    this.state.trust = e.currentTarget.value;
   };
 
   snd = (str) => {
@@ -742,7 +741,7 @@ export class ConsoleLog extends Component {
   };
 
   filterAddress = (data) => {
-    if(JSON.parse(data)['address']==='192.168.0.100')
+    if(JSON.parse(data)['address']==='192.168.0.1')
       return ''
     else
       return JSON.parse(data)['address']

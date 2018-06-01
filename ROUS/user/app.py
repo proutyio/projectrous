@@ -97,33 +97,45 @@ def clear_all():
 # lot of error checking, looks nasty, sorry
 @io.on('trust')
 def remove_trust(block_ip):
-	find_nodes()
-	newkey = str(encryption.newkey())
-	removed.append(block_ip)
-	if block_ip == str(0): #restore keys to all
-		#network.send_tcp_message(self_ip,"key,ukey,"+newkey)
-		utils.write_new_key(utils.ukey(),newkey,self_ip)
-		try:
-			network.send_tcp_message('192.168.0.100',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey)
-			network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey)
-			# for r in removed:
-			# 	if r != str(0):
-			# 		network.send_tcp_message(r,"key,ukey,"+newkey)
-		except: pass
-		if nodes:
-			for n in nodes:
-				node_ip = json.loads(n)['address']
-				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
-	elif nodes: #remove key for selected node
-		if block_ip != self_ip: #issues new key to myself
-			network.send_tcp_message(self_ip,"key,ukey,"+newkey)
-		for n in nodes: #issue new keys to all nodes but untrusted
-			node_ip = json.loads(n)['address']
-			if block_ip != node_ip:
-				network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+	print block_ip
+
+	if block_ip != '':
+		find_nodes()
+		newkey = str(encryption.newkey())
+		removed.append(block_ip)
+		if block_ip == str(0): #restore keys to all
+			#network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+			utils.write_new_key(utils.ukey(),newkey,self_ip)
+			try: #temp bug fix till I find a better solution
+				try: 
+					network.send_tcp_message('192.168.0.100',"key,ukey,"+newkey) 
+				except: pass
+				try: 
+					network.send_tcp_message('192.168.0.102',"key,ukey,"+newkey) 
+				except: pass
+				try: 
+					network.send_tcp_message('192.168.0.103',"key,ukey,"+newkey) 
+				except: pass
+				try: 
+					network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey) 
+				except: pass
+				# for r in removed:
+				# 	if r != str(0):
+				# 		network.send_tcp_message(r,"key,ukey,"+newkey)
+			except: pass
+			# if nodes:
+			# 	for n in nodes:
+			# 		node_ip = json.loads(n)['address']
+			# 		network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+		elif nodes: #remove key for selected node
+			if block_ip != self_ip: #issues new key to myself
 				utils.write_new_key(utils.ukey(),newkey,self_ip)
+				# network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+			for n in nodes: #issue new keys to all nodes but untrusted
+				node_ip = json.loads(n)['address']
+				if block_ip != node_ip:
+					network.send_tcp_message(node_ip,"key,ukey,"+newkey)
+					# utils.write_new_key(utils.ukey(),newkey,self_ip)
 
 
 # sends msg to all nodes to turn off their leds
@@ -148,7 +160,7 @@ def build_complex(msg_lst):
 	for m in msg_lst:
 		msg+=''+add_uid(m)+','
 	msg = msg[:-1]+']'
-	msg = '{"tag":"service","service":"complex","uid":'+encryption.newkey()+',"services":'+json.dumps(msg)+'}'
+	msg = '{"tag":"service","service":"complex","uid":"'+encryption.newkey()+'","services":'+json.dumps(msg)+'}'
 	return msg
 
 
