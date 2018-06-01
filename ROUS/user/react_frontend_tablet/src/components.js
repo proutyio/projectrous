@@ -83,17 +83,19 @@ export class FormSend extends Component {
       display_values:[],
       bw_files: [],
       color_files:[],
-      g_on:'{"tag":"service","service":"green_on"}',
-      g_off: '{"tag":"service","service":"green_off"}',
-      r_on: '{"tag":"service","service":"red_on"}',
-      r_off: '{"tag":"service","service":"red_off"}',
-      b_on: '{"tag":"service","service":"blue_on"}',
-      b_off: '{"tag":"service","service":"blue_off"}',
-      p_on: '{"tag":"service","service":"pink_on"}',
-      y_on: '{"tag":"service","service":"yellow_on"}',
-      w_on: '{"tag":"service","service":"white_on"}',
-      print_bw: '{"tag":"service","service":"print_bw"}',
-      print_color: '{"tag":"service","service":"print_color"}',
+      g_on:'{"tag":"service","service":"green_on","uid":""}',
+      g_off: '{"tag":"service","service":"green_off","uid":""}',
+      r_on: '{"tag":"service","service":"red_on","uid":""}',
+      r_off: '{"tag":"service","service":"red_off","uid":""}',
+      b_on: '{"tag":"service","service":"blue_on","uid":""}',
+      b_off: '{"tag":"service","service":"blue_off","uid":""}',
+      p_on: '{"tag":"service","service":"pink_on","uid":""}',
+      y_on: '{"tag":"service","service":"yellow_on","uid":""}',
+      w_on: '{"tag":"service","service":"white_on","uid":""}',
+      rbg_on: '{"tag":"service","service":"redbluegreen","uid":""}',
+      wpy_on: '{"tag":"service","service":"whitepinkyellow","uid":""}',
+      print_bw: '{"tag":"service","service":"print_bw","uid":""}',
+      print_color: '{"tag":"service","service":"print_color","uid":""}',
     };
   }
 
@@ -106,6 +108,7 @@ export class FormSend extends Component {
 
   complexSend = (e) => {
     e.preventDefault();
+    this.state.socket.emit("clearall");
     this.state.socket.emit('complex_send',this.state.complex_values);
     this.state.display_values = this.state.complex_values; 
     this.setState({complex_values:[]});
@@ -187,6 +190,18 @@ export class FormSend extends Component {
                                   className="btn btn-default"
                                   value={this.state.w_on}>
                                   <p>White ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.rbg_on}>
+                                  <p>RBG ON</p>
+                    </ToggleButton>
+                    <ToggleButton style={{backgroundColor:""}}
+                                  id="TabButtons"
+                                  className="btn btn-default"
+                                  value={this.state.wpy_on}>
+                                  <p>WPY ON</p>
                     </ToggleButton>
               </ToggleButtonGroup>
               {this.state.complex_values.map((data,i)=>{

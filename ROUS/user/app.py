@@ -119,6 +119,9 @@ def remove_trust(block_ip):
 				try: 
 					network.send_tcp_message('192.168.0.104',"key,ukey,"+newkey) 
 				except: pass
+				try: 
+					network.send_tcp_message('192.168.0.105',"key,ukey,"+newkey) 
+				except: pass
 				# for r in removed:
 				# 	if r != str(0):
 				# 		network.send_tcp_message(r,"key,ukey,"+newkey)
