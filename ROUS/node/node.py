@@ -51,9 +51,6 @@ def wait_for_message(sock):
                 msg = decrypt_message(message)
                 try:
                     print json.loads(msg)
-                except:
-                    print "json loads failed"
-                try:
                     choose_path(msg, sock)
                 except:
                     print "failed choose_path"

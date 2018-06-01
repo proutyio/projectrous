@@ -140,7 +140,7 @@ export class FormSend extends Component {
     return (
       <Well className="FormSend" style={{marginTop:"20px",padding:"5px"}}>
           <ButtonToolbar className="text-center" justifed
-                         style={{margin:"10px",marginBottom:"100px",marginLeft:"14%"}}>
+                         style={{margin:"10px",marginBottom:"100px",marginLeft:"20%"}}>
           <div className="btn-group">
             <Form horizontal onSubmit={this.complexSend}>
 
@@ -205,7 +205,7 @@ export class FormSend extends Component {
                     </ToggleButton>
               </ToggleButtonGroup>
               {this.state.complex_values.map((data,i)=>{
-                  return <p style={{textAlign:"left",marginLeft:"35%"}}>
+                  return <p style={{textAlign:"left",marginLeft:"30%"}}>
                             {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
                           </p>  
               })}
@@ -233,9 +233,9 @@ export class FormSend extends Component {
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <h3 className="text-center" style={{color:"#D73F09",marginBottom:"15px"}}>
-              <b>Sent!</b></h3>
+              <b>SENT!</b></h3>
               {this.state.display_values.map((data,i)=>{
-                  return <p style={{textAlign:"left",marginLeft:"43%"}}>
+                  return <p style={{textAlign:"left",marginLeft:"40%"}}>
                             {i+1}: {removeAndCapitalize(JSON.parse(data)['service'])}
                           </p>  
               })}
