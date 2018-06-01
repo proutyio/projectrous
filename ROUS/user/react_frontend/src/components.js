@@ -90,7 +90,7 @@ export class TableMain extends Component {
       track:[],
       time_value:0,
       time_color:"black",
-      IP:["192.168.0.14"],  
+      IP:["192.168.0.100","192.168.0.102","192.168.0.103","192.168.0.104"],  
     };
     
     setInterval(() => {
@@ -447,8 +447,8 @@ class FormSend extends Component {
       p_on: '{"tag":"service","service":"pink_on","uid":""}',
       y_on: '{"tag":"service","service":"yellow_on","uid":""}',
       w_on: '{"tag":"service","service":"white_on","uid":""}',
-      rbg_on: '{"tag":"service","service":"red_blue_green","uid":""}',
-      wpy_on: '{"tag":"service","service":"white_pink_yellow","uid":""}',
+      rbg_on: '{"tag":"service","service":"redbluegreen","uid":""}',
+      wpy_on: '{"tag":"service","service":"whitepinkyellow","uid":""}',
       print_bw: '{"tag":"service","service":"print_bw","uid":""}',
       print_color: '{"tag":"service","service":"print_color","uid":""}',
     };
@@ -516,7 +516,7 @@ class FormSend extends Component {
           </ButtonToolbar>
 
           <ButtonToolbar className="text-center" 
-                         style={{margin:"10px",marginBottom:"15px",marginLeft:"2%"}}>
+                         style={{margin:"10px",marginBottom:"15px",marginLeft:"13%"}}>
             <ToggleButtonGroup type="radio" name="options" 
                                defaultValue={0}
                                vertical-block>
@@ -557,7 +557,7 @@ class FormSend extends Component {
                             <p>White ON</p>
               </ToggleButton>
 
-              <ToggleButton style={{width:"85%",marginTop:"5%",marginLeft:"0%",
+              <ToggleButton style={{width:"80%",marginTop:"5%",marginRight:"0%",
                                     fontSize:"12px"}}
                             onChange={this.messageChange}
                             value={this.state.print_bw}>
@@ -566,7 +566,7 @@ class FormSend extends Component {
                                    style={{marginLeft:"1%"}}
                                    onChange={(e)=>this.handleChange(e.target.files)}/>
                             </ToggleButton>
-              <ToggleButton style={{width:"85%", marginLeft:"0%",marginTop:"1px",
+              <ToggleButton style={{width:"80%", marginLeft:"0%",marginTop:"1px",
                                     fontSize:"12px"}}
                             onChange={this.messageChange}
                             value={this.state.print_color}>

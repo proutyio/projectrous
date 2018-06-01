@@ -107,6 +107,7 @@ svg {
 #TabButtons p {
 	margin-top:44%;
 	font-size: 11px;
+	font-weight: bold;
 }	
 
 
@@ -138,7 +139,7 @@ svg {
 	border: none;
 	box-shadow:none;
 	background-color:"";
-	padding: 6px;
+	padding: 12px;
 	text-align: center;
 }
 

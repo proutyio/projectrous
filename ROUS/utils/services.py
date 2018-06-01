@@ -6,13 +6,14 @@ import config
 import printer
 import rpi_control as rpi
 import network
+import encryption
 
-g_on = '{"tag":"service","service":"green_on"}'
-r_on = '{"tag":"service","service":"red_on"}'
-b_on = '{"tag":"service","service":"blue_on"}'
-p_on = '{"tag":"service","service":"pink_on"}'
-y_on = '{"tag":"service","service":"yellow_on"}'
-w_on = '{"tag":"service","service":"white_on"}'
+g_on = '{"tag":"service","service":"green_on","uid":""}'
+r_on = '{"tag":"service","service":"red_on","uid":""}'
+b_on = '{"tag":"service","service":"blue_on","uid":""}'
+p_on = '{"tag":"service","service":"pink_on","uid":""}'
+y_on = '{"tag":"service","service":"yellow_on","uid":""}'
+w_on = '{"tag":"service","service":"white_on","uid":""}'
 complex_timeout = 2
 
 
@@ -26,7 +27,7 @@ def all_services():
 	return jstr
 
 def run_service(msg, ukey, sender_address):
-	try:
+	#try:
 		if not msg['service'] == "complex":
 			#config.call_service(msg['service'], sender_address)
 			## !! temp bug fix, hardcoded for now
@@ -43,14 +44,14 @@ def run_service(msg, ukey, sender_address):
 				yellow_on(sender_address)
 			if srv == "white_on":
 				white_on(sender_address)
-			if srv == "red_blue_green":
+			if srv == "redbluegreen":
 				red_blue_green(ukey,sender_address)
-			if srv == "white_pink_yellow":
+			if srv == "whitepinkyellow":
 				white_pink_yellow(ukey,sender_address)
 		else:
 			complex(msg, ukey, sender_address)
-	except:
-		pass
+	#except:
+	#	pass
 
 
 # this code looks like it should be refactored but it works like this for
@@ -101,9 +102,12 @@ def white_pink_yellow(ukey, sender_address):
 def build_complex_service(msg_lst):
 	msg = '['
 	for m in msg_lst:
-		msg+=''+m+','
+		msg+=''+add_uid(m)+','
 	msg = msg[:-1]+']'
-	msg = '{"tag":"service","service":"complex","services":'+msg+'}'
+	print
+	print msg
+	print
+	msg = '{"tag":"service","service":"complex","uid":"'+encryption.newkey()+'","services":'+msg+'}'
 	return msg 
 
 def thread_complex(services,ukey,sender_address):
@@ -122,9 +126,17 @@ def complex(msg, ukey, sender_address):
 		if type(msg['services']) == type([]):
 			services = []
 			for m in msg['services']:
-				services.append('{"tag":"'+m['tag']+'","service":"'+m['service']+'"' )
+				services.append('{"tag":"'+m['tag']+'","uid":"'+encryption.newkey()+'","service":"'+m['service']+'"' )
 		else:
 			services = msg['services'][1:-1].split("}")
 	finally:
 		t = threading.Thread(target=thread_complex,args=[services,ukey,sender_address])
 		t.start()
+
+
+# every message gets a uid
+def add_uid(msg):
+	uid = encryption.newkey()
+	msg = msg[:-2]
+	msg = msg+uid+'"}'
+	return msg

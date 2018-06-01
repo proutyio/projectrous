@@ -45,7 +45,6 @@ def start_multicast_receiver(address):
 	return sock
 
 
-
 #
 def send_multicast_message(message, key, address):
 	try:
@@ -62,7 +61,6 @@ def send_multicast_message(message, key, address):
 		print "multicast send FAILED"
 
 
-
 # format: ("tag", "keytype", "newkey")
 def thread_tcp_server():
 	host = find_my_ip()
@@ -76,30 +74,10 @@ def thread_tcp_server():
 			data = conn.recv(1024)
 			if(data == "stop"): 
 				break
-			elif (data == "key"):
+			if (data.split(",")[0] == "key"):
 				update_key(data, host)
-				break
-			elif (data == "print"):
-				receive_print(data, conn)
 		finally:
 			conn.close()
-
-	
-#
-def receive_print(data, conn):
-	try:
-		msg = data.split(",")
-		byteAmount = msg[1]
-		conn.send("received initial amount")
-		fileContents = conn.recv(byteAmount)
-		fileObject = open("rous/utils/m.txt", "w")
-		fileObject.write(str(fileContents))
-		fileObject.close()
-		services.print_file(conn)
-	except:
-		print "failed to receive/print"
-
-
 
 
 # writes a new key to the key file
@@ -114,7 +92,6 @@ def update_key(data, host):
 					utils.write_new_key(key, newkey, host)
 	except:
 		print "failed to update_key"
-
 
 
 #

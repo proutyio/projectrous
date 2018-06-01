@@ -101,7 +101,7 @@ def remove_trust(block_ip):
 	newkey = str(encryption.newkey())
 	removed.append(block_ip)
 	if block_ip == str(0): #restore keys to all
-		network.send_tcp_message(self_ip,"key,ukey,"+newkey)
+		#network.send_tcp_message(self_ip,"key,ukey,"+newkey)
 		utils.write_new_key(utils.ukey(),newkey,self_ip)
 		try:
 			network.send_tcp_message('192.168.0.100',"key,ukey,"+newkey)
@@ -138,7 +138,6 @@ def add_uid(msg):
 	uid = encryption.newkey()
 	msg = msg[:-2]
 	msg = msg+uid+'"}'
-	print msg
 	return msg
 
 
@@ -147,9 +146,9 @@ def add_uid(msg):
 def build_complex(msg_lst):
 	msg = '['
 	for m in msg_lst:
-		msg+=''+m+','
+		msg+=''+add_uid(m)+','
 	msg = msg[:-1]+']'
-	msg = '{"tag":"service","service":"complex","services":'+json.dumps(msg)+'}'
+	msg = '{"tag":"service","service":"complex","uid":'+encryption.newkey()+',"services":'+json.dumps(msg)+'}'
 	return msg
 
 
@@ -158,7 +157,7 @@ def build_complex(msg_lst):
 # lots of try except so I can allow some cases to be able to fail
 def thread_listener(sock, address):
 	while True:
-		message, (host,port) = sock.recvfrom(1024)
+		message, (host,port) = sock.recvfrom(2048)
 		if message:
 			msg = encryption.decrypt(message, ukey)
 			try:
@@ -182,6 +181,7 @@ def thread_listener(sock, address):
 				pass 
 			finally:
 				mutex.release()
+
 
 # mutlicast listen, threaded
 def listener():
@@ -221,8 +221,6 @@ def find_nodes():
 		del console_data[:]
 		mutex.release()
 
-
-
 #
 def handle_ctrl_c(signal, frame):
     print "\nSIGNAL: ctrl c"
@@ -231,12 +229,9 @@ def handle_ctrl_c(signal, frame):
     sys.exit(0)
 
 
-
 #	START
 ###############################################
 listener()
 network.start_tcp_server(self_ip)
 signal.signal(signal.SIGINT, partial(handle_ctrl_c))
 ###############################################
-
-

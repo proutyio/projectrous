@@ -17,8 +17,8 @@ import utils.encryption as encryption
 #
 #    tag               format
 #
-#  service        = {tag:"", service:"", params:[]}
-#  info, error    = {tag:"", message:"", address:""}
+#  service        = {tag:"", service:"", services:[], uid:""}
+#  info, error    = {tag:"", message:"",address:""}
 #  bid            = {tag:"", bid:"", address:""}
 #  confirm        = {tag:"", id:""}
 #  whois          = {tag:"", address:""}
@@ -44,21 +44,17 @@ pause_interval = 0
 # IMPORTANT - Program sits here for most of its life 
 def wait_for_message(sock):
     while True:
-        message, (host,port) = sock.recvfrom(1024)
+        message, (host,port) = sock.recvfrom(2048)
 
         if message:
             msg = decrypt_message(message)
-            # if check_trust(host, data):
             try:
                 try:
                     print json.loads(msg)
                 except:
-                    print
                     print msg
-                    print
                 choose_path(msg, sock)
             except:
-                print
                 print msg
                 print "bad message"
 
@@ -188,13 +184,11 @@ def finish_bidding():
                     if(str(m[0]) >= max(tmp)):
                         print "\tWON"
                         network.send_multicast_message(
-                        '{"tag":"winner","address":"'+self_ip+'","service":"'+
-                        s['service']+'"}',ukey,self_ip)
+                            '{"tag":"winner","address":"'+self_ip+'","service":"'+
+                            s['service']+'"}',ukey,self_ip)
                         services.run_service(s,ukey,self_ip)
                         service_queue.remove(s)
-                        my_bids.remove(m)
-                    else:
-                        print "\tLOST" 
+                        my_bids.remove(m) 
     except:
         pass
     finally:
