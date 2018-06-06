@@ -1,0 +1,144 @@
+\documentclass[onecolumn, draftclsnofoot,10pt, compsoc]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{amsmath,amsfonts}
+\usepackage{natbib}
+\usepackage{listings}
+\usepackage{color}
+
+\lstset{frame=tb,
+  language=C,
+  aboveskip=1mm,
+  belowskip=1mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=1
+}
+
+\geometry{textheight=9.5in, textwidth=7in}
+
+
+\title{CS461_Technology_Review}
+
+\begin{document}
+\begin{titlepage}
+\pagenumbering{gobble}
+    \begin{singlespace}
+		\hfill  
+        \vfill
+        \centering
+        \scshape{
+            {\Huge Technology Review}\par\vspace{.2in}
+            {\LARGE Individual Assignment}\par\vspace{.2in}
+            {\LARGE CS 461}\par\vspace{.2in}
+            {\large\today}\par
+            \vspace{1in}
+           	{\large Prepared by }\par
+            {\LARGE Hayden Anderson\par}
+            {\large	Group 46\par
+           			Project ROUS\par}
+            \vspace{5pt}
+            \vfill
+        }    
+    \end{singlespace}
+    \begin{abstract}
+
+	\end{abstract}
+\end{titlepage}
+
+
+
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+
+
+\section{GUI Language}
+\subsection{Overview}
+One part of the ROUS project is user interaction with the system. This is done by creating a Graphical User Interface(GUI). Stakeholders need to be able to see the system graphically and give input, and see some output. Finding a programming language to represent our system to the stakeholders, primarily the user, is going to be a key part of the ROUS project. There are three options of making a graphical interface for the user that make the most sense for this project: using wxPython, creating a web application using ReactJS, or using C\#. These are all very versatile and well-documented portable languages that can create beautiful and user-friendly interfaces.
+
+
+\subsection{Criteria}
+The options listed in the overview above need to:
+\begin{itemize}
+	\item Be relatively easy to use
+    \item Integrate well with other languages
+    \item Have the ability to create a Single Page Application (SPA)
+    \item Be able to create a vibrant colorful and appealing interface
+    \item Be easy to test
+    \item Take a reasonable amount of time to write in
+\end{itemize}
+\subsection{Potential Choices}
+\subsubsection{wxPython}
+wxPython is a programming language that would help meet the client's needs and possibly allow for further integration in the future because of its parent language Python. Because of wxPython's integration with its parent language, using Python for most of the project would make codependence between the GUI and framework irrelevant. Creating a layout would be simplistic. However, the visual results seem to come out blocky and dull \cite{wxPython}. Portability is another factor to consider. wxPython is fairly portable because it does not take up a lot of space and works on a variety of systems. 
+\subsubsection{ReactJS}
+The second option for presenting our users with a graphical interface is creating a web application primarily using ReactJS. According to Svetlana Gordiyenko at XBSoftware, ReactJs is great for creating Single Page Applications (SPA)\cite{React}, due to the limited space on a microSD card, and increases portability between platforms.
+\subsubsection{C\#}
+C\# is the final option that was considered to be used as a platform to create a GUI for the user experience. C\# is a very well used programming language in the computer science industry. According to the TIOBE index,  C\# has been continuously the third most used programming language \cite{TIOBE}. It is the least forgiving in terms of ease of use. This would add development time in both the development and testing phase. This language also allows for a highly customizable user experience and creative designs. However, doing so takes extra time and testing. One major benefit with C\# is its integration with Microsoft's IDE, Visual Studio. This would significantly decrease the time of development, but would increase set up time and also have less portability.
+\subsection{Discussion}
+ReactJS will be the moderately difficult of the three options. This is because it is less forgiving than wxPython but more forgiving than C\#. C\# will take more time to use in the short span of the project and is more suitable for large scale programs, as opposed to ReactJS, which is more suited for one page applications. wxPython has a very bland interface and seems more like something a developer would use for their personal programs and its needs.
+\subsection{Conclusion}
+After doing thorough research, I have decided to create a web application using ReactJS, because it will be the most portable and beneficial language to write our graphical user interface on. This is because of its portability across different platforms, the ease of use, and its ability to react so dynamically.
+
+\section{Threat Introduction}
+\subsection{Overview}
+Another point of interest is how to simulate a threat in the system. Having a threat introduced  will show how the user will be able to both see the effects it has on the system and warn them if their objective can no longer be finished due to the intrusion. Simulating a threat can be difficult as there are many types of “hacks” a Blackhat could use. For the purposes within the scope of the project, there will be a focus on IoT device services no longer being able to work or not working as intended. One option to force a service disruption is by implementing it in the CLI of an individual node. Another option would be to allow the user to simulate a threat by having a button that allows the user to select services of a specific node and disable them. Finally, third option would be to preprogram an objective that faults specific services for a node that they should theoretically be able to do but no longer can, essentially a Trojan type virus. 
+\subsection{Criteria}
+These options need to:
+\begin{itemize}
+    \item Take short amount of time to take effect
+    \item Be able to be visually represented
+    \item Be able to change the type of services interrupted
+    \item Be easy to test
+    \item Take a reasonable amount of time to program
+\end{itemize}
+\subsection{Potential Choices}
+\subsubsection{CLI}
+Creating a command in the CLI would allow easy operation and control by the developer and administrator to simulate a threat within the system. This keeps a user from doing something that they did not know the consequences of. It would also be exponentially faster and require much less fail-safe’s to be programmed. Demoing the project with this feature would require constant attention and access by an administrator.
+\subsubsection{GUI}
+Another viable option would be to create a virtual button within the user accessible graphical interface. This would give more function to the application and a solid foundation for the GUI. This would also require a lot more programming and implementation of fail-safes so the user does not accidentally remove all services from nodes rendering them unusable. However, it would make the demo much more interactive.
+\subsubsection{Trojan}
+The third option would be to create an objective that is essentially a Trojan horse. A Trojan Horse in terms of computer systems is generally defined as "any malicious computer program which misleads users of its true intent. The term is derived from the Ancient Greek story of the deceptive wooden horse that led to the fall of the city of Troy"\cite{Trojan}. This would be accomplished by creating an objective that would be propagated through the system like a normal objective would, but would disable some service. What is great about this method is that it is the most realistic type of threat introduction to a system because this is a real technique a hacker would use. Using a Trojan type of threat introduction would take a good amount of time but would also be the most impressive.
+\subsection{Discussion}
+These three options all are viable. The CLI option would be the easiest to implement. Using a GUI or a Trojan are more difficult, but they would take the same amount of work to produce. The CLI is not the easiest to visually represent to the user. Using the GUI would be the most visually represented. The Trojan can be used as an objective and the user can see the services disappear in real time. Of these choices, the hardest to test would probably be the Trojan.
+\subsection{Conclusion}
+After much consideration and deliberation, creating a changeable Trojan virus like objective seemed to be the best way to simulate a threat. However, this may be somewhat more difficult to implement than other options. It is definitely the most realistic approach and therefore an option that could not be ignored.
+
+\section{Testing Framework}
+\subsection{Overview}
+The third point of focus for this project is the testing framework to be used to ensure code quality. Blackbox and whitebox testing are incredibly important for projects of this size. Choosing among these frameworks will help make sure the code is implemented as intended. Creating automated and manual tests for the project is necessary. Of the many different types of testing frameworks, the three most viable options would be: Modular Based Testing, Data Driven Testing, and Hybrid Testing. 
+\subsection{Criteria}
+These options need to:
+\begin{itemize}
+	\item Have a decent coverage of the code
+    \item Be modular
+    \item Be scalable
+    \item Take a reasonable amount of time to implement
+\end{itemize}
+
+\subsection{Potential Choices}
+\subsubsection{Modular Based Testing}
+Modular Based Testing is a framework revolved around modularizing different parts of the program. Using this testing method allows for more structured testing and repetition and iterative testing. It will compartmentalize each part of the program which works really well with an agile development cycle. One problem with modular based testing is that not all developers know which parts of the system they are missing and which paths have yet to be covered. Getting full coverage of a program is important in testing and modular testing relies on the developers' knowledge of the system. Modular Based Testing also relies on the programmer to keep track of each piece. Using a modular approach allows the tester to pinpoint exactly where the bug is occurring within the code fairly easily and allows the rest of the code to be untouched.
+\subsubsection{Data Driven Testing}
+The second approach to a testing framework is Data Driven Testing. This method involves a multitude of data to be used within tests to continuously test many options. This works well for programs that require a lot of user input and data manipulation. It is unlikely this will be a good fit for the program because the end product will contain a lot of different data input. To work properly, his method also would require an external database with a lot of fabricated test data. This would involve a lot of prep time and busy-work that could otherwise be used to develop more tests.
+\subsubsection{Hybrid Testing}
+Lastly, a Hybrid Testing framework is a combination of a few different testing frameworks, including the frameworks previously mentioned. It can be modular, data driven, and use a multitude of keywords and test data. This framework would allow for the most coverage of the project. However, it would also require the most brainpower and time devotion. Another downside to this framework is the lack of scalability. Scalability is very helpful in an agile development process because the project starts off small and iteratively becomes larger.
+\subsection{Discussion}
+All of these testing frameworks are valid options. Each would have a good coverage of the code. The Hybrid Testing framework is the least scalable, followed by the Data Driven and then the Modular. Obviously the Modular Testing framework is the most modular of the three options. Compared to the other options, Modular testing would also take the least amount of time to implement.
+
+\subsection{Conclusion}
+In the end, a modular based testing framework is the most viable option. This method flows better within an agile development process and allows the project to be modularized and automated. If all tests of an agile cycle are not complete, the modular nature of this framework allows some lenience to allow more tests be developed later.\cite{Software_Testing_Help}
+\newpage
+\bibliographystyle{plain}
+\bibliography{bibtex.bib}
+\end{document}

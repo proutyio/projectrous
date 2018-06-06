@@ -1,0 +1,310 @@
+\documentclass[draftclsnofoot, onecolumn, compsoc, 10pt]{IEEEtran}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{graphicx}
+% \usepackage{placeins}
+\usepackage{caption}
+% \usepackage{float}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage[section]{placeins}
+\graphicspath{ {images/} }
+\linespread{1.0}
+\parindent=0.0in
+\parskip=0.2in
+\geometry{textheight=9.5in, textwidth=7in}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+\title{\huge Final Report}
+\author{Oregon State University\\CS 463\\2017-2018\\\\Prepared By:\\ Kyle Prouty\\Hayden Anderson\\}
+
+\def \CapstoneTeamName{			Rodents Of Unusual Size}
+\def \CapstoneTeamNumber{		46}
+\def \GroupMemberOne{			Hayden Anderson}
+\def \GroupMemberTwo{			Kyle Prouty}
+\def \CapstoneProjectName{		Project ROUS}
+\def \CapstoneSponsorCompany{	HP, Inc}
+\def \CapstoneSponsorPerson{	Lonnie Mandigo}
+
+\def \DocType{ Spring Progress Report }
+			
+\newcommand{\NameSigPair}[1]{\par
+\makebox[2.75in][r]{#1} \hfil 	\makebox[3.25in]{\makebox[2.25in]{\hrulefill} \hfill		\makebox[.75in]{\hrulefill}}
+\par\vspace{-12pt} \textit{\tiny\noindent
+\makebox[2.75in]{} \hfil		\makebox[3.25in]{\makebox[2.25in][r]{Signature} \hfill	\makebox[.75in][r]{Date}}}}
+
+\begin{document}
+\begin{titlepage}
+    \pagenumbering{gobble}
+    \begin{singlespace}
+        \hfill  
+        \par\vspace{.2in}
+        \centering
+        \scshape{
+            \huge CS Capstone \DocType \par
+            {\large\today}\par
+            \vspace{1in}
+            \textbf{\Huge\CapstoneProjectName}\par
+            \vspace{1in}
+%             \vfill
+%             {\large Prepared for}\par
+%             \Huge \CapstoneSponsorCompany\par
+%             \vspace{5pt}
+%             {\Large\NameSigPair{\CapstoneSponsorPerson}\par}
+            {\large Prepared by }\par
+            Group\CapstoneTeamNumber\par
+            \CapstoneTeamName\par 
+            \vspace{5pt}
+            {\Large
+                \NameSigPair{\GroupMemberOne}\par
+                \NameSigPair{\GroupMemberTwo}\par
+            }
+            \vspace{20pt}
+        }
+        \vfill
+        \begin{abstract}
+        \noindent 
+        This document gives an overview of the ROUS framework. To start we will go over the project's purpose and goals. We will discuss the problems encountered and how we worked through them. Finally, we will show some important code snippets and images that explain different features and aspects to the ROUS framework.
+
+        
+        \end{abstract}     
+    \end{singlespace}
+\end{titlepage}
+\newpage
+\pagenumbering{arabic}
+\clearpage 
+\tableofcontents
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%
+% Report
+
+% Introduction to Project (Hint, refer to project proposal and problem statement)
+% Who requested it?
+% Why was it requested?
+% What is its importance?
+% Who was/were your client(s)?
+% Who are the members of your team?
+% What were their roles?
+% What was the role of the client(s)? (I.e., did they supervise only, or did they participate in doing development)
+% Requirements Document
+% include the original document, showing what you thought, at the time, was the project definition with the original Gantt chart
+% Add (your client should have okay'd): What new requirements were added? What existing requirements were changed? What existing requirements were deleted? Why? 
+% Add: Final Gantt Chart as a record of what happened when.
+% Design Document (original)
+% include the original document, showing what you thought, at the time, was the project design
+% Add (your client should have okay'd): What design aspects were changed, deleted or added? Why? 
+% Tech Review (original)
+% Weekly Blog Posts (all team members' posts)
+% formatted nicely and clearly distinct from one another
+% include all members posts, clearly distinct, clearly organized
+% Final Poster
+% scaled to fit on a color-printed on a single 8.5"x11" paper.
+% Project Documentation
+% How does your project work? (Could include the following...)
+% What is its structure?
+% What is its Theory of Operation?
+% Block and flow diagrams are good here.
+% How does one install your software, if any?
+% How does one run it?
+% Are there any special hardware, OS, or runtime requirements to run your software?
+% Any user guides, API documentation, etc.
+% This needs to be detailed enough to recreate and/or use your project!
+% Recommended Technical Resources for Learning More
+% What web sites were helpful? (Listed in order of helpfulness.)
+% What, if any, reference books really helped?
+% Were there any people on campus that were really helpful?
+% Conclusions and Reflections (each team member answers all questions individually)
+% What technical information did you learn?
+% What non-technical information did you learn?
+% What have you learned about project work?
+% What have you learned about project management?
+% What have you learned about working in teams?
+% If you could do it all over, what would you do differently?
+% Be honest here -- no B.S.
+
+% Appendix 1: Essential Code Listings. You don't have to include absolutely everything, but if someone wants to understand your project, there should be enough here to learn from. If you worked within a larger project, something like a patch file might be a good way to go.
+% Appendix 2: Anything else you want to include. Photos, etc.
+%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\subsection{The Requester}
+\subsection{Why Requested}
+\subsection{Client}
+\subsection{Our Members}
+\subsection{Our Roles}
+\subsection{Client Role}
+\section{Requirements Document}
+\subsection{Original}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{srs.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Final Gantt Chart}
+\section{Design Document}
+\subsection{Original}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{srs.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Additions / Changes}
+\section{Technology Review}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{DesignDocument.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Weekly Blog Posts}
+\subsection{Hayden}
+\subsubsection{Fall}
+\paragraph{Week 1}
+This week was spent deciding what projects I would like to work on for capstone.I created a list of all of the ones that seemed interesting to me. For my final five, I chose what interested me the most as well as some consideration to the companies I would like to work with.  I really like IoT because to me, it is an emerging market and I would love to get in on the growth of IoT and maybe even help shape what it becomes. 
+\paragraph{Week 2}
+This week I found who was in my group after a long weekend of worrying. I got my number one choice working on the Internet of Things collaboration project for HP.  We met our client Lonnie Mandigo and decided to focus on a security portion of Internet of Things and how to mitigate a security break-in with a mesh nodal structure.  We also found that we won't have to create any middle-ware onto any existing device but rather use arduinos or raspberry pi's to be the middle man and IoT connectors. We also settled on using Scrum as our development process and settled on Mondays at 4:30 to do our weekly sprint review meetings via Skype.  We also settled on a name for our project, Collaborating Threat Mitigation, or CTM for short.  And we reserved a study room in the library for the meetings. Lonnie also decided that I will be the one to take project ownership which is an amazing opportunity, but also a LOT of responsibility. I think I'm up for the task though. 
+\paragraph{Week 3}
+This week we narrowed down more of what we are going to work on for our project and some specific features we want to focus on. We also met with our TA and set up weekly times for our TA meetings. 
+\paragraph{Week 4}
+This week we decided to change our weekly review scrum meetings on Tuesdays at 4 to give us more time to discuss the project. I think we are going to use raspberry pi zeros as nodes.   
+\paragraph{Week 5}
+This week we finished up a little more fine tuning on the problem statement and made sure we were all on the same page. We finished our rough draft of the requirements document, but there is still plenty of editing and adding we need to finish before our final draft. We had a good weekly review meeting on Thursday with Lonnie.
+\paragraph{Week 6}
+This week I had a meeting with our client, Lonnie, on Monday to get some feedback on our requirements document and gave him a copy of it.  
+Tuesday we worked a little on the requirements document and also had our weekly review with Lonnie.  
+
+The rest of the week, Kyle and I made changes and modifications to our requirements document. We sent an updated version of our requirements document to Lonnie on Wednesday.
+\paragraph{Week 7}
+This week we decided which parts we wanted to write about for the tech review. I am in charge of the UI portion and getting input from users as well as the start of the threat. Another main portion is how we are presenting the user with a visual of how the results are being shown. I need to find a good representation of how to our system so that a user can understand what's going on. Most of what I am working is the high level directly with user input and output to the user.  
+\paragraph{Week 8}
+This week, Kyle and I got to really start focusing on the design portion of the project. We made an appointment with Lonnie to meet on Monday and flesh out a lot of the design for our project and how we are doing it. We decided that creating a threat would be really good to act as if it is an objective for the system. The system will do the objective which would be disabling some service on a node or two. The following objective will have to make it through the system and complete successfully. We also decided on doing a web app using ReactJS so that anyone that is connected to the self-sustained network can connect to the nodes and we might need to create a sign in to have authorized users to see it. The GUI is going to most likely be a Single Page Application.
+\paragraph{Week 9}
+This week I finished up my tech review and had a great meeting to talk about design with Lonnie and Kyle. We decided to create a system that bids on services of an objective if the node can do the objective. Each will broadcast a random number and compare their number to the numbers received from broadcasts. If there are no numbers higher than their broadcasted number, once the bidding phase is over, it starts the job. I also started the design document and tried to get as much of it done as I could. 
+\paragraph{Week 10}
+This week we worked more on the design document. We got our first draft together and completed it by Tuesday. We sent it out to our client, Lonnie, by Wednesday. He gave us some tremendous feedback the following day and we have been working on implementing that since. I also started the progress report and I am a little nervous I will not get it done in time, but I think I will. 
+\subsubsection{Winter Break}
+\paragraph{Break Notes}
+Over break I got the Raspberry Pi's I borrowed from Kevin and received one of my own for Christmas. I spent some time figuring out what I needed to make the Raspberry Pi's work and how to connect to them headless without ever having to connect a monitor to them. I started making some random sketches for how I envisioned the user GUI.
+\subsubsection{Winter}
+\paragraph{Week 1}
+\paragraph{Week 2}
+\paragraph{Week 3}
+\paragraph{Week 4}
+\paragraph{Week 5}
+\paragraph{Week 6}
+\paragraph{Week 7}
+\paragraph{Week 8}
+\paragraph{Week 9}
+\paragraph{Week 10}
+
+\subsubsection{Spring}
+\paragraph{Week 1}
+\paragraph{Week 2}
+\paragraph{Week 3}
+\paragraph{Week 4}
+\paragraph{Week 5}
+\paragraph{Week 6}
+\paragraph{Week 7}
+\paragraph{Week 8}
+\paragraph{Week 9}
+\paragraph{Week 10}
+\subsection{Kyle}
+\subsubsection{Fall}
+\paragraph{Week 1}
+\paragraph{Week 2}
+\paragraph{Week 3}
+\paragraph{Week 4}
+\paragraph{Week 5}
+\paragraph{Week 6}
+\paragraph{Week 7}
+\paragraph{Week 8}
+\paragraph{Week 9}
+\paragraph{Week 10}
+\subsubsection{Winter}
+\paragraph{Week 1}
+\paragraph{Week 2}
+\paragraph{Week 3}
+\paragraph{Week 4}
+\paragraph{Week 5}
+\paragraph{Week 6}
+\paragraph{Week 7}
+\paragraph{Week 8}
+\paragraph{Week 9}
+\paragraph{Week 10}
+\subsubsection{Spring}
+\paragraph{Week 1}
+\paragraph{Week 2}
+\paragraph{Week 3}
+\paragraph{Week 4}
+\paragraph{Week 5}
+\paragraph{Week 6}
+\paragraph{Week 7}
+\paragraph{Week 8}
+\paragraph{Week 9}
+\paragraph{Week 10}
+
+\section{Final Poster}
+\begin{sidewaysfigure}
+    \centering
+    \includegraphics[scale=0.25]{team46_final_poster.png}
+    \caption{Final Poster Presented At Expo}
+    \label{fig:my_label}
+\end{sidewaysfigure}
+\section{Project Documentation}
+\subsection{How Does ROUS Work?}
+\subsubsection{ROUS Structure}
+\subsubsection{Theory of Operation}
+\subsubsection{Block \& Flow Charts}
+\subsection{Installation}
+\subsection{Running}
+\subsection{Special Requirements}
+\subsection{User Guides}
+\section{Recommended Technical Resources for Learning More}
+\subsection{Web Sites}
+\subsection{Books}
+\subsection{People}
+\section{Conclusions and Reflections}
+\subsection{Hayden}
+\subsubsection{Technical Information Learned}
+\subsubsection{Non-Technical Information Learned}
+\subsubsection{Project Work Learned}
+\subsubsection{Project Management Learned}
+\subsubsection{Working in Teams}
+\subsubsection{What I would Differently}
+\subsection{Kyle}
+\subsubsection{Technical Information Learned}
+\subsubsection{Non-Technical Information Learned}
+\subsubsection{Project Work Learned}
+\subsubsection{Project Management Learned}
+\subsubsection{Working in Teams}
+\subsubsection{What I would Differently}
+\section{Appendix 1: Essential Code Listings}
+\section{Appendix 2: Final Look}
+
+
+
+
+
+\end{document}
